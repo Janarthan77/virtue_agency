@@ -62,7 +62,7 @@ export function GallerySection() {
     : galleryItems.filter(item => item.type === activeTab);
 
   return (
-    <section className="bg-white pt-24 pb-0 relative">
+    <section className="bg-[#1E293B] pt-24 pb-0 relative">
       <div className="container mx-auto px-6 max-w-7xl mb-16">
         
         {/* Header */}
@@ -70,13 +70,13 @@ export function GallerySection() {
           <p className="text-gray-400 font-semibold text-sm tracking-[0.25em] uppercase mb-3">
             Virtue IN Gallery
           </p>
-          <h2 className="text-4xl md:text-5xl font-light text-gray-900 tracking-tight">
+          <h2 className="text-4xl md:text-5xl font-light text-white tracking-tight">
             Beautiful & <span className="font-bold">Unforgettable Times</span>
           </h2>
         </div>
 
         {/* Tabs */}
-        <div className="flex flex-wrap justify-center gap-8 border-b border-gray-200">
+        <div className="flex flex-wrap justify-center gap-8 border-b border-white/20">
           {tabs.map((tab) => {
             const isActive = activeTab === tab.id;
             const Icon = tab.icon;
@@ -85,10 +85,10 @@ export function GallerySection() {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-2 pb-4 relative transition-colors duration-300 font-medium ${
-                  isActive ? "text-gray-900" : "text-gray-400 hover:text-gray-700"
+                  isActive ? "text-white" : "text-gray-400 hover:text-gray-200"
                 }`}
               >
-                <Icon size={16} className={isActive ? "text-[#93C52E]" : "text-gray-400"} />
+                <Icon size={16} className={isActive ? "text-[#FFB800]" : "text-gray-400"} />
                 <span className={isActive ? "font-bold" : ""}>{tab.label.split(" ")[0]}</span>
                 <span className="font-light">Gallery</span>
                 
@@ -96,7 +96,7 @@ export function GallerySection() {
                 {isActive && (
                   <motion.div 
                     layoutId="galleryTab"
-                    className="absolute bottom-[-1px] left-0 right-0 h-[3px] bg-[#93C52E]"
+                    className="absolute bottom-[-1px] left-0 right-0 h-[3px] bg-[#6C3EF4]"
                   />
                 )}
               </button>
@@ -137,7 +137,7 @@ export function GallerySection() {
                   <h3 className="text-xl font-bold text-white mb-2 leading-tight">
                     {item.title}
                   </h3>
-                  <p className="text-[#93C52E] text-sm font-medium tracking-wide">
+                  <p className="text-[#FFB800] text-sm font-medium tracking-wide">
                     {item.date}
                   </p>
                 </div>
@@ -145,7 +145,7 @@ export function GallerySection() {
                 {/* Video Play Icon overlay if video */}
                 {item.type === "video" && (
                   <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
-                    <div className="w-16 h-16 rounded-full bg-[#93C52E] flex items-center justify-center pl-1 shadow-lg transform scale-50 group-hover:scale-100 transition-transform duration-500">
+                    <div className="w-16 h-16 rounded-full bg-[#6C3EF4] flex items-center justify-center pl-1 shadow-lg transform scale-50 group-hover:scale-100 transition-transform duration-500">
                       <Play size={24} className="text-white fill-white" />
                     </div>
                   </div>

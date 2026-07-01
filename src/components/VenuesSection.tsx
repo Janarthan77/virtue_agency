@@ -39,7 +39,7 @@ export function VenuesSection() {
   const activeVenue = venues[activeIndex];
 
   return (
-    <section className="bg-[#f8f9fa] py-24 relative overflow-hidden text-gray-900">
+    <section className="bg-[#0F172A] py-24 relative overflow-hidden text-white">
       {/* Background image overlay simulating the mountain landscape faintly */}
       <div className="absolute inset-0 opacity-[0.02] bg-[url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center pointer-events-none" />
 
@@ -48,11 +48,11 @@ export function VenuesSection() {
         {/* Header Row */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
           <div>
-            <p className="text-[#93C52E] font-bold text-sm tracking-[0.25em] uppercase mb-4 flex items-center gap-4">
-              <span className="w-12 h-[1px] bg-[#93C52E]"></span>
+            <p className="text-[#FFB800] font-bold text-sm tracking-[0.25em] uppercase mb-4 flex items-center gap-4">
+              <span className="w-12 h-[1px] bg-[#6C3EF4]"></span>
               Virtue IN Venues
             </p>
-            <h2 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight">
+            <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight">
               Conference <span className="font-light">Rooms & Hotels</span>
             </h2>
           </div>
@@ -69,14 +69,14 @@ export function VenuesSection() {
                 <div
                   key={venue.id}
                   onClick={() => setActiveIndex(idx)}
-                  className={`group relative p-6 cursor-pointer border-b border-gray-200 transition-all duration-300 ${isActive ? "bg-white shadow-sm rounded-lg" : "hover:bg-white/50"
+                  className={`group relative p-6 cursor-pointer border-b border-white/20 transition-all duration-300 ${isActive ? "bg-[#1E293B] shadow-sm rounded-lg" : "hover:bg-[#1E293B]/50"
                     }`}
                 >
                   {/* Active Indicator Line */}
                   {isActive && (
                     <motion.div
                       layoutId="activeVenueIndicator"
-                      className="absolute right-0 top-1/4 bottom-1/4 w-1 bg-[#93C52E] rounded-l"
+                      className="absolute right-0 top-1/4 bottom-1/4 w-1 bg-[#6C3EF4] rounded-l"
                     />
                   )}
 
@@ -93,12 +93,12 @@ export function VenuesSection() {
 
                     {/* Details */}
                     <div>
-                      <h4 className="font-bold text-lg flex items-center gap-2 mb-1 text-gray-900">
-                        <span className="text-[#93C52E] flex items-center text-sm">{venue.stars} <Star size={12} className="fill-[#93C52E] ml-0.5" /></span>
+                      <h4 className="font-bold text-lg flex items-center gap-2 mb-1 text-white">
+                        <span className="text-[#FFB800] flex items-center text-sm">{venue.stars} <Star size={12} className="fill-[#FFB800] ml-0.5" /></span>
                         {venue.name}
                       </h4>
-                      <p className="text-gray-500 text-xs mb-1 font-semibold tracking-wide">Party Room {venue.capacity}</p>
-                      <p className="text-[#93C52E] text-xs font-bold tracking-wide">Price from {venue.price}</p>
+                      <p className="text-gray-400 text-xs mb-1 font-semibold tracking-wide">Party Room {venue.capacity}</p>
+                      <p className="text-[#FFB800] text-xs font-bold tracking-wide">Price from {venue.price}</p>
                     </div>
                   </div>
                 </div>
@@ -106,14 +106,14 @@ export function VenuesSection() {
             })}
 
             <div className="pt-8 pl-6">
-              <Link href="#" className="text-[#93C52E] font-bold text-xs tracking-widest uppercase hover:text-gray-900 transition-colors flex items-center gap-2">
+              <Link href="#" className="text-[#FFB800] font-bold text-xs tracking-widest uppercase hover:text-white transition-colors flex items-center gap-2">
                 View All <span className="text-gray-400 font-normal">Hotel & Resort</span>
               </Link>
             </div>
           </div>
 
           {/* Right Featured Image */}
-          <div className="w-full lg:w-7/12 relative overflow-hidden mt-12 lg:mt-0 min-h-[400px] rounded-2xl border border-gray-100 shadow-xl">
+          <div className="w-full lg:w-7/12 relative overflow-hidden mt-12 lg:mt-0 min-h-[400px] rounded-2xl border border-white/10 shadow-xl">
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeVenue.id}
@@ -133,7 +133,7 @@ export function VenuesSection() {
                 <div className="absolute inset-0 bg-black/5" />
 
                 {/* Green Badge */}
-                <div className="absolute top-0 left-8 bg-[#93C52E] text-white px-3 pt-6 pb-6 flex flex-col items-center justify-center min-w-[70px]" style={{ clipPath: "polygon(0 0, 100% 0, 100% 100%, 50% 85%, 0 100%)" }}>
+                <div className="absolute top-0 left-8 bg-[#6C3EF4] text-white px-3 pt-6 pb-6 flex flex-col items-center justify-center min-w-[70px]" style={{ clipPath: "polygon(0 0, 100% 0, 100% 100%, 50% 85%, 0 100%)" }}>
                   <Star size={20} className="fill-white mb-1" />
                   <span className="text-xl font-black">{activeVenue.stars}.0</span>
                   <span className="text-[8px] font-bold tracking-widest uppercase mt-1 text-center">Featured<br />Hotel</span>
@@ -141,7 +141,7 @@ export function VenuesSection() {
 
                 {/* Booking Button */}
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <button className="px-10 py-4 bg-gradient-to-r from-orange-500 to-pink-500 text-white font-black text-sm tracking-widest uppercase rounded-lg shadow-[0_10px_30px_-10px_rgba(236,72,153,0.6)] transform hover:scale-105 hover:shadow-[0_15px_40px_-10px_rgba(236,72,153,0.8)] transition-all duration-300">
+                  <button className="px-10 py-4 bg-gradient-to-r from-[#6C3EF4] to-[#9D72FF] text-white font-black text-sm tracking-widest uppercase rounded-lg shadow-[0_10px_30px_-10px_rgba(236,72,153,0.6)] transform hover:scale-105 hover:shadow-[0_15px_40px_-10px_rgba(236,72,153,0.8)] transition-all duration-300">
                     Booking Now
                   </button>
                 </div>

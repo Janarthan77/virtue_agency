@@ -47,7 +47,7 @@ export function ProjectsSection() {
   );
 
   return (
-    <section className="bg-[#f8f9fa] py-24 relative">
+    <section className="bg-[#0F172A] py-24 relative">
       <div className="container mx-auto px-6 max-w-7xl">
 
         {/* Header & Tabs */}
@@ -55,12 +55,12 @@ export function ProjectsSection() {
           <p className="text-gray-400 font-semibold text-sm tracking-[0.2em] uppercase mb-2">
             Virtue IN Events
           </p>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-12">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-12">
             Event <span className="font-light">Listing</span>
           </h2>
 
           {/* Tabs */}
-          <div className="flex flex-wrap justify-center gap-6 md:gap-12 border-b border-gray-200 w-full max-w-4xl">
+          <div className="flex flex-wrap justify-center gap-6 md:gap-12 border-b border-white/20 w-full max-w-4xl">
             {categories.map((cat) => {
               const isActive = activeTab === cat.id;
               const Icon = cat.icon;
@@ -68,17 +68,17 @@ export function ProjectsSection() {
                 <button
                   key={cat.id}
                   onClick={() => handleTabChange(cat.id)}
-                  className={`flex items-center gap-2 pb-4 px-2 relative transition-colors duration-300 ${isActive ? "text-gray-900 font-bold" : "text-gray-500 hover:text-gray-900 font-medium"
+                  className={`flex items-center gap-2 pb-4 px-2 relative transition-colors duration-300 ${isActive ? "text-white font-bold" : "text-gray-400 hover:text-white font-medium"
                     }`}
                 >
-                  <Icon size={16} className={isActive ? "text-[#93C52E]" : "text-gray-400"} />
+                  <Icon size={16} className={isActive ? "text-[#FFB800]" : "text-gray-400"} />
                   {cat.name}
 
                   {/* Active underline */}
                   {isActive && (
                     <motion.div
                       layoutId="activeTab"
-                      className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#93C52E]"
+                      className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#6C3EF4]"
                     />
                   )}
                 </button>
@@ -98,7 +98,7 @@ export function ProjectsSection() {
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: -20 }}
                 transition={{ duration: 0.4, delay: idx * 0.05 }}
-                className="bg-white flex flex-col sm:flex-row shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-shadow duration-300"
+                className="bg-[#1E293B] flex flex-col sm:flex-row shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-shadow duration-300"
               >
                 {/* Left Image */}
                 <div className="relative w-full sm:w-[240px] h-[200px] sm:h-auto shrink-0">
@@ -109,7 +109,7 @@ export function ProjectsSection() {
                     className="object-cover"
                   />
                   {/* Date Badge */}
-                  <div className="absolute top-0 left-0 bg-[#93C52E] text-white flex flex-col items-center justify-center w-16 h-16">
+                  <div className="absolute top-0 left-0 bg-[#6C3EF4] text-white flex flex-col items-center justify-center w-16 h-16">
                     <span className="text-xl font-black leading-none">{event.date}</span>
                     <span className="text-[10px] font-bold tracking-wider uppercase mt-1">{event.month}</span>
                   </div>
@@ -117,25 +117,25 @@ export function ProjectsSection() {
 
                 {/* Right Content */}
                 <div className="p-6 md:p-8 flex flex-col justify-center flex-1">
-                  <h3 className="text-xl font-black text-gray-900 leading-tight mb-1 hover:text-[#93C52E] transition-colors cursor-pointer">
+                  <h3 className="text-xl font-black text-white leading-tight mb-1 hover:text-[#FFB800] transition-colors cursor-pointer">
                     {event.title}
                   </h3>
-                  <p className="text-[#93C52E] text-sm font-semibold mb-5">
+                  <p className="text-[#FFB800] text-sm font-semibold mb-5">
                     {event.subtitle}
                   </p>
 
                   <div className="space-y-3 mb-6">
-                    <div className="flex items-center gap-3 text-sm text-gray-500 font-medium">
-                      <Clock size={16} className="text-[#93C52E]/70" />
+                    <div className="flex items-center gap-3 text-sm text-gray-400 font-medium">
+                      <Clock size={16} className="text-[#FFB800]/70" />
                       Start {event.time}
                     </div>
-                    <div className="flex items-center gap-3 text-sm text-gray-500 font-medium">
-                      <MapPin size={16} className="text-[#93C52E]/70" />
+                    <div className="flex items-center gap-3 text-sm text-gray-400 font-medium">
+                      <MapPin size={16} className="text-[#FFB800]/70" />
                       {event.location}
                     </div>
                   </div>
 
-                  <Link href="/portfolio" className="inline-flex items-center justify-center px-6 py-2.5 bg-gray-100 hover:bg-[#93C52E] text-gray-600 hover:text-white text-xs font-bold tracking-widest uppercase rounded-full transition-colors duration-300 self-start">
+                  <Link href="/portfolio" className="inline-flex items-center justify-center px-6 py-2.5 bg-[#1E293B] hover:bg-[#6C3EF4] text-gray-300 hover:text-white text-xs font-bold tracking-widest uppercase rounded-full transition-colors duration-300 self-start">
                     Product Details
                   </Link>
                 </div>
@@ -157,8 +157,8 @@ export function ProjectsSection() {
                 onClick={() => setCurrentPage(i + 1)}
                 className={`w-12 h-12 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 ${
                   currentPage === i + 1 
-                    ? "bg-[#93C52E] text-white shadow-[0_8px_20px_-6px_rgba(147,197,46,0.5)]" 
-                    : "bg-white text-gray-500 hover:bg-gray-100 hover:text-gray-900 shadow-sm border border-gray-100"
+                    ? "bg-[#6C3EF4] text-white shadow-[0_8px_20px_-6px_rgba(108,62,244,0.5)]" 
+                    : "bg-[#1E293B] text-gray-400 hover:bg-[#1E293B] hover:text-white shadow-sm border border-white/10"
                 }`}
               >
                 {i + 1}

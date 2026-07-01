@@ -118,7 +118,7 @@ export function HeroSlider() {
                   {slides[current].title}
                 </h1>
                 <h2 className="text-5xl md:text-7xl font-black leading-tight tracking-tight mb-8"
-                  style={{ WebkitTextStroke: "2px #93C52E", color: "transparent" }}>
+                  style={{ WebkitTextStroke: "2px #FFB800", color: "transparent" }}>
                   {slides[current].accent}
                 </h2>
               </motion.div>
@@ -147,13 +147,13 @@ export function HeroSlider() {
             >
               <Link
                 href="/contact"
-                className="px-8 py-4 bg-gradient-to-r from-orange-500 to-pink-500 text-white font-bold rounded-lg hover:opacity-90 transition-opacity text-center shadow-xl shadow-pink-500/20"
+                className="px-8 py-4 bg-gradient-to-r from-[#6C3EF4] to-[#9D72FF] text-white font-bold rounded-lg hover:opacity-90 transition-opacity text-center shadow-xl shadow-pink-500/20"
               >
                 Plan Your Event
               </Link>
               <Link
                 href="/portfolio"
-                className="px-8 py-4 bg-white/10 backdrop-blur-sm border border-white/20 text-white font-bold rounded-lg hover:bg-white/20 transition-colors text-center"
+                className="px-8 py-4 bg-[#1E293B]/10 backdrop-blur-sm border border-white/20 text-white font-bold rounded-lg hover:bg-[#1E293B]/20 transition-colors text-center"
               >
                 View Portfolio
               </Link>
@@ -179,7 +179,7 @@ export function HeroSlider() {
                 {/* Progress track */}
                 <div className="relative h-[3px] rounded-full overflow-hidden"
                   style={{ width: idx === current ? "80px" : "40px", transition: "width 0.3s ease" }}>
-                  <div className="absolute inset-0 bg-white/20 rounded-full" />
+                  <div className="absolute inset-0 bg-[#1E293B]/20 rounded-full" />
                   {idx === current && (
                     <motion.div
                       className="absolute inset-y-0 left-0 bg-accent rounded-full"
@@ -187,7 +187,7 @@ export function HeroSlider() {
                     />
                   )}
                   {idx < current && (
-                    <div className="absolute inset-0 bg-white/40 rounded-full" />
+                    <div className="absolute inset-0 bg-[#1E293B]/40 rounded-full" />
                   )}
                 </div>
               </button>
@@ -199,7 +199,7 @@ export function HeroSlider() {
       {/* Slide count (top right) */}
       <div className="absolute top-8 right-12 z-30 hidden md:flex items-center gap-3">
         <span className="text-white text-sm font-bold">0{current + 1}</span>
-        <div className="w-6 h-px bg-white/30" />
+        <div className="w-6 h-px bg-[#1E293B]/30" />
         <span className="text-white/40 text-sm">0{slides.length}</span>
       </div>
 

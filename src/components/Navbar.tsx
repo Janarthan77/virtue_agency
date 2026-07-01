@@ -33,7 +33,7 @@ export default function Navbar() {
 
   return (
     <motion.header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? "bg-white/90 backdrop-blur-md border-b border-gray-200 py-4 shadow-sm" : "bg-transparent py-6"
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? "bg-[#1E293B]/90 backdrop-blur-md border-b border-white/20 py-4 shadow-sm" : "bg-transparent py-6"
         }`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
@@ -42,7 +42,7 @@ export default function Navbar() {
       <div className="container mx-auto px-6 md:px-12 flex justify-between items-center">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group">
-          <span className={`text-2xl font-bold tracking-tighter ${isScrolled ? "text-gray-900" : "text-white"}`}>
+          <span className={`text-2xl font-bold tracking-tighter ${isScrolled ? "text-white" : "text-white"}`}>
             VIRTUE <span className="text-accent">IN</span>
           </span>
         </Link>
@@ -56,7 +56,7 @@ export default function Navbar() {
                 className={`text-sm font-medium transition-colors flex items-center gap-1 ${pathname === link.href
                   ? "text-accent"
                   : isScrolled
-                    ? "text-gray-700 hover:text-accent"
+                    ? "text-gray-200 hover:text-accent"
                     : "text-white hover:text-accent"
                   }`}
               >
@@ -73,7 +73,7 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-4">
           <Link
             href="/contact"
-            className="px-6 py-2.5 bg-gradient-to-r from-orange-500 to-pink-500 text-white font-bold rounded-lg transition-all duration-300 transform hover:opacity-90"
+            className="px-6 py-2.5 bg-gradient-to-r from-[#6C3EF4] to-[#9D72FF] text-white font-bold rounded-lg transition-all duration-300 transform hover:opacity-90"
           >
             PLAN YOUR EVENT
           </Link>
@@ -81,7 +81,7 @@ export default function Navbar() {
 
         {/* Mobile Menu Toggle */}
         <button
-          className={`md:hidden transition-colors hover:text-accent ${isScrolled ? "text-gray-900" : "text-white"}`}
+          className={`md:hidden transition-colors hover:text-accent ${isScrolled ? "text-white" : "text-white"}`}
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         >
           {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
@@ -95,7 +95,7 @@ export default function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "100vh" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden absolute top-full left-0 right-0 bg-white/95 backdrop-blur-lg border-b border-gray-200"
+            className="md:hidden absolute top-full left-0 right-0 bg-[#1E293B]/95 backdrop-blur-lg border-b border-white/20"
           >
             <div className="flex flex-col items-center justify-center h-full gap-8 pb-20">
               {navLinks.map((link) => (
@@ -103,7 +103,7 @@ export default function Navbar() {
                   key={link.name}
                   href={link.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`text-2xl font-bold ${pathname === link.href ? "text-accent" : "text-gray-900"
+                  className={`text-2xl font-bold ${pathname === link.href ? "text-accent" : "text-white"
                     }`}
                 >
                   {link.name}
@@ -112,7 +112,7 @@ export default function Navbar() {
               <Link
                 href="/contact"
                 onClick={() => setMobileMenuOpen(false)}
-                className="mt-4 px-8 py-3 bg-gradient-to-r from-orange-500 to-pink-500 text-white font-bold rounded-lg"
+                className="mt-4 px-8 py-3 bg-gradient-to-r from-[#6C3EF4] to-[#9D72FF] text-white font-bold rounded-lg"
               >
                 PLAN YOUR EVENT
               </Link>

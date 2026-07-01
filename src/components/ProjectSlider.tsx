@@ -12,7 +12,7 @@ const featured = [
     img: "/service_conference.png",
     badge: "Corporate Event",
     year: "2026",
-    accent: "#93C52E",
+    accent: "#FFB800",
     wide: true,
   },
   {
@@ -66,7 +66,7 @@ function Card({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.6, delay, ease: [0.25, 0.46, 0.45, 0.94] }}
-      className="group relative rounded-2xl overflow-hidden bg-white border border-gray-100 shadow-md hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 flex flex-col h-full"
+      className="group relative rounded-2xl overflow-hidden bg-[#1E293B] border border-white/10 shadow-md hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 flex flex-col h-full"
     >
       {/* Image */}
       <div className="relative overflow-hidden" style={{ aspectRatio: "16/9" }}>
@@ -109,7 +109,7 @@ function Card({
         </span>
 
         {/* Title */}
-        <h3 className="text-xl font-black text-gray-900 leading-snug mb-1 group-hover:text-gray-700 transition-colors">
+        <h3 className="text-xl font-black text-white leading-snug mb-1 group-hover:text-gray-200 transition-colors">
           {p.title}
         </h3>
 
@@ -137,7 +137,7 @@ function Card({
 
 export function ProjectSlider() {
   return (
-    <section className="bg-gray-50 py-20">
+    <section className="bg-[#0F172A] py-20">
       {/* Header */}
       <div className="container mx-auto px-6 md:px-12 max-w-7xl">
         <motion.div
@@ -148,16 +148,16 @@ export function ProjectSlider() {
           className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12"
         >
           <div>
-            <p className="text-[#93C52E] font-bold text-xs tracking-[0.25em] uppercase mb-3">
+            <p className="text-[#FFB800] font-bold text-xs tracking-[0.25em] uppercase mb-3">
               Our Work
             </p>
-            <h2 className="text-4xl md:text-6xl font-black text-gray-900 tracking-tight leading-tight">
+            <h2 className="text-4xl md:text-6xl font-black text-white tracking-tight leading-tight">
               Events That Made<br />An Impression
             </h2>
           </div>
           <Link
             href="/portfolio"
-            className="self-start md:self-end inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-gray-200 text-gray-600 hover:border-[#93C52E] hover:text-[#93C52E] font-semibold text-sm transition-all duration-300 group shrink-0"
+            className="self-start md:self-end inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-white/20 text-gray-300 hover:border-[#FFB800] hover:text-[#FFB800] font-semibold text-sm transition-all duration-300 group shrink-0"
           >
             View All Projects
             <ArrowUpRight size={15} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
@@ -194,11 +194,11 @@ export function ProjectSlider() {
             transition={{ duration: 0.6, delay: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
             className="md:col-span-6"
           >
-            <Link href="/portfolio" className="group flex flex-col items-center justify-center h-full min-h-[220px] rounded-2xl border-2 border-dashed border-gray-200 hover:border-[#93C52E] bg-white hover:bg-[#93C52E]/5 transition-all duration-500 p-10 text-center">
-              <span className="w-14 h-14 rounded-full bg-gray-100 group-hover:bg-[#93C52E] flex items-center justify-center mb-5 transition-colors duration-300">
+            <Link href="/portfolio" className="group flex flex-col items-center justify-center h-full min-h-[220px] rounded-2xl border-2 border-dashed border-white/20 hover:border-[#FFB800] bg-[#1E293B] hover:bg-[#6C3EF4]/5 transition-all duration-500 p-10 text-center">
+              <span className="w-14 h-14 rounded-full bg-[#1E293B] group-hover:bg-[#6C3EF4] flex items-center justify-center mb-5 transition-colors duration-300">
                 <ArrowUpRight size={22} className="text-gray-400 group-hover:text-white transition-colors" />
               </span>
-              <p className="text-xl font-black text-gray-700 group-hover:text-[#93C52E] transition-colors mb-1">
+              <p className="text-xl font-black text-gray-200 group-hover:text-[#FFB800] transition-colors mb-1">
                 See All 17+ Events
               </p>
               <p className="text-gray-400 text-sm">

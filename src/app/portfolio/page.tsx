@@ -46,7 +46,7 @@ export default function Portfolio() {
               className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
                 filter === f 
                   ? "bg-accent text-primary" 
-                  : "glass text-white hover:bg-white/10"
+                  : "glass text-white hover:bg-[#1E293B]/10"
               }`}
             >
               {f}
@@ -74,7 +74,7 @@ export default function Portfolio() {
                 <div className="transform translate-y-8 group-hover:translate-y-0 transition-transform duration-500">
                   <div className="flex items-center gap-3 mb-3">
                     <span className="text-accent text-xs font-bold uppercase tracking-wider">{project.type}</span>
-                    <span className="w-1.5 h-1.5 rounded-full bg-white/30" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#1E293B]/30" />
                     <span className="text-gray-400 text-xs font-semibold">{project.year}</span>
                   </div>
                   <h3 className="text-2xl font-bold text-white mb-2 leading-tight">{project.title}</h3>
