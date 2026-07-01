@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useInView } from "framer-motion";
+import { useInView, motion } from "framer-motion";
 import { useRef, useEffect } from "react";
 import { ArrowRight, Briefcase, Rocket, GlassWater, Star, ChevronLeft, ChevronRight, CalendarDays, Settings, Mic, ClipboardCheck, MapPin, Building, Palette, Music, Hammer, Store, Megaphone, Activity, Globe, PenTool, Radio } from "lucide-react";
 import { HeroSlider } from "@/components/HeroSlider";
@@ -10,6 +10,7 @@ import { AboutSection } from "@/components/AboutSection";
 import { ProjectsSection } from "@/components/ProjectsSection";
 import { GallerySection } from "@/components/GallerySection";
 import { VenuesSection } from "@/components/VenuesSection";
+import { FAQSection } from "@/components/FAQSection";
 
 /* ─── Brand data ─────────────────────────────────────────────── */
 const row1Brands = [
@@ -387,129 +388,81 @@ const servicesData = [
 
 /* ─── Services Section with GSAP & Slider ───────────────────────────────── */
 function ServicesSection() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let ctx: any;
-    const init = async () => {
-      const gsapMod = (await import("gsap")).default;
-      const { ScrollTrigger } = await import("gsap/ScrollTrigger");
-      gsapMod.registerPlugin(ScrollTrigger);
-
-      ctx = gsapMod.context(() => {
-        gsapMod.fromTo(".service-card",
-          { y: 60, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.8,
-            stagger: 0.2,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: "top 80%",
-            }
-          }
-        );
-      }, containerRef);
-    };
-    init();
-    return () => ctx?.revert();
-  }, []);
-
-  const scroll = (direction: 'left' | 'right') => {
-    if (scrollRef.current) {
-      const scrollAmount = window.innerWidth > 768 ? 400 : 300;
-      scrollRef.current.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
-    }
-  };
+  const displayedServices = servicesData.slice(0, 6);
 
   return (
-    <section ref={containerRef} className="bg-[#0F172A] relative overflow-hidden pt-32 pb-32">
+    <section className="bg-[#0F172A] relative pt-32 pb-32">
       <div className="container mx-auto max-w-[1400px] px-6 md:px-12 relative z-10">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
-          <Reveal>
-            <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight uppercase">
-              Our Services
-            </h2>
-          </Reveal>
 
-          {/* Slider Navigation */}
-          <Reveal delay={0.2}>
-            <div className="flex gap-4">
-              <button
-                onClick={() => scroll('left')}
-                className="w-12 h-12 rounded-full border border-white/20 bg-[#1E293B] flex items-center justify-center text-gray-400 hover:text-[#FFB800] hover:border-[#FFB800] transition-all duration-300 shadow-sm hover:shadow-md"
-              >
-                <ChevronLeft size={24} />
-              </button>
-              <button
-                onClick={() => scroll('right')}
-                className="w-12 h-12 rounded-full border border-white/20 bg-[#1E293B] flex items-center justify-center text-gray-400 hover:text-[#FFB800] hover:border-[#FFB800] transition-all duration-300 shadow-sm hover:shadow-md"
-              >
-                <ChevronRight size={24} />
-              </button>
-            </div>
-          </Reveal>
-        </div>
-
-        {/* Horizontal Slider */}
-        <div
-          ref={scrollRef}
-          className="flex overflow-x-auto gap-8 pb-12 pt-4 px-4 -mx-4 snap-x snap-mandatory scrollbar-hide"
-          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-        >
-          {/* Inject style for Webkit scrollbar hiding inline */}
-          <style dangerouslySetInnerHTML={{
-            __html: `
-            .scrollbar-hide::-webkit-scrollbar { display: none; }
-          `}} />
-
-          {Array(10).fill(servicesData).flat().map((s, i) => {
-            const Icon = s.icon;
-            return (
-              <div key={i} className="service-card shrink-0 w-[85vw] sm:w-[380px] lg:w-[400px] snap-center group relative bg-[#1E293B] rounded-[2rem] overflow-hidden cursor-pointer flex flex-col"
-                style={{
-                  boxShadow: "0 10px 40px -10px rgba(0,0,0,0.08)",
-                  border: "1px solid rgba(0,0,0,0.03)"
-                }}>
-
-                {/* Top Image */}
-                <div className="relative w-full h-56 overflow-hidden shrink-0">
-                  <Image src={s.image} alt={s.title} fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
-                  <div className="absolute inset-0 bg-black/5 group-hover:bg-black/0 transition-colors duration-500" />
-                  <div className="absolute bottom-0 right-8 w-14 h-14 bg-[#1E293B] rounded-t-2xl flex items-center justify-center shadow-[0_-5px_20px_rgba(0,0,0,0.05)] transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                    <Icon size={24} className="text-[#FFB800]" />
-                  </div>
-                </div>
-
-                <div className="relative z-10 flex flex-col p-8 pt-10 flex-grow bg-[#1E293B]">
-                  <div className="mb-2">
-                    <span className="text-[#FFB800] font-black text-xs tracking-widest">{s.num}</span>
-                  </div>
-
-                  <h3 className="text-xl font-black text-white mb-3 leading-tight group-hover:text-[#FFB800] transition-colors duration-500">
-                    {s.title}
-                  </h3>
-
-                  <p className="text-gray-400 text-sm leading-relaxed">
-                    {s.desc}
+        <div className="flex flex-col lg:flex-row gap-16 relative">
+          {/* Left Side: Sticky Content */}
+          <div className="lg:w-1/3 flex flex-col justify-start relative z-10">
+            {/* Fixed sticky positioning */}
+            <div className="lg:sticky lg:top-[30vh]">
+              <Reveal>
+                <div className="flex items-center gap-4 mb-4">
+                  <span className="w-12 h-[2px] bg-[#FFB800]"></span>
+                  <p className="text-gray-400 font-semibold text-sm tracking-[0.2em] uppercase">
+                    Comprehensive Solutions
                   </p>
                 </div>
-              </div>
-            );
-          })}
+                <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight leading-tight mb-6">
+                  From concept to execution — <br />
+                  <span className="text-[#FFB800]">managed by experts.</span>
+                </h2>
+                <p className="text-gray-400 text-base md:text-lg leading-relaxed mb-10">
+                  Virtue IN Agency handles every detail of your corporate event with dedicated expertise. We manage the complexity so you can focus on your guests and business.
+                </p>
+                <Link href="/services"
+                  className="inline-flex items-center gap-2 px-8 py-4 rounded-full text-white font-bold text-sm transition-all duration-300 hover:scale-105"
+                  style={{ background: "linear-gradient(135deg, #6C3EF4, #9D72FF)", boxShadow: "0 10px 30px -10px rgba(108, 62, 244, 0.4)" }}>
+                  See All Services <ArrowRight size={18} />
+                </Link>
+              </Reveal>
+            </div>
+          </div>
+
+          {/* Right Side: Scrolling Cards */}
+          <div className="lg:w-2/3 flex flex-col gap-12 relative mt-12 lg:mt-0 z-20">
+            {displayedServices.map((s, i) => {
+              const Icon = s.icon;
+              return (
+                <div
+                  key={i}
+                  className="group relative bg-[#1E293B] rounded-[2rem] overflow-hidden cursor-pointer flex flex-col shadow-[0_-10px_40px_-10px_rgba(0,0,0,0.3)] transition-transform duration-500 hover:-translate-y-2"
+                  style={{
+                    border: "1px solid rgba(255,255,255,0.05)"
+                  }}
+                >
+                  <div className="flex flex-col md:flex-row">
+                    {/* Image Side */}
+                    <div className="relative w-full md:w-5/12 h-64 md:h-auto overflow-hidden shrink-0">
+                      <Image src={s.image} alt={s.title} fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
+                      <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-500" />
+                      <div className="absolute top-6 left-6 w-12 h-12 bg-[#1E293B] rounded-xl flex items-center justify-center shadow-lg">
+                        <Icon size={20} className="text-[#FFB800]" />
+                      </div>
+                    </div>
+
+                    {/* Content Side */}
+                    <div className="relative z-10 flex flex-col p-8 md:p-12 flex-grow bg-[#1E293B]">
+                      <div className="mb-4">
+                        <span className="text-[#FFB800] font-black text-xs tracking-widest bg-[#FFB800]/10 px-3 py-1 rounded-full">{s.num}</span>
+                      </div>
+                      <h3 className="text-2xl md:text-3xl font-black text-white mb-4 leading-tight group-hover:text-[#FFB800] transition-colors duration-500">
+                        {s.title}
+                      </h3>
+                      <p className="text-gray-400 text-base md:text-lg leading-relaxed">
+                        {s.desc}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
 
-        <div className="mt-12 flex justify-center">
-          <Link href="/contact"
-            className="inline-flex items-center gap-2 px-10 py-4 rounded-full text-white font-bold text-sm transition-all duration-300 hover:scale-105"
-            style={{ background: "linear-gradient(135deg, #6C3EF4, #9D72FF)", boxShadow: "0 10px 30px -10px rgba(108, 62, 244, 0.4)" }}>
-            Plan Your Event
-          </Link>
-        </div>
       </div>
     </section>
   );
@@ -517,95 +470,100 @@ function ServicesSection() {
 
 /* ─── Testimonials Section ─────────────────────────────────────── */
 function TestimonialsSection() {
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let ctx: any;
-    const init = async () => {
-      const gsapMod = (await import("gsap")).default;
-      const { ScrollTrigger } = await import("gsap/ScrollTrigger");
-      gsapMod.registerPlugin(ScrollTrigger);
-
-      ctx = gsapMod.context(() => {
-        gsapMod.fromTo(".testimonial-card",
-          { y: 50, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.8,
-            stagger: 0.2,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: containerRef.current,
-              start: "top 75%",
-            }
-          }
-        );
-      }, containerRef);
-    };
-    init();
-    return () => ctx?.revert();
-  }, []);
+  const testimonials = [
+    {
+      text: "We had the factory inauguration done by Virtue IN and we are very satisfied. We experienced a very smooth and well coordinated team. We will have more interactions with them in the future.",
+      client: "Hydra Specma",
+      role: "Factory Inauguration",
+      initial: "H",
+      color: "#6C3EF4",
+    },
+    {
+      text: "Thanks for your extended support on our special day. Thanks and done a great job. Your team managed every detail flawlessly, allowing us to focus on our guests.",
+      client: "Corporate Partner",
+      role: "Annual Day Event",
+      initial: "C",
+      color: "#FFB800",
+    },
+    {
+      text: "Virtue IN made our product launch unforgettable. Their attention to detail and creative direction exceeded all our expectations. Truly a world-class event management team.",
+      client: "TVS Emerald",
+      role: "Product Launch",
+      initial: "T",
+      color: "#a78bfa",
+    },
+  ];
 
   return (
-    <section ref={containerRef} className="py-32 bg-[#1E293B] relative z-20">
-      <div className="container mx-auto px-6 max-w-7xl">
+    <section className="py-28 bg-[#0F172A] relative overflow-hidden z-20">
+      {/* Background glows */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-[#6C3EF4]/6 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-[400px] h-[300px] bg-[#FFB800]/4 blur-[100px] rounded-full pointer-events-none" />
+
+      <div className="container mx-auto px-6 max-w-7xl relative z-10">
+        {/* Header */}
         <div className="text-center mb-20">
           <Reveal>
-            <div className="flex justify-center mb-6">
-              <div className="flex gap-1.5 opacity-20">
-                <div className="w-3 h-10 bg-[#6C3EF4] transform skew-x-12" />
-                <div className="w-3 h-10 bg-[#6C3EF4] transform skew-x-12" />
-              </div>
+            <div className="flex items-center justify-center gap-3 mb-5">
+              <span className="w-10 h-[2px] bg-[#FFB800]" />
+              <p className="text-[#FFB800] font-bold text-sm tracking-[0.25em] uppercase">
+                Client Stories
+              </p>
+              <span className="w-10 h-[2px] bg-[#FFB800]" />
             </div>
-            <p className="text-[#FFB800] font-bold text-sm tracking-[0.25em] uppercase mb-4">Client Stories</p>
-            <h2 className="text-4xl md:text-6xl font-black text-white tracking-tight">
-              Hear it straight from our clients
+            <h2 className="text-4xl md:text-6xl font-black text-white tracking-tight leading-tight">
+              Hear it straight from{" "}
+              <span className="text-[#FFB800]">our clients</span>
             </h2>
           </Reveal>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
-          {[
-            {
-              text: "We had the factory inauguration done by Virtue IN and we are very satisfied. We experienced a very smooth and well coordinated team. We will have more interactions with them in the future.",
-              client: "Hydra Specma"
-            },
-            {
-              text: "Thanks for your extended support on our special day. Thanks and done a great job. Your team managed every detail flawlessly, allowing us to focus on our guests.",
-              client: "Corporate Partner"
-            }
-          ].map((testimonial, i) => (
-            <div key={i} className="testimonial-card group bg-[#1E293B] rounded-3xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] border border-white/10 overflow-hidden flex flex-col md:flex-row h-full transition-transform duration-500 hover:-translate-y-2 cursor-pointer">
-              {/* Left Green Accent */}
-              <div className="w-full md:w-24 bg-[#6C3EF4] shrink-0 relative overflow-hidden flex flex-col items-center justify-start p-6 md:pt-10 transition-colors duration-500 group-hover:bg-gray-900">
-                <span className="text-7xl font-serif text-white/30 leading-none group-hover:text-[#FFB800]/50 transition-colors duration-500">"</span>
-              </div>
+        {/* Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {testimonials.map((t, i) => (
+            <Reveal key={i} delay={i * 0.15}>
+              <div className="group relative bg-[#1E293B] rounded-2xl border border-white/[0.07] p-8 flex flex-col h-full hover:border-white/20 hover:shadow-[0_20px_50px_-15px_rgba(0,0,0,0.4)] transition-all duration-400 cursor-pointer overflow-hidden">
+                {/* Top accent line */}
+                <div
+                  className="absolute top-0 left-0 right-0 h-[2px] rounded-t-2xl"
+                  style={{ background: `linear-gradient(90deg, transparent, ${t.color}, transparent)` }}
+                />
 
-              {/* Content */}
-              <div className="p-8 md:p-12 flex flex-col flex-grow">
-                <h4 className="text-xs font-black tracking-[0.2em] uppercase text-gray-400 mb-6 group-hover:text-[#FFB800] transition-colors">Client Testimonial</h4>
+                {/* Quote icon */}
+                <div
+                  className="w-10 h-10 rounded-xl flex items-center justify-center mb-6 shrink-0"
+                  style={{ background: `${t.color}18`, border: `1px solid ${t.color}30` }}
+                >
+                  <span className="text-2xl font-serif leading-none" style={{ color: t.color }}>&quot;</span>
+                </div>
 
                 {/* Stars */}
-                <div className="flex gap-1.5 mb-8">
+                <div className="flex gap-1 mb-5">
                   {[...Array(5)].map((_, idx) => (
-                    <Star key={idx} size={18} className="fill-[#f59e0b] text-[#f59e0b]" />
+                    <Star key={idx} size={15} className="fill-[#FFB800] text-[#FFB800]" />
                   ))}
                 </div>
 
-                <p className="text-gray-300 text-base md:text-lg leading-relaxed mb-10 flex-grow font-medium">
-                  {testimonial.text}
+                {/* Text */}
+                <p className="text-gray-300 text-sm md:text-base leading-relaxed flex-grow mb-8">
+                  &ldquo;{t.text}&rdquo;
                 </p>
 
-                <div className="flex items-center gap-5 border-t border-white/10 pt-8 mt-auto">
-                  <div className="w-12 h-12 rounded-full bg-[#1E293B] flex items-center justify-center group-hover:bg-[#6C3EF4]/10 transition-colors">
-                    <span className="font-black text-gray-400 group-hover:text-[#FFB800]">{testimonial.client.charAt(0)}</span>
+                {/* Author */}
+                <div className="border-t border-white/[0.07] pt-6 flex items-center gap-4 mt-auto">
+                  <div
+                    className="w-11 h-11 rounded-full flex items-center justify-center shrink-0 font-black text-white text-base"
+                    style={{ background: `linear-gradient(135deg, ${t.color}cc, ${t.color}55)` }}
+                  >
+                    {t.initial}
                   </div>
-                  <span className="font-black text-white text-lg">{testimonial.client}</span>
+                  <div>
+                    <p className="text-white font-black text-sm">{t.client}</p>
+                    <p className="text-gray-500 text-xs font-medium mt-0.5">{t.role}</p>
+                  </div>
                 </div>
               </div>
-            </div>
+            </Reveal>
           ))}
         </div>
       </div>
@@ -752,6 +710,9 @@ export default function Home() {
 
       {/* 7 · TESTIMONIALS */}
       <TestimonialsSection />
+
+      {/* 8 · FAQ */}
+      <FAQSection variant="home" />
 
     </div>
   );

@@ -114,10 +114,10 @@ export function HeroSlider() {
                 exit={{ opacity: 0, y: -40 }}
                 transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.1 }}
               >
-                <h1 className="text-5xl md:text-7xl font-black leading-tight tracking-tight text-white mb-2">
+                <h1 className="text-4xl sm:text-5xl md:text-7xl font-black leading-tight tracking-tight text-white mb-2">
                   {slides[current].title}
                 </h1>
-                <h2 className="text-5xl md:text-7xl font-black leading-tight tracking-tight mb-8"
+                <h2 className="text-4xl sm:text-5xl md:text-7xl font-black leading-tight tracking-tight mb-6 md:mb-8"
                   style={{ WebkitTextStroke: "2px #FFB800", color: "transparent" }}>
                   {slides[current].accent}
                 </h2>
@@ -147,13 +147,13 @@ export function HeroSlider() {
             >
               <Link
                 href="/contact"
-                className="px-8 py-4 bg-gradient-to-r from-[#6C3EF4] to-[#9D72FF] text-white font-bold rounded-lg hover:opacity-90 transition-opacity text-center shadow-xl shadow-pink-500/20"
+                className="px-6 sm:px-8 py-3.5 sm:py-4 bg-gradient-to-r from-[#6C3EF4] to-[#9D72FF] text-white font-bold rounded-full hover:scale-105 transition-transform text-sm sm:text-base text-center shadow-xl shadow-purple-500/20"
               >
                 Plan Your Event
               </Link>
               <Link
                 href="/portfolio"
-                className="px-8 py-4 bg-[#1E293B]/10 backdrop-blur-sm border border-white/20 text-white font-bold rounded-lg hover:bg-[#1E293B]/20 transition-colors text-center"
+                className="px-6 sm:px-8 py-3.5 sm:py-4 bg-white/10 backdrop-blur-sm border border-white/20 text-white font-bold rounded-full hover:bg-white/20 transition-colors text-sm sm:text-base text-center"
               >
                 View Portfolio
               </Link>

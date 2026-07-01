@@ -16,6 +16,9 @@ export const metadata: Metadata = {
   description: "Premium end-to-end corporate event & conference management solutions.",
 };
 
+import SmoothScroll from "@/components/SmoothScroll";
+import ScrollToTop from "@/components/ScrollToTop";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -28,15 +31,18 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body 
-        className="min-h-full flex flex-col font-sans bg-primary text-text-light selection:bg-accent selection:text-primary overflow-x-hidden"
+        className="min-h-full flex flex-col font-sans bg-primary text-text-light selection:bg-accent selection:text-primary"
         suppressHydrationWarning
       >
-        <Navbar />
-        <main className="flex-grow">
-          {children}
-        </main>
-        <Footer />
-        <FloatingCTA />
+        <SmoothScroll>
+          <ScrollToTop />
+          <Navbar />
+          <main className="flex-grow">
+            {children}
+          </main>
+          <Footer />
+          <FloatingCTA />
+        </SmoothScroll>
       </body>
     </html>
   );
