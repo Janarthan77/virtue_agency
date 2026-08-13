@@ -81,8 +81,8 @@ export default function Navbar() {
           <div className="hidden md:flex items-center">
             <Link
               href="/contact"
-              className="px-6 py-2.5 rounded-full text-white font-bold text-sm transition-all duration-300 hover:scale-105 hover:shadow-[0_8px_20px_-6px_rgba(108,62,244,0.5)]"
-              style={{ background: "linear-gradient(135deg,#6C3EF4,#9D72FF)" }}
+              className="px-6 py-2.5 rounded-full text-gray-900 font-bold text-sm transition-all duration-300 hover:scale-105 hover:shadow-[0_8px_20px_-6px_rgba(255,255,255,0.5)]"
+              style={{ background: "linear-gradient(135deg,#FFFFFF,#E2E8F0)" }}
             >
               PLAN YOUR EVENT
             </Link>
@@ -90,7 +90,7 @@ export default function Navbar() {
 
           {/* Mobile hamburger */}
           <button
-            className="md:hidden w-10 h-10 flex items-center justify-center rounded-xl border border-white/10 text-white hover:border-[#6C3EF4]/50 transition-colors duration-200"
+            className="md:hidden w-10 h-10 flex items-center justify-center rounded-xl border border-white/10 text-white hover:border-[#FFFFFF]/50 transition-colors duration-200"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
           >
@@ -163,8 +163,8 @@ export default function Navbar() {
             >
               <Link
                 href="/contact"
-                className="w-full py-4 rounded-2xl text-white font-black text-lg text-center transition-all duration-300 hover:scale-[1.02]"
-                style={{ background: "linear-gradient(135deg,#6C3EF4,#9D72FF)" }}
+                className="w-full py-4 rounded-2xl text-gray-900 font-black text-lg text-center transition-all duration-300 hover:scale-[1.02]"
+                style={{ background: "linear-gradient(135deg,#FFFFFF,#E2E8F0)" }}
               >
                 PLAN YOUR EVENT
               </Link>

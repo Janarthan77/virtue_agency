@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useInView, motion } from "framer-motion";
-import { useRef, useEffect } from "react";
-import { ArrowRight, Briefcase, Rocket, GlassWater, Star, ChevronLeft, ChevronRight, CalendarDays, Settings, Mic, ClipboardCheck, MapPin, Building, Palette, Music, Hammer, Store, Megaphone, Activity, Globe, PenTool, Radio } from "lucide-react";
+import { useInView } from "framer-motion";
+import { useRef } from "react";
+import { ArrowRight, Star, CalendarDays, Settings, Mic, ClipboardCheck, MapPin, Building, Palette, Music, Hammer, Store, Megaphone, Activity, Globe, PenTool, Radio } from "lucide-react";
 import { HeroSlider } from "@/components/HeroSlider";
 import { AboutSection } from "@/components/AboutSection";
 import { ProjectsSection } from "@/components/ProjectsSection";
@@ -184,7 +184,8 @@ function Reveal({ children, delay = 0, className = "" }: { children: React.React
       style={{
         transform: isInView ? "none" : "translateY(30px)",
         opacity: isInView ? 1 : 0,
-        transition: `all 0.6s cubic-bezier(0.17, 0.55, 0.55, 1) ${delay}s`
+        transition: `opacity 0.6s cubic-bezier(0.17, 0.55, 0.55, 1) ${delay}s, transform 0.6s cubic-bezier(0.17, 0.55, 0.55, 1) ${delay}s`,
+        willChange: "transform, opacity",
       }}>
       {children}
     </div>
@@ -194,19 +195,7 @@ function Reveal({ children, delay = 0, className = "" }: { children: React.React
 /* ─── Brand Card ─────────────────────────────────────────────── */
 function BrandCard({ name }: { name: string }) {
   return (
-    <div className="flex-shrink-0 w-48 h-24 bg-[#1E293B] rounded-2xl border border-white/10 shadow-sm flex items-center justify-center px-5 cursor-pointer group"
-      style={{ transition: "box-shadow 0.3s, border-color 0.3s, transform 0.3s" }}
-      onMouseEnter={e => {
-        (e.currentTarget as HTMLDivElement).style.boxShadow = "0 8px 30px rgba(108,62,244,0.15)";
-        (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(108,62,244,0.4)";
-        (e.currentTarget as HTMLDivElement).style.transform = "translateY(-4px)";
-      }}
-      onMouseLeave={e => {
-        (e.currentTarget as HTMLDivElement).style.boxShadow = "";
-        (e.currentTarget as HTMLDivElement).style.borderColor = "";
-        (e.currentTarget as HTMLDivElement).style.transform = "";
-      }}
-    >
+    <div className="flex-shrink-0 w-48 h-24 bg-[#1E293B] rounded-2xl border border-white/10 shadow-sm flex items-center justify-center px-5 cursor-pointer group hover:shadow-[0_8px_30px_rgba(255,255,255,0.15)] hover:border-white/40 hover:-translate-y-1 transition-[transform,box-shadow,border-color] duration-300">
       <span className="text-gray-400 group-hover:text-[#FFB800] font-bold text-[11px] uppercase tracking-[0.15em] text-center leading-tight transition-colors duration-300">
         {name}
       </span>
@@ -217,7 +206,7 @@ function BrandCard({ name }: { name: string }) {
 /* ─── Portfolio Card ─────────────────────────────────────────── */
 function PortfolioCard({ project, idx }: { project: typeof projects[0]; idx: number }) {
   return (
-    <Reveal delay={idx * 0.1}>
+    <Reveal delay={Math.min(idx * 0.08, 0.4)}>
       <Link href="/portfolio"
         className="group flex flex-col bg-[#1E293B] rounded-2xl overflow-hidden shadow-sm border border-white/10 hover:shadow-xl hover:-translate-y-1 transition-all duration-400 cursor-pointer h-full">
 
@@ -227,6 +216,7 @@ function PortfolioCard({ project, idx }: { project: typeof projects[0]; idx: num
             src={project.img}
             alt={project.title}
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
             className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
           />
           {/* Subtle dark vignette at bottom of image */}
@@ -242,8 +232,8 @@ function PortfolioCard({ project, idx }: { project: typeof projects[0]; idx: num
         <div className="p-6 flex flex-col flex-1">
           {/* Badge */}
           <span className="self-start inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase mb-3"
-            style={{ background: "rgba(108,62,244,0.12)", color: "#FFB800", border: "1px solid rgba(108,62,244,0.3)" }}>
-            <span className="w-1.5 h-1.5 rounded-full bg-[#6C3EF4]" />
+            style={{ background: "rgba(255,255,255,0.12)", color: "#FFB800", border: "1px solid rgba(255,255,255,0.3)" }}>
+            <span className="w-1.5 h-1.5 rounded-full bg-[#FFFFFF]" />
             {project.badge}
           </span>
 
@@ -414,8 +404,8 @@ function ServicesSection() {
                   Virtue IN Agency handles every detail of your corporate event with dedicated expertise. We manage the complexity so you can focus on your guests and business.
                 </p>
                 <Link href="/services"
-                  className="inline-flex items-center gap-2 px-8 py-4 rounded-full text-white font-bold text-sm transition-all duration-300 hover:scale-105"
-                  style={{ background: "linear-gradient(135deg, #6C3EF4, #9D72FF)", boxShadow: "0 10px 30px -10px rgba(108, 62, 244, 0.4)" }}>
+                  className="inline-flex items-center gap-2 px-8 py-4 rounded-full text-gray-900 font-bold text-sm transition-all duration-300 hover:scale-105"
+                  style={{ background: "linear-gradient(135deg, #FFFFFF, #E2E8F0)", boxShadow: "0 10px 30px -10px rgba(255,255,255, 0.4)" }}>
                   See All Services <ArrowRight size={18} />
                 </Link>
               </Reveal>
@@ -476,7 +466,7 @@ function TestimonialsSection() {
       client: "Hydra Specma",
       role: "Factory Inauguration",
       initial: "H",
-      color: "#6C3EF4",
+      color: "#FFFFFF",
     },
     {
       text: "Thanks for your extended support on our special day. Thanks and done a great job. Your team managed every detail flawlessly, allowing us to focus on our guests.",
@@ -490,14 +480,14 @@ function TestimonialsSection() {
       client: "TVS Emerald",
       role: "Product Launch",
       initial: "T",
-      color: "#a78bfa",
+      color: "#CBD5E1",
     },
   ];
 
   return (
     <section className="py-28 bg-[#0F172A] relative overflow-hidden z-20">
       {/* Background glows */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-[#6C3EF4]/6 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-[#FFFFFF]/6 blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute bottom-0 right-0 w-[400px] h-[300px] bg-[#FFB800]/4 blur-[100px] rounded-full pointer-events-none" />
 
       <div className="container mx-auto px-6 max-w-7xl relative z-10">
@@ -570,90 +560,6 @@ function TestimonialsSection() {
     </section>
   );
 }
-
-/* ─── Capabilities Section ─────────────────────────────────────── */
-const capabilitiesList = [
-  "END TO END EVENT MANAGEMENT",
-  "END TO END EVENT PRODUCTION",
-  "CONFERENCE MANAGEMENT - MICE",
-  "EVENT PLANNING - OPERATIONS & CONSULTING",
-  "DESTINATION MANAGEMENT",
-  "VENUE SOURCING",
-  "DECOR HIRE, STYLING & THEMING",
-  "ENTERTAINMENT & ARTIST MANAGEMENT",
-  "CUSTOM BUILD SETUPS",
-  "EXHIBITION - STALL FABRICATION",
-  "SIGNAGE",
-  "BTL ACTIVATIONS",
-  "PUBLIC RELATIONS & MEDIA",
-  "CREATIVE DESIGN & PRINT MEDIA DESIGNING",
-  "ATL MANAGEMENT"
-];
-
-// function CapabilitiesSection() {
-//   const containerRef = useRef<HTMLDivElement>(null);
-
-//   useEffect(() => {
-//     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//     let ctx: any;
-//     const init = async () => {
-//       const gsapMod = (await import("gsap")).default;
-//       const { ScrollTrigger } = await import("gsap/ScrollTrigger");
-//       gsapMod.registerPlugin(ScrollTrigger);
-
-//       ctx = gsapMod.context(() => {
-//         gsapMod.fromTo(".capability-item",
-//           { y: 30, opacity: 0, scale: 0.9 },
-//           {
-//             y: 0,
-//             opacity: 1,
-//             scale: 1,
-//             duration: 0.5,
-//             stagger: 0.04,
-//             ease: "back.out(1.2)",
-//             scrollTrigger: {
-//               trigger: containerRef.current,
-//               start: "top 80%",
-//             }
-//           }
-//         );
-//       }, containerRef);
-//     };
-//     init();
-//     return () => ctx?.revert();
-//   }, []);
-
-//   return (
-//     <section ref={containerRef} className="bg-[#0b1120] py-32 relative overflow-hidden">
-//       {/* Decorative background gradients */}
-//       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#6C3EF4]/5 blur-[120px] rounded-full pointer-events-none" />
-
-//       <div className="container mx-auto px-6 max-w-7xl relative z-10">
-//         <div className="text-center mb-20">
-//           <Reveal>
-//             <p className="text-[#FFB800] font-bold text-sm tracking-[0.25em] uppercase mb-4">Our Expertise</p>
-//             <h2 className="text-4xl md:text-6xl font-black text-white tracking-tight uppercase">
-//               What Are We Best At
-//             </h2>
-//           </Reveal>
-//         </div>
-
-//         <div className="flex flex-wrap justify-center gap-4 max-w-5xl mx-auto">
-//           {capabilitiesList.map((item, i) => (
-//             <div key={i} className="capability-item group relative px-6 py-4 md:px-8 md:py-5 rounded-full border border-gray-800 bg-gray-900/40 backdrop-blur-md hover:border-[#FFB800]/50 hover:bg-[#6C3EF4]/10 hover:shadow-[0_0_30px_rgba(108,62,244,0.15)] hover:-translate-y-1 overflow-hidden transition-all duration-500 cursor-default">
-//               {/* Subtle hover sweep effect */}
-//               <div className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 bg-gradient-to-r from-transparent via-[#FFB800]/10 to-transparent pointer-events-none" />
-
-//               <span className="relative z-10 text-gray-400 text-xs md:text-sm font-bold tracking-[0.15em] group-hover:text-white transition-colors duration-300 uppercase">
-//                 {item}
-//               </span>
-//             </div>
-//           ))}
-//         </div>
-//       </div>
-//     </section>
-//   );
-// }
 
 /* ─── Page ───────────────────────────────────────────────────── */
 export default function Home() {

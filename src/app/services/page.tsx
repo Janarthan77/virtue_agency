@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import Link from 'next/link'
 import { motion } from 'framer-motion'
@@ -24,7 +24,7 @@ import {
 
 /* ─── Data ─────────────────────────────────────────────────────────────────── */
 
-const ACCENT_CYCLE = ['#6C3EF4', '#FFB800', '#a78bfa', '#34d399', '#f472b6', '#60a5fa']
+const ACCENT_CYCLE = ['#FFFFFF', '#FFB800', '#CBD5E1', '#34d399', '#f472b6', '#60a5fa']
 
 const SERVICES = [
   { num: '01', title: 'End to End Event Management',       desc: 'Comprehensive management from concept to execution for all types of events.',                                      icon: CalendarDays   },
@@ -201,8 +201,8 @@ function ServiceCard({
 
       <style jsx>{`
         .services-card:hover {
-          border-color: rgba(108, 62, 244, 0.4) !important;
-          box-shadow: 0 0 32px rgba(108, 62, 244, 0.18), 0 8px 40px rgba(0, 0, 0, 0.4) !important;
+          border-color: rgba(255,255,255, 0.4) !important;
+          box-shadow: 0 0 32px rgba(255,255,255, 0.18), 0 8px 40px rgba(0, 0, 0, 0.4) !important;
         }
         .services-card:hover .card-title {
           color: #FFB800 !important;
@@ -239,7 +239,7 @@ function ProcessCard({ step, index }: { step: (typeof PROCESS_STEPS)[0]; index: 
           width: 60,
           height: 60,
           borderRadius: '50%',
-          background: 'linear-gradient(135deg, #6C3EF4, #a78bfa)',
+          background: 'linear-gradient(135deg, #FFFFFF, #CBD5E1)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -247,7 +247,7 @@ function ProcessCard({ step, index }: { step: (typeof PROCESS_STEPS)[0]; index: 
           fontWeight: 900,
           color: '#fff',
           letterSpacing: '0.05em',
-          boxShadow: '0 0 24px rgba(108,62,244,0.4)',
+          boxShadow: '0 0 24px rgba(255,255,255,0.4)',
           flexShrink: 0,
         }}
       >
@@ -287,7 +287,7 @@ export default function ServicesPage() {
           style={{
             position: 'absolute', top: '-10%', left: '50%', transform: 'translateX(-50%)',
             width: 700, height: 500,
-            background: 'radial-gradient(ellipse at center, rgba(108,62,244,0.18) 0%, transparent 70%)',
+            background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.18) 0%, transparent 70%)',
             pointerEvents: 'none',
           }}
         />
@@ -427,7 +427,7 @@ export default function ServicesPage() {
               How We{' '}
               <span
                 style={{
-                  background: 'linear-gradient(135deg, #6C3EF4, #a78bfa)',
+                  background: 'linear-gradient(135deg, #FFFFFF, #CBD5E1)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                 }}
@@ -474,7 +474,7 @@ export default function ServicesPage() {
             position: 'absolute', top: '50%', left: '50%',
             transform: 'translate(-50%, -50%)',
             width: 800, height: 400,
-            background: 'radial-gradient(ellipse at center, rgba(108,62,244,0.15) 0%, transparent 70%)',
+            background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.15) 0%, transparent 70%)',
             pointerEvents: 'none',
           }}
         />
@@ -523,14 +523,14 @@ export default function ServicesPage() {
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: 10,
-                  background: 'linear-gradient(135deg, #6C3EF4, #8B5CF6)',
+                  background: 'linear-gradient(135deg, #FFFFFF, #E2E8F0)',
                   color: '#fff',
                   fontWeight: 700,
                   fontSize: 16,
                   padding: '0.875rem 2.25rem',
                   borderRadius: 50,
                   textDecoration: 'none',
-                  boxShadow: '0 0 32px rgba(108,62,244,0.35)',
+                  boxShadow: '0 0 32px rgba(255,255,255,0.35)',
                   transition: 'transform 0.2s, box-shadow 0.2s',
                 }}
                 className="cta-btn"
@@ -544,7 +544,7 @@ export default function ServicesPage() {
         <style jsx>{`
           .cta-btn:hover {
             transform: translateY(-2px) scale(1.04);
-            box-shadow: 0 0 48px rgba(108, 62, 244, 0.55) !important;
+            box-shadow: 0 0 48px rgba(255,255,255, 0.55) !important;
           }
         `}</style>
       </section>

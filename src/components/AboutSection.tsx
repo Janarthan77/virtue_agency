@@ -28,7 +28,7 @@ export function AboutSection() {
               transition={{ duration: 0.6 }}
             >
               <div className="flex items-center gap-4 mb-4">
-                <span className="w-12 h-[2px] bg-[#6C3EF4]"></span>
+                <span className="w-12 h-[2px] bg-[#FFFFFF]"></span>
                 <p className="text-gray-400 font-semibold text-sm tracking-[0.2em] uppercase">
                   We Are Virtue IN
                 </p>
@@ -45,7 +45,7 @@ export function AboutSection() {
               <div>
                 <Link
                   href="/about"
-                  className="inline-flex items-center justify-center px-10 py-4 bg-[#6C3EF4] text-white font-bold text-sm tracking-widest uppercase rounded-full shadow-[0_10px_30px_-10px_rgba(108,62,244,0.6)] hover:shadow-[0_15px_40px_-10px_rgba(108,62,244,0.8)] hover:scale-105 transition-all duration-300"
+                  className="inline-flex items-center justify-center px-10 py-4 bg-[#FFFFFF] text-gray-900 font-bold text-sm tracking-widest uppercase rounded-full shadow-[0_10px_30px_-10px_rgba(255,255,255,0.6)] hover:shadow-[0_15px_40px_-10px_rgba(255,255,255,0.8)] hover:scale-105 transition-all duration-300"
                 >
                   About Virtue IN
                 </Link>
@@ -61,14 +61,14 @@ export function AboutSection() {
                 return (
                   <motion.div
                     key={idx}
-                    initial={{ opacity: 0, scale: 0.8, rotate: idx % 2 === 0 ? -15 : 15, y: 100, x: idx % 2 === 0 ? -50 : 50 }}
-                    whileInView={{ opacity: 1, scale: 1, rotate: 0, y: 0, x: 0 }}
-                    whileHover={{ y: -8, scale: 1.02 }}
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    whileHover={{ y: -6 }}
                     viewport={{ once: true, margin: "-50px" }}
-                    transition={{ type: "spring", stiffness: 200, damping: 20, delay: idx * 0.15 }}
+                    transition={{ duration: 0.5, ease: "easeOut", delay: Math.min(idx * 0.1, 0.35) }}
                     className="flex flex-col items-center text-center group cursor-default"
                   >
-                    <div className="w-16 h-16 mb-5 flex items-center justify-center bg-[#0F172A] group-hover:bg-[#6C3EF4]/10 rounded-full transition-colors duration-500">
+                    <div className="w-16 h-16 mb-5 flex items-center justify-center bg-[#0F172A] group-hover:bg-[#FFFFFF]/10 rounded-full transition-colors duration-500">
                       <Icon size={32} className="text-[#FFB800] transform group-hover:scale-110 transition-transform duration-500" />
                     </div>
                     <h3 className="text-lg font-bold text-white mb-2">{feature.title}</h3>

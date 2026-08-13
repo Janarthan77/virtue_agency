@@ -36,26 +36,17 @@ const SLIDE_DURATION = 6000;
 
 export function HeroSlider() {
   const [current, setCurrent] = useState(0);
-  const [progress, setProgress] = useState(0);
 
   const goTo = useCallback((idx: number) => {
     setCurrent(idx);
-    setProgress(0);
   }, []);
 
+  // Auto-advance via a simple timer — no 50ms setState loop
   useEffect(() => {
-    setProgress(0);
-    const startTime = Date.now();
-    const interval = setInterval(() => {
-      const elapsed = Date.now() - startTime;
-      const pct = Math.min((elapsed / SLIDE_DURATION) * 100, 100);
-      setProgress(pct);
-      if (pct >= 100) {
-        setCurrent((prev) => (prev + 1) % slides.length);
-        clearInterval(interval);
-      }
-    }, 50);
-    return () => clearInterval(interval);
+    const timer = setTimeout(() => {
+      setCurrent((prev) => (prev + 1) % slides.length);
+    }, SLIDE_DURATION);
+    return () => clearTimeout(timer);
   }, [current]);
 
   return (
@@ -75,6 +66,7 @@ export function HeroSlider() {
             src={slides[current].img}
             alt={slides[current].title}
             fill
+            sizes="100vw"
             className="object-cover"
             priority={current === 0}
           />
@@ -147,7 +139,7 @@ export function HeroSlider() {
             >
               <Link
                 href="/contact"
-                className="px-6 sm:px-8 py-3.5 sm:py-4 bg-gradient-to-r from-[#6C3EF4] to-[#9D72FF] text-white font-bold rounded-full hover:scale-105 transition-transform text-sm sm:text-base text-center shadow-xl shadow-purple-500/20"
+                className="px-6 sm:px-8 py-3.5 sm:py-4 bg-gradient-to-r from-[#FFFFFF] to-[#E2E8F0] text-gray-900 font-bold rounded-full hover:scale-105 transition-transform text-sm sm:text-base text-center shadow-xl shadow-white/20"
               >
                 Plan Your Event
               </Link>
@@ -181,9 +173,11 @@ export function HeroSlider() {
                   style={{ width: idx === current ? "80px" : "40px", transition: "width 0.3s ease" }}>
                   <div className="absolute inset-0 bg-[#1E293B]/20 rounded-full" />
                   {idx === current && (
-                    <motion.div
+                    // CSS animation — zero JS re-renders. key resets animation on slide change.
+                    <div
+                      key={`progress-${current}`}
                       className="absolute inset-y-0 left-0 bg-accent rounded-full"
-                      style={{ width: `${progress}%` }}
+                      style={{ animation: `progressFill ${SLIDE_DURATION}ms linear forwards` }}
                     />
                   )}
                   {idx < current && (

@@ -27,7 +27,7 @@ const categories = [
 
 const categoryMeta: Record<string, { color: string; bg: string }> = {
   Corporate: { color: "#FFB800", bg: "rgba(255,184,0,0.12)" },
-  "Product Launch": { color: "#a78bfa", bg: "rgba(167,139,250,0.12)" },
+  "Product Launch": { color: "#CBD5E1", bg: "rgba(255,255,255,0.12)" },
   Entertainment: { color: "#34d399", bg: "rgba(52,211,153,0.12)" },
 };
 
@@ -57,7 +57,7 @@ export function ProjectsSection() {
   return (
     <section className="bg-[#0F172A] py-28 relative overflow-hidden">
       {/* Subtle background glow */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-[#6C3EF4]/5 blur-[120px] pointer-events-none" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-[#FFFFFF]/5 blur-[120px] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-[#FFB800]/4 blur-[100px] pointer-events-none" />
 
       <div className="container mx-auto px-6 max-w-7xl relative z-10">
@@ -77,10 +77,10 @@ export function ProjectsSection() {
           </div>
           <Link
             href="/portfolio"
-            className="inline-flex items-center gap-2 px-7 py-3 rounded-full text-white font-bold text-sm transition-all duration-300 hover:scale-105 self-start lg:self-auto shrink-0"
+            className="inline-flex items-center gap-2 px-7 py-3 rounded-full text-gray-900 font-bold text-sm transition-all duration-300 hover:scale-105 self-start lg:self-auto shrink-0"
             style={{
-              background: "linear-gradient(135deg, #6C3EF4, #9D72FF)",
-              boxShadow: "0 8px 25px -8px rgba(108,62,244,0.5)",
+              background: "linear-gradient(135deg, #FFFFFF, #E2E8F0)",
+              boxShadow: "0 8px 25px -8px rgba(255,255,255,0.5)",
             }}
           >
             View All Events <ArrowRight size={16} />
@@ -99,11 +99,11 @@ export function ProjectsSection() {
                 className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300"
                 style={{
                   background: isActive
-                    ? "linear-gradient(135deg, #6C3EF4, #9D72FF)"
+                    ? "linear-gradient(135deg, #FFFFFF, #E2E8F0)"
                     : "rgba(30,41,59,0.8)",
-                  color: isActive ? "#fff" : "#94a3b8",
+                  color: isActive ? "#111827" : "#94a3b8",
                   border: isActive ? "none" : "1px solid rgba(255,255,255,0.08)",
-                  boxShadow: isActive ? "0 4px 20px rgba(108,62,244,0.35)" : "none",
+                  boxShadow: isActive ? "0 4px 20px rgba(255,255,255,0.35)" : "none",
                 }}
               >
                 <Icon size={14} />
@@ -123,7 +123,7 @@ export function ProjectsSection() {
               return (
                 <div
                   key={event.id}
-                  className="group bg-[#1E293B] rounded-2xl overflow-hidden border border-white/[0.07] hover:border-[#6C3EF4]/35 hover:shadow-[0_20px_50px_-15px_rgba(108,62,244,0.25)] transition-all duration-300 cursor-pointer flex flex-col"
+                  className="group bg-[#1E293B] rounded-2xl overflow-hidden border border-white/[0.07] hover:border-[#FFFFFF]/35 hover:shadow-[0_20px_50px_-15px_rgba(255,255,255,0.25)] transition-all duration-300 cursor-pointer flex flex-col"
                 >
                   {/* Image */}
                   <div className="relative h-52 overflow-hidden shrink-0">
@@ -131,6 +131,7 @@ export function ProjectsSection() {
                       src={event.image}
                       alt={event.title}
                       fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
                       className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#1E293B] via-transparent to-transparent" />
@@ -138,10 +139,10 @@ export function ProjectsSection() {
                     {/* Date badge */}
                     <div
                       className="absolute top-4 left-4 w-14 h-14 rounded-xl flex flex-col items-center justify-center shadow-lg"
-                      style={{ background: "linear-gradient(135deg, #6C3EF4, #9D72FF)" }}
+                      style={{ background: "linear-gradient(135deg, #FFFFFF, #E2E8F0)" }}
                     >
-                      <span className="text-white text-xl font-black leading-none">{event.date}</span>
-                      <span className="text-white/80 text-[9px] font-black tracking-widest uppercase mt-0.5">{event.month}</span>
+                      <span className="text-gray-900 text-xl font-black leading-none">{event.date}</span>
+                      <span className="text-gray-600 text-[9px] font-black tracking-widest uppercase mt-0.5">{event.month}</span>
                     </div>
 
                     {/* Category tag */}
@@ -208,11 +209,11 @@ export function ProjectsSection() {
                 style={{
                   background:
                     currentPage === i + 1
-                      ? "linear-gradient(135deg, #6C3EF4, #9D72FF)"
+                      ? "linear-gradient(135deg, #FFFFFF, #E2E8F0)"
                       : "rgba(30,41,59,0.8)",
-                  color: currentPage === i + 1 ? "#fff" : "#94a3b8",
+                  color: currentPage === i + 1 ? "#111827" : "#94a3b8",
                   border: currentPage === i + 1 ? "none" : "1px solid rgba(255,255,255,0.08)",
-                  boxShadow: currentPage === i + 1 ? "0 4px 20px rgba(108,62,244,0.4)" : "none",
+                  boxShadow: currentPage === i + 1 ? "0 4px 20px rgba(255,255,255,0.4)" : "none",
                 }}
               >
                 {i + 1}

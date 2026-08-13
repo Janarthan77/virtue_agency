@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -22,7 +22,7 @@ const values = [
     icon: Target,
     title: "Precision Execution",
     desc: "Every detail planned, every moment delivered perfectly.",
-    color: "#6C3EF4",
+    color: "#FFFFFF",
   },
   {
     icon: Eye,
@@ -34,7 +34,7 @@ const values = [
     icon: Users,
     title: "Expert Team",
     desc: "Seasoned professionals who thrive under pressure.",
-    color: "#a78bfa",
+    color: "#CBD5E1",
   },
   {
     icon: Award,
@@ -116,7 +116,7 @@ export default function About() {
       {/* ══ 1. HERO ══════════════════════════════════════════ */}
       <div className="relative pt-36 pb-24 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-1/3 w-[600px] h-[500px] rounded-full bg-[#6C3EF4]/8 blur-[130px]" />
+          <div className="absolute top-0 left-1/3 w-[600px] h-[500px] rounded-full bg-[#FFFFFF]/8 blur-[130px]" />
           <div className="absolute top-20 right-1/4 w-[400px] h-[400px] rounded-full bg-[#FFB800]/5 blur-[100px]" />
         </div>
 
@@ -146,17 +146,17 @@ export default function About() {
                 <div className="flex items-center gap-4 flex-wrap">
                   <Link
                     href="/contact"
-                    className="inline-flex items-center gap-2 px-8 py-4 rounded-full text-white font-bold text-sm transition-all duration-300 hover:scale-105"
+                    className="inline-flex items-center gap-2 px-8 py-4 rounded-full text-gray-900 font-bold text-sm transition-all duration-300 hover:scale-105"
                     style={{
-                      background: "linear-gradient(135deg,#6C3EF4,#9D72FF)",
-                      boxShadow: "0 10px 30px -10px rgba(108,62,244,0.5)",
+                      background: "linear-gradient(135deg,#FFFFFF,#E2E8F0)",
+                      boxShadow: "0 10px 30px -10px rgba(255,255,255,0.5)",
                     }}
                   >
                     Plan Your Event <ArrowRight size={16} />
                   </Link>
                   <Link
                     href="/services"
-                    className="inline-flex items-center gap-2 px-8 py-4 rounded-full text-gray-300 font-bold text-sm border border-white/10 hover:border-[#6C3EF4]/50 hover:text-white transition-all duration-300"
+                    className="inline-flex items-center gap-2 px-8 py-4 rounded-full text-gray-300 font-bold text-sm border border-white/10 hover:border-[#FFFFFF]/50 hover:text-white transition-all duration-300"
                   >
                     Our Services
                   </Link>
@@ -198,7 +198,7 @@ export default function About() {
                 <div
                   className="text-4xl md:text-5xl font-black mb-2"
                   style={{
-                    background: "linear-gradient(135deg,#6C3EF4,#FFB800)",
+                    background: "linear-gradient(135deg,#FFFFFF,#FFB800)",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
                     backgroundClip: "text",
@@ -270,7 +270,7 @@ export default function About() {
                         key={i}
                         className="flex items-center gap-3 bg-[#0F172A] rounded-xl px-4 py-3"
                       >
-                        <CheckCircle2 size={16} className="text-[#6C3EF4] shrink-0" />
+                        <CheckCircle2 size={16} className="text-[#FFFFFF] shrink-0" />
                         <span className="text-gray-300 text-sm font-medium">{item}</span>
                       </div>
                     ))}
@@ -349,10 +349,10 @@ export default function About() {
                 </p>
                 <Link
                   href="/services"
-                  className="inline-flex items-center gap-2 px-8 py-4 rounded-full text-white font-bold text-sm transition-all duration-300 hover:scale-105"
+                  className="inline-flex items-center gap-2 px-8 py-4 rounded-full text-gray-900 font-bold text-sm transition-all duration-300 hover:scale-105"
                   style={{
-                    background: "linear-gradient(135deg,#6C3EF4,#9D72FF)",
-                    boxShadow: "0 10px 30px -10px rgba(108,62,244,0.5)",
+                    background: "linear-gradient(135deg,#FFFFFF,#E2E8F0)",
+                    boxShadow: "0 10px 30px -10px rgba(255,255,255,0.5)",
                   }}
                 >
                   Explore Services <ArrowRight size={16} />
@@ -366,11 +366,11 @@ export default function About() {
                   {services.map((s, i) => (
                     <div
                       key={i}
-                      className="group flex items-center gap-3 bg-[#1E293B] border border-white/[0.07] rounded-xl px-5 py-4 hover:border-[#6C3EF4]/40 hover:bg-[#1E293B] transition-all duration-300 cursor-default"
+                      className="group flex items-center gap-3 bg-[#1E293B] border border-white/[0.07] rounded-xl px-5 py-4 hover:border-[#FFFFFF]/40 hover:bg-[#1E293B] transition-all duration-300 cursor-default"
                     >
                       <div
                         className="w-2 h-2 rounded-full shrink-0 transition-transform duration-300 group-hover:scale-125"
-                        style={{ background: "linear-gradient(135deg,#6C3EF4,#FFB800)" }}
+                        style={{ background: "linear-gradient(135deg,#FFFFFF,#FFB800)" }}
                       />
                       <span className="text-gray-300 text-sm font-semibold group-hover:text-white transition-colors duration-300">
                         {s}
@@ -400,10 +400,10 @@ export default function About() {
             </h2>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 px-10 py-4 rounded-full text-white font-bold text-sm transition-all duration-300 hover:scale-105"
+              className="inline-flex items-center gap-2 px-10 py-4 rounded-full text-gray-900 font-bold text-sm transition-all duration-300 hover:scale-105"
               style={{
-                background: "linear-gradient(135deg,#6C3EF4,#9D72FF)",
-                boxShadow: "0 10px 30px -10px rgba(108,62,244,0.5)",
+                background: "linear-gradient(135deg,#FFFFFF,#E2E8F0)",
+                boxShadow: "0 10px 30px -10px rgba(255,255,255,0.5)",
               }}
             >
               Plan Your Event <ArrowRight size={18} />

@@ -67,7 +67,7 @@ export function FAQSection({ variant = "home" }: FAQSectionProps) {
   return (
     <section className="bg-[#0F172A] py-28 relative overflow-hidden">
       {/* Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#6C3EF4]/6 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#FFFFFF]/6 blur-[120px] rounded-full pointer-events-none" />
 
       <div className="container mx-auto px-6 max-w-4xl relative z-10">
         {/* Header */}
@@ -96,9 +96,9 @@ export function FAQSection({ variant = "home" }: FAQSectionProps) {
                 key={i}
                 className="rounded-2xl border overflow-hidden transition-all duration-300"
                 style={{
-                  background: isOpen ? "rgba(108,62,244,0.07)" : "#1E293B",
+                  background: isOpen ? "rgba(255,255,255,0.07)" : "#1E293B",
                   borderColor: isOpen
-                    ? "rgba(108,62,244,0.4)"
+                    ? "rgba(255,255,255,0.4)"
                     : "rgba(255,255,255,0.07)",
                 }}
               >
@@ -116,12 +116,12 @@ export function FAQSection({ variant = "home" }: FAQSectionProps) {
                     className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 transition-all duration-300"
                     style={{
                       background: isOpen
-                        ? "linear-gradient(135deg,#6C3EF4,#9D72FF)"
+                        ? "linear-gradient(135deg,#FFFFFF,#E2E8F0)"
                         : "rgba(255,255,255,0.06)",
                     }}
                   >
                     {isOpen ? (
-                      <Minus size={16} className="text-white" />
+                      <Minus size={16} className="text-gray-900" />
                     ) : (
                       <Plus size={16} className="text-gray-400" />
                     )}
@@ -149,10 +149,10 @@ export function FAQSection({ variant = "home" }: FAQSectionProps) {
           <p className="text-gray-400 text-sm mb-4">Still have questions?</p>
           <a
             href="/contact"
-            className="inline-flex items-center gap-2 px-8 py-3 rounded-full text-white font-bold text-sm transition-all duration-300 hover:scale-105"
+            className="inline-flex items-center gap-2 px-8 py-3 rounded-full text-gray-900 font-bold text-sm transition-all duration-300 hover:scale-105"
             style={{
-              background: "linear-gradient(135deg,#6C3EF4,#9D72FF)",
-              boxShadow: "0 8px 25px -8px rgba(108,62,244,0.5)",
+              background: "linear-gradient(135deg,#FFFFFF,#E2E8F0)",
+              boxShadow: "0 8px 25px -8px rgba(255,255,255,0.5)",
             }}
           >
             Contact Us

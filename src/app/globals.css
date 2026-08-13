@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #6C3EF4;
+  --color-primary: #FFFFFF;
   --color-secondary: #FFB800;
   --color-accent: #F8FAFC;
   --color-background: #0F172A;
@@ -39,10 +39,6 @@ body {
   max-width: 100vw;
 }
 
-/* Smooth scrolling for anchor links */
-html {
-  scroll-behavior: smooth;
-}
 
 /* Minimum tap target size for mobile */
 button,
@@ -79,25 +75,26 @@ textarea {
 }
 
 
-/* Marquee animations */
 @keyframes marquee-left {
-  0% {
-    transform: translateX(0);
-  }
-
-  100% {
-    transform: translateX(-33.333%);
-  }
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-33.333%); }
 }
 
 @keyframes marquee-right {
-  0% {
-    transform: translateX(-33.333%);
-  }
+  0%   { transform: translateX(-33.333%); }
+  100% { transform: translateX(0); }
+}
 
-  100% {
-    transform: translateX(0);
-  }
+/* Hero slider CSS-driven progress bar */
+@keyframes progressFill {
+  from { width: 0%; }
+  to   { width: 100%; }
+}
+
+/* GPU-accelerated marquee containers */
+.marquee-track {
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
 .animate-marquee-left {

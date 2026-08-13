@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { Mail, Phone, MapPin } from "lucide-react";
 
 export default function Footer() {
@@ -82,7 +82,7 @@ export default function Footer() {
         </div>
 
         <div className="flex justify-center mb-8">
-           <Link href="/contact" className="px-8 py-3 bg-gradient-to-r from-[#6C3EF4] to-[#9D72FF] text-white font-bold rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center gap-2">
+           <Link href="/contact" className="px-8 py-3 bg-gradient-to-r from-[#FFFFFF] to-[#E2E8F0] text-gray-900 font-bold rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center gap-2">
               Plan Your Event
            </Link>
         </div>

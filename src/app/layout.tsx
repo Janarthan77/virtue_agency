@@ -3,21 +3,20 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import FloatingCTA from "@/components/FloatingCTA";
+import ClientProviders from "@/components/ClientProviders";
 
+// Trim to 3 weights — saves 2 font file requests vs the original 5
 const poppins = Poppins({
   variable: "--font-poppins",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["400", "700", "800"],
+  display: "swap", // prevents invisible text during font load (FOIT)
 });
 
 export const metadata: Metadata = {
   title: "Virtue IN Agency | Corporate Event Management",
   description: "Premium end-to-end corporate event & conference management solutions.",
 };
-
-import SmoothScroll from "@/components/SmoothScroll";
-import ScrollToTop from "@/components/ScrollToTop";
 
 export default function RootLayout({
   children,
@@ -30,19 +29,17 @@ export default function RootLayout({
       className={`${poppins.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body 
+      <body
         className="min-h-full flex flex-col font-sans bg-primary text-text-light selection:bg-accent selection:text-primary"
         suppressHydrationWarning
       >
-        <SmoothScroll>
-          <ScrollToTop />
+        <ClientProviders>
           <Navbar />
           <main className="flex-grow">
             {children}
           </main>
           <Footer />
-          <FloatingCTA />
-        </SmoothScroll>
+        </ClientProviders>
       </body>
     </html>
   );

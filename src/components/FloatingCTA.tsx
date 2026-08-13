@@ -8,17 +8,18 @@ export default function FloatingCTA() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    let rafId: number;
     const handleScroll = () => {
-      // Show button after scrolling down 300px
-      if (window.scrollY > 300) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        setIsVisible(window.scrollY > 300);
+      });
     };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      cancelAnimationFrame(rafId);
+    };
   }, []);
 
   return (
@@ -29,10 +30,10 @@ export default function FloatingCTA() {
     >
       <Link 
         href="/contact"
-        className="flex items-center gap-2 px-6 py-3 rounded-full text-white font-bold text-sm shadow-xl transition-transform hover:scale-105 active:scale-95"
+        className="flex items-center gap-2 px-6 py-3 rounded-full text-gray-900 font-bold text-sm shadow-xl transition-transform hover:scale-105 active:scale-95"
         style={{ 
-          background: "linear-gradient(135deg, #6C3EF4, #9D72FF)", 
-          boxShadow: "0 10px 30px -10px rgba(108, 62, 244, 0.6)" 
+          background: "linear-gradient(135deg, #FFFFFF, #E2E8F0)", 
+          boxShadow: "0 10px 30px -10px rgba(255,255,255, 0.6)" 
         }}
       >
         <CalendarDays size={18} />

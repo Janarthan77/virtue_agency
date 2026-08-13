@@ -96,7 +96,7 @@ export function GallerySection() {
                 {isActive && (
                   <motion.div 
                     layoutId="galleryTab"
-                    className="absolute bottom-[-1px] left-0 right-0 h-[3px] bg-[#6C3EF4]"
+                    className="absolute bottom-[-1px] left-0 right-0 h-[3px] bg-[#FFFFFF]"
                   />
                 )}
               </button>
@@ -107,33 +107,33 @@ export function GallerySection() {
 
       {/* Full-width seamless grid */}
       <div className="w-full max-w-[2000px] mx-auto overflow-hidden">
-        <motion.div layout className="grid grid-cols-1 md:grid-cols-4 gap-0">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-0">
           <AnimatePresence mode="popLayout">
             {filteredItems.map((item) => (
               <motion.div
                 key={item.id}
-                layout
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                transition={{ duration: 0.4 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
                 className={`relative group overflow-hidden cursor-pointer bg-gray-900 ${
                   activeTab === 'all' ? item.gridClass : 'md:col-span-1 md:row-span-1 h-[300px]'
                 }`}
               >
                 {/* Image */}
-                <Image 
+                <Image
                   src={item.img}
                   alt={item.title}
                   fill
+                  sizes={item.gridClass?.includes("col-span-2") ? "(max-width: 768px) 100vw, 50vw" : "(max-width: 768px) 100vw, 25vw"}
                   className="object-cover transition-transform duration-700 group-hover:scale-110 group-hover:opacity-60"
                 />
-                
+
                 {/* Dark Gradient Overlay for text readability (always slightly there, stronger on hover) */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
                 {/* Hover Content */}
-                <div className="absolute bottom-0 left-0 right-0 p-8 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                <div className="absolute bottom-0 left-0 right-0 p-8 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-[transform,opacity] duration-500">
                   <h3 className="text-xl font-bold text-white mb-2 leading-tight">
                     {item.title}
                   </h3>
@@ -141,19 +141,19 @@ export function GallerySection() {
                     {item.date}
                   </p>
                 </div>
-                
+
                 {/* Video Play Icon overlay if video */}
                 {item.type === "video" && (
                   <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
-                    <div className="w-16 h-16 rounded-full bg-[#6C3EF4] flex items-center justify-center pl-1 shadow-lg transform scale-50 group-hover:scale-100 transition-transform duration-500">
-                      <Play size={24} className="text-white fill-white" />
+                    <div className="w-16 h-16 rounded-full bg-[#FFFFFF] flex items-center justify-center pl-1 shadow-lg transform scale-50 group-hover:scale-100 transition-transform duration-500">
+                      <Play size={24} className="text-gray-900 fill-gray-900" />
                     </div>
                   </div>
                 )}
               </motion.div>
             ))}
           </AnimatePresence>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

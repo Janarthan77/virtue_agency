@@ -132,8 +132,8 @@ const filters = ["All", "Corporate Event", "Product Launch", "Entertainment"];
 
 const tagMeta: Record<string, { color: string; border: string }> = {
   CORPORATE: { color: "#FFB800", border: "rgba(255,184,0,0.25)" },
-  "PRODUCT LAUNCH": { color: "#6C3EF4", border: "rgba(108,62,244,0.35)" },
-  ENTERTAINMENT: { color: "#a78bfa", border: "rgba(167,139,250,0.3)" },
+  "PRODUCT LAUNCH": { color: "#FFFFFF", border: "rgba(255,255,255,0.35)" },
+  ENTERTAINMENT: { color: "#CBD5E1", border: "rgba(255,255,255,0.3)" },
 };
 
 function GridCard({ project, idx }: { project: (typeof portfolioProjects)[0]; idx: number }) {
@@ -145,7 +145,7 @@ function GridCard({ project, idx }: { project: (typeof portfolioProjects)[0]; id
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20, scale: 0.95 }}
       transition={{ duration: 0.45, delay: idx * 0.05, ease: [0.25, 0.46, 0.45, 0.94] }}
-      className="group relative overflow-hidden rounded-2xl cursor-pointer bg-[#1E293B] border border-white/10 hover:border-[#6C3EF4]/40 hover:shadow-[0_20px_60px_-15px_rgba(108,62,244,0.3)] transition-all duration-500"
+      className="group relative overflow-hidden rounded-2xl cursor-pointer bg-[#1E293B] border border-white/10 hover:border-[#FFFFFF]/40 hover:shadow-[0_20px_60px_-15px_rgba(255,255,255,0.3)] transition-all duration-500"
       style={{ aspectRatio: "4/3" }}
     >
       {/* Image */}
@@ -209,7 +209,7 @@ function ListCard({ project, idx }: { project: (typeof portfolioProjects)[0]; id
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 20 }}
       transition={{ duration: 0.4, delay: idx * 0.04 }}
-      className="group flex items-center gap-5 bg-[#1E293B] border border-white/10 rounded-2xl p-4 hover:border-[#6C3EF4]/40 hover:shadow-[0_8px_30px_-10px_rgba(108,62,244,0.25)] transition-all duration-400 cursor-pointer"
+      className="group flex items-center gap-5 bg-[#1E293B] border border-white/10 rounded-2xl p-4 hover:border-[#FFFFFF]/40 hover:shadow-[0_8px_30px_-10px_rgba(255,255,255,0.25)] transition-all duration-400 cursor-pointer"
     >
       {/* Thumbnail */}
       <div className="relative w-20 h-14 rounded-xl overflow-hidden shrink-0">
@@ -267,7 +267,7 @@ export default function Portfolio() {
       <div className="relative pt-36 pb-20 overflow-hidden">
         {/* Subtle purple glow */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] rounded-full bg-[#6C3EF4]/8 blur-[120px]" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] rounded-full bg-[#FFFFFF]/8 blur-[120px]" />
         </div>
 
         <div className="container mx-auto px-6 md:px-12 text-center relative z-10">
@@ -338,10 +338,10 @@ export default function Portfolio() {
                 onClick={() => setFilter(f)}
                 className="relative px-5 py-2 rounded-full text-sm font-semibold transition-all duration-300"
                 style={{
-                  color: filter === f ? "#fff" : "#6b7280",
-                  background: filter === f ? "linear-gradient(135deg,#6C3EF4,#9D72FF)" : "transparent",
+                  color: filter === f ? "#111827" : "#6b7280",
+                  background: filter === f ? "linear-gradient(135deg,#FFFFFF,#E2E8F0)" : "transparent",
                   border: filter === f ? "none" : "1px solid rgba(255,255,255,0.08)",
-                  boxShadow: filter === f ? "0 4px 20px rgba(108,62,244,0.35)" : "none",
+                  boxShadow: filter === f ? "0 4px 20px rgba(255,255,255,0.35)" : "none",
                 }}
               >
                 {f}
@@ -356,7 +356,7 @@ export default function Portfolio() {
                 key={m}
                 onClick={() => setView(m)}
                 className={`p-2 rounded-lg transition-all duration-200 ${
-                  view === m ? "bg-[#6C3EF4] text-white" : "text-gray-500 hover:text-gray-300"
+                  view === m ? "bg-[#FFFFFF] text-gray-900" : "text-gray-500 hover:text-gray-300"
                 }`}
               >
                 <I size={15} />
@@ -419,8 +419,8 @@ export default function Portfolio() {
             href="/contact"
             className="inline-flex items-center gap-2 px-10 py-4 rounded-full text-white font-bold text-sm transition-all duration-300 hover:scale-105"
             style={{
-              background: "linear-gradient(135deg, #6C3EF4, #9D72FF)",
-              boxShadow: "0 10px 30px -10px rgba(108,62,244,0.5)",
+              background: "linear-gradient(135deg, #FFFFFF, #E2E8F0)",
+              boxShadow: "0 10px 30px -10px rgba(255,255,255,0.5)",
             }}
           >
             Plan Your Event <ArrowRight size={18} />
