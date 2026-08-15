@@ -417,8 +417,9 @@ function ServicesSection() {
             {displayedServices.map((s, i) => {
               const Icon = s.icon;
               return (
-                <div
+                <Link
                   key={i}
+                  href='/services'
                   className="group relative bg-[#1E293B] rounded-[2rem] overflow-hidden cursor-pointer flex flex-col shadow-[0_-10px_40px_-10px_rgba(0,0,0,0.3)] transition-transform duration-500 hover:-translate-y-2"
                   style={{
                     border: "1px solid rgba(255,255,255,0.05)"
@@ -447,7 +448,7 @@ function ServicesSection() {
                       </p>
                     </div>
                   </div>
-                </div>
+                </Link>
               );
             })}
           </div>

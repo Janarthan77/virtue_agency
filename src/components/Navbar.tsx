@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 const navLinks = [
@@ -50,10 +51,15 @@ export default function Navbar() {
         <div className="container mx-auto px-5 md:px-12 flex justify-between items-center max-w-7xl">
 
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 shrink-0">
-            <span className="text-xl md:text-2xl font-black tracking-tighter text-white">
-              VIRTUE <span className="text-[#FFB800]">IN</span>
-            </span>
+          <Link href="/" className="flex items-center gap-2 shrink-0 group">
+            <Image
+              src="/logo.png"
+              alt="Virtue IN"
+              width={160}
+              height={39}
+              className="h-8 md:h-9 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
+              priority
+            />
           </Link>
 
           {/* Desktop Nav */}

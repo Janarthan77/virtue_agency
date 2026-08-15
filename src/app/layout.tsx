@@ -16,6 +16,13 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: "Virtue IN Agency | Corporate Event Management",
   description: "Premium end-to-end corporate event & conference management solutions.",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.png", type: "image/png", sizes: "192x192" },
+    ],
+    apple: [{ url: "/icon.png", sizes: "192x192" }],
+  },
 };
 
 export default function RootLayout({

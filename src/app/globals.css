@@ -31,6 +31,23 @@ body {
   .glass {
     @apply bg-white/5 backdrop-blur-md border border-white/10;
   }
+  
+  /* Modern thin scrollbar */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(15, 23, 42, 0.6);
+    border-radius: 9999px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 9999px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.4);
+  }
 }
 
 /* Prevent horizontal overflow on all screens without breaking position: sticky */
@@ -40,14 +57,11 @@ body {
 }
 
 
-/* Minimum tap target size for mobile */
-button,
-a {
-  min-width: 44px;
-}
-
-/* Exception: inline text links and small badges */
+/* Minimum tap target size for mobile with exception for circular/icon buttons */
 button.inline-btn,
+button.icon-btn,
+button.rounded-full,
+button[class*="rounded-full"],
 a.inline-link,
 span>a {
   min-height: unset;

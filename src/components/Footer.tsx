@@ -1,4 +1,5 @@
-﻿import Link from "next/link";
+import Link from "next/link";
+import Image from "next/image";
 import { Mail, Phone, MapPin } from "lucide-react";
 
 export default function Footer() {
@@ -8,10 +9,14 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           {/* Brand */}
           <div>
-            <Link href="/" className="flex items-center gap-2 mb-6">
-              <span className="text-2xl font-bold tracking-tighter text-white">
-                VIRTUE <span className="text-accent">IN</span>
-              </span>
+            <Link href="/" className="inline-block mb-6 group">
+              <Image
+                src="/logo.png"
+                alt="Virtue IN"
+                width={180}
+                height={44}
+                className="h-10 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
+              />
             </Link>
             <p className="text-gray-300 mb-6 text-sm leading-relaxed">
               Crafting extraordinary corporate experiences. We exclusively specialize in corporate events and product releases.

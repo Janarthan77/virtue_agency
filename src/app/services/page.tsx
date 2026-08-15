@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import Link from 'next/link'
 import { motion } from 'framer-motion'
@@ -245,7 +245,7 @@ function ProcessCard({ step, index }: { step: (typeof PROCESS_STEPS)[0]; index: 
           justifyContent: 'center',
           fontSize: 20,
           fontWeight: 900,
-          color: '#fff',
+          color: '#0F172A',
           letterSpacing: '0.05em',
           boxShadow: '0 0 24px rgba(255,255,255,0.4)',
           flexShrink: 0,
@@ -524,7 +524,7 @@ export default function ServicesPage() {
                   alignItems: 'center',
                   gap: 10,
                   background: 'linear-gradient(135deg, #FFFFFF, #E2E8F0)',
-                  color: '#fff',
+                  color: '#0F172A',
                   fontWeight: 700,
                   fontSize: 16,
                   padding: '0.875rem 2.25rem',
