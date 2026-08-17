@@ -24,7 +24,7 @@ export default function FloatingCTA() {
 
   return (
     <div 
-      className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-40 transition-all duration-500 ${
+      className={`hidden md:flex fixed bottom-8 left-1/2 -translate-x-1/2 z-40 transition-all duration-500 ${
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10 pointer-events-none"
       }`}
     >
