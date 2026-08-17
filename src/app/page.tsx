@@ -27,147 +27,147 @@ const projects = [
   {
     title: "Rotary Club of Madras West",
     client: "President Installation 2026–27 @ ITC",
-    img: "/service_conference.png",
+    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/BNI%20Futurz%20chapter%20Meeting%20at%20Audi%20chennai/image-1.webp",
     badge: "CORPORATE",
     year: "2026",
   },
   {
     title: "TVS Emerald – Home Debut",
     client: "Peninsula, Green Enclave & Atrium Launch",
-    img: "/service_launch.png",
+    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/TVS%20Emerald%20Peninsula/image-6.webp",
     badge: "PRODUCT RELEASE",
     year: "2026",
   },
   {
     title: "NeXHS Annual Foundation Day",
     client: "Next Generation Hybrid Systems",
-    img: "/hero_bg.png",
+    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/BNP%20Paribas%20Gala%20Night/image-1.webp",
     badge: "CORPORATE",
     year: "2026",
   },
   {
     title: "JLL – Day Outing",
     client: "Jones Lang LaSalle (JLL)",
-    img: "/service_conference.png",
+    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Radiant%20Dental%20Care%20-%20Day%20out%20%40%20Polaris/image-8.webp",
     badge: "CORPORATE",
     year: "2025",
   },
   {
     title: "Audi Chennai Conference Meeting",
     client: "BNI B Region – Audi Chennai",
-    img: "/service_launch.png",
+    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/BNI%20Futurz%20chapter%20Meeting%20at%20Audi%20chennai/image-4.webp",
     badge: "CORPORATE",
     year: "2024",
   },
   {
     title: "IIMM Conference – Spectrum 2024",
     client: "Indian Institute of Material Management",
-    img: "/hero_bg.png",
+    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/BNP%20Paribas%20Gala%20Night/image-3.webp",
     badge: "CORPORATE",
     year: "2024",
   },
   {
     title: "Radiant Raising Day 2023",
     client: "Radiant Dental Care – Employees Annual Day",
-    img: "/service_conference.png",
+    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Radiant%20Dental%20Care%20-%20Day%20out%20%40%20Polaris/image-2.webp",
     badge: "CORPORATE",
     year: "2023",
   },
   {
     title: "Radiant Raising Day 2024",
     client: "Radiant Dental Care – Day Outing & Annual Day",
-    img: "/service_launch.png",
+    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Radiant%20Dental%20Care%20-%20Day%20out%20%40%20Polaris/image-5.webp",
     badge: "CORPORATE",
     year: "2024",
   },
   {
     title: "10th Southern HOG Rally",
     client: "Harley-Davidson Marina Chapter",
-    img: "/hero_bg.png",
+    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Southern%20HOG%20Rally/image-1.webp",
     badge: "CORPORATE",
     year: "2023",
   },
   {
     title: "Doordarshan Election Conclave",
     client: "Prasar Bharati",
-    img: "/service_conference.png",
+    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/BNI%20Futurz%20chapter%20Meeting%20at%20Audi%20chennai/image-5.webp",
     badge: "CORPORATE",
     year: "2026",
   },
   {
     title: "NYE Beach Night 2025",
     client: "Fortune Beach Resort",
-    img: "/hero_bg.png",
+    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/NYE%20Beach%202025/image-1.webp",
     badge: "CORPORATE",
     year: "2025",
   },
   {
     title: "BNP Paribas Annual Meet",
     client: "BNP Paribas",
-    img: "/service_launch.png",
+    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/BNP%20Paribas%20Gala%20Night/image-5.webp",
     badge: "CORPORATE",
     year: "2024",
   },
   {
     title: "Save a Child Marathon",
     client: "Saveetha Eco Pupil School – Ekam NGO",
-    img: "/service_conference.png",
+    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Save%20a%20Child%20EKAM%20Foundation%20Marathon/image-1.webp",
     badge: "CORPORATE",
     year: "2025",
   },
   {
     title: "Sema Pongal Themed Event @ VGP",
     client: "Round Table India – Area 7",
-    img: "/hero_bg.png",
+    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Welona%20Healthcare%20Family%20Day/image-2.webp",
     badge: "CORPORATE",
     year: "2025",
   },
   {
     title: "Middle Office Annual Bash",
     client: "BNP Paribas – Rocktober Evening",
-    img: "/service_launch.png",
+    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/BNP%20Paribas%20Gala%20Night/image-7.webp",
     badge: "CORPORATE",
     year: "2024",
   },
   {
     title: "Employees Day Outing",
     client: "Societe Generale",
-    img: "/service_conference.png",
+    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Welona%20Healthcare%20Family%20Day/image-4.webp",
     badge: "CORPORATE",
     year: "2025",
   },
   {
     title: "Madarase Fashion Talent Hunt & Expo",
     client: "Phoenix Marketcity Chennai",
-    img: "/hero_bg.png",
+    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Madras%20-%20Fashion%20talent%20Expo/image-5.webp",
     badge: "CORPORATE",
     year: "2025",
   },
   {
     title: "Annual Night Celebrations",
     client: "Bank of America IT Company",
-    img: "/service_launch.png",
+    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/NYE%20Beach%202025/image-10.webp",
     badge: "CORPORATE",
     year: "2025",
   },
   {
     title: "Welona Family Day – R & R",
     client: "Welona Healthcare",
-    img: "/service_conference.png",
+    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Welona%20Healthcare%20Family%20Day/image-1.webp",
     badge: "CORPORATE",
     year: "2024",
   },
   {
     title: "Harley Davidson Motorcycles Display",
     client: "Marina Harley-Davidson – Various Venues",
-    img: "/hero_bg.png",
+    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Display%20Advertising%20of%20Classic%2048%20-%20VR%20Chennai/image-1.webp",
     badge: "PRODUCT RELEASE",
     year: "2024",
   },
   {
     title: "Toyota Hilux – Product Reveal",
     client: "Lanson Toyota",
-    img: "/service_launch.png",
+    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Display%20Advertising%20of%20Classic%2048%20-%20VR%20Chennai/image-7.webp",
     badge: "PRODUCT RELEASE",
     year: "2024",
   },
@@ -260,7 +260,7 @@ const servicesData = [
     desc: "Comprehensive management from concept to execution for all types of events, ensuring a seamless experience.",
     bg: "#ffffff",
     icon: CalendarDays,
-    image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=800"
+    image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Southern%20HOG%20Rally/image-5.webp"
   },
   {
     num: "02",
@@ -268,7 +268,7 @@ const servicesData = [
     desc: "Full-scale technical and stage production, ensuring flawless audio, visual, and lighting experiences.",
     bg: "#ffffff",
     icon: Settings,
-    image: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=800"
+    image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Madras%20-%20Fashion%20talent%20Expo/image-2.webp"
   },
   {
     num: "03",
@@ -276,7 +276,7 @@ const servicesData = [
     desc: "Expert handling of Meetings, Incentives, Conferences, and Exhibitions for corporate excellence.",
     bg: "#ffffff",
     icon: Mic,
-    image: "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&q=80&w=800"
+    image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/BNI%20Futurz%20chapter%20Meeting%20at%20Audi%20chennai/image-2.webp"
   },
   {
     num: "04",
@@ -284,7 +284,7 @@ const servicesData = [
     desc: "Strategic planning, logistics, and operational consulting to make your events seamless.",
     bg: "#ffffff",
     icon: ClipboardCheck,
-    image: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&q=80&w=800"
+    image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Save%20a%20Child%20EKAM%20Foundation%20Marathon/image-2.webp"
   },
   {
     num: "05",
@@ -292,7 +292,7 @@ const servicesData = [
     desc: "Complete travel, logistics, and localized event planning across premier destinations.",
     bg: "#ffffff",
     icon: MapPin,
-    image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&q=80&w=800"
+    image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Radiant%20Dental%20Care%20-%20Day%20out%20%40%20Polaris/image-3.webp"
   },
   {
     num: "06",
@@ -300,7 +300,7 @@ const servicesData = [
     desc: "Finding the perfect backdrop tailored to your event's scale, style, and unique requirements.",
     bg: "#ffffff",
     icon: Building,
-    image: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&q=80&w=800"
+    image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/BNP%20Paribas%20Gala%20Night/image-4.webp"
   },
   {
     num: "07",
@@ -308,7 +308,7 @@ const servicesData = [
     desc: "Creative set designs, gorgeous floral arrangements, and thematic styling for immersive environments.",
     bg: "#ffffff",
     icon: Palette,
-    image: "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&q=80&w=800"
+    image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/TVS%20Emerald%20Peninsula/image-4.webp"
   },
   {
     num: "08",
@@ -316,7 +316,7 @@ const servicesData = [
     desc: "Curating top-tier talent, bands, speakers, and artists for captivating live performances.",
     bg: "#ffffff",
     icon: Music,
-    image: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?auto=format&fit=crop&q=80&w=800"
+    image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/NYE%20Beach%202025/image-6.webp"
   },
   {
     num: "09",
@@ -324,7 +324,7 @@ const servicesData = [
     desc: "Bespoke structural designs, custom staging, and immersive fabrications tailored to your vision.",
     bg: "#ffffff",
     icon: Hammer,
-    image: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&q=80&w=800"
+    image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Southern%20HOG%20Rally/image-8.webp"
   },
   {
     num: "10",
@@ -332,7 +332,7 @@ const servicesData = [
     desc: "Designing and building interactive and engaging exhibition stalls and corporate booths.",
     bg: "#ffffff",
     icon: Store,
-    image: "https://images.unsplash.com/photo-1531058020387-3be344556be6?auto=format&fit=crop&q=80&w=800"
+    image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Display%20Advertising%20of%20Classic%2048%20-%20VR%20Chennai/image-3.webp"
   },
   {
     num: "11",
@@ -340,7 +340,7 @@ const servicesData = [
     desc: "High-quality, custom event signage and branding materials for impactful visibility.",
     bg: "#ffffff",
     icon: Megaphone,
-    image: "https://images.unsplash.com/photo-1563298723-dcfebaa392e3?auto=format&fit=crop&q=80&w=800"
+    image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Display%20Advertising%20of%20Classic%2048%20-%20VR%20Chennai/image-5.webp"
   },
   {
     num: "12",
@@ -348,7 +348,7 @@ const servicesData = [
     desc: "Below-the-line marketing activations focused on direct, meaningful consumer engagement.",
     bg: "#ffffff",
     icon: Activity,
-    image: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=800"
+    image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Welona%20Healthcare%20Family%20Day/image-3.webp"
   },
   {
     num: "13",
@@ -356,7 +356,7 @@ const servicesData = [
     desc: "Strategic PR campaigns and comprehensive media management to amplify your event's reach.",
     bg: "#ffffff",
     icon: Globe,
-    image: "https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?auto=format&fit=crop&q=80&w=800"
+    image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/BNP%20Paribas%20Gala%20Night/image-6.webp"
   },
   {
     num: "14",
@@ -364,7 +364,7 @@ const servicesData = [
     desc: "Exceptional graphic design and printing services for all your event collaterals.",
     bg: "#ffffff",
     icon: PenTool,
-    image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&q=80&w=800"
+    image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/TVS%20Emerald%20Peninsula/image-9.webp"
   },
   {
     num: "15",
@@ -372,7 +372,7 @@ const servicesData = [
     desc: "Above-the-line mass media advertising and large-scale brand awareness campaigns.",
     bg: "#ffffff",
     icon: Radio,
-    image: "https://images.unsplash.com/photo-1542744094-24638eff58bb?auto=format&fit=crop&q=80&w=800"
+    image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Madras%20-%20Fashion%20talent%20Expo/image-6.webp"
   }
 ];
 

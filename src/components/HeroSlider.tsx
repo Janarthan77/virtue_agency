@@ -8,7 +8,7 @@ import Link from "next/link";
 const slides = [
   {
     id: 1,
-    img: "/hero_bg.png",
+    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Southern%20HOG%20Rally/image-1.webp",
     tag: "Corporate Events",
     title: "Creating Unforgettable",
     accent: "Event Experiences",
@@ -16,7 +16,7 @@ const slides = [
   },
   {
     id: 2,
-    img: "/service_launch.png",
+    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/TVS%20Emerald%20Peninsula/image-6.webp",
     tag: "Product Releases",
     title: "Delivering High-Impact",
     accent: "Product Launches",
@@ -24,7 +24,7 @@ const slides = [
   },
   {
     id: 3,
-    img: "/service_conference.png",
+    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/BNP%20Paribas%20Gala%20Night/image-1.webp",
     tag: "Conferences",
     title: "Executing Flawless",
     accent: "Corporate Summits",
