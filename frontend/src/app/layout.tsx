@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import ClientProviders from "@/components/ClientProviders";
+import AppShell from "@/components/AppShell";
 
 // Trim to 3 weights — saves 2 font file requests vs the original 5
 const poppins = Poppins({
@@ -40,13 +38,7 @@ export default function RootLayout({
         className="min-h-full flex flex-col font-sans bg-primary text-text-light selection:bg-accent selection:text-primary"
         suppressHydrationWarning
       >
-        <ClientProviders>
-          <Navbar />
-          <main className="flex-grow">
-            {children}
-          </main>
-          <Footer />
-        </ClientProviders>
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   );

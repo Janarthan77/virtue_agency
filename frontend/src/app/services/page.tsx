@@ -95,21 +95,20 @@ function ServiceCard({
   return (
     <motion.div
       variants={fadeUp}
-      whileHover={{ scale: 1.02 }}
+      whileHover={{ y: -4 }}
       style={{
         position: 'relative',
         background: '#1E293B',
         borderRadius: 20,
         border: '1px solid rgba(255,255,255,0.07)',
-        padding: '2rem',
         display: 'flex',
         flexDirection: 'column',
         gap: '1rem',
         overflow: 'hidden',
-        transition: 'border-color 0.3s, box-shadow 0.3s',
+        transition: 'border-color 0.3s, box-shadow 0.3s, transform 0.3s',
         cursor: 'default',
       }}
-      className="services-card group"
+      className="services-card group p-6 sm:p-8 h-full"
     >
       {/* top gradient accent line */}
       <span
@@ -219,25 +218,25 @@ function ProcessCard({ step, index }: { step: (typeof PROCESS_STEPS)[0]; index: 
   return (
     <motion.div
       variants={fadeUp}
+      whileHover={{ y: -4 }}
       style={{
-        flex: 1,
-        minWidth: 0,
         background: 'rgba(15,23,42,0.6)',
         border: '1px solid rgba(255,255,255,0.07)',
         borderRadius: 20,
-        padding: '2rem 1.5rem',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         textAlign: 'center',
-        gap: '1rem',
+        gap: '1.25rem',
+        transition: 'border-color 0.3s, box-shadow 0.3s, transform 0.3s',
       }}
+      className="p-6 sm:p-8 w-full h-full hover:border-white/20 hover:shadow-[0_16px_36px_-12px_rgba(0,0,0,0.5)]"
     >
       {/* gradient circle */}
       <div
         style={{
-          width: 60,
-          height: 60,
+          width: 64,
+          height: 64,
           borderRadius: '50%',
           background: 'linear-gradient(135deg, #FFFFFF, #CBD5E1)',
           display: 'flex',
@@ -255,10 +254,10 @@ function ProcessCard({ step, index }: { step: (typeof PROCESS_STEPS)[0]; index: 
       </div>
 
       <div>
-        <h4 style={{ fontSize: 17, fontWeight: 800, color: '#fff', marginBottom: 8 }}>
+        <h4 style={{ fontSize: 18, fontWeight: 800, color: '#fff', marginBottom: 10 }}>
           {step.title}
         </h4>
-        <p style={{ fontSize: 14, color: '#94a3b8', lineHeight: 1.65 }}>{step.desc}</p>
+        <p style={{ fontSize: 14, color: '#94a3b8', lineHeight: 1.7 }}>{step.desc}</p>
       </div>
     </motion.div>
   )
@@ -272,14 +271,7 @@ export default function ServicesPage() {
 
       {/* ── HERO ─────────────────────────────────────────────────────────────── */}
       <section
-        style={{
-          position: 'relative',
-          background: '#0F172A',
-          paddingTop: '7rem',
-          paddingBottom: '5rem',
-          textAlign: 'center',
-          overflow: 'hidden',
-        }}
+        className="relative bg-[#0F172A] pt-28 md:pt-36 pb-16 md:pb-24 text-center overflow-hidden"
       >
         {/* glow blobs */}
         <div
@@ -341,12 +333,7 @@ export default function ServicesPage() {
             {/* stat row */}
             <motion.div
               variants={fadeUp}
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                flexWrap: 'wrap',
-                gap: '2rem 4rem',
-              }}
+              className="flex justify-center flex-wrap gap-8 sm:gap-12 md:gap-16"
             >
               {STATS.map((s) => (
                 <div key={s.label} style={{ textAlign: 'center' }}>
@@ -374,7 +361,7 @@ export default function ServicesPage() {
       </section>
 
       {/* ── SERVICES GRID ────────────────────────────────────────────────────── */}
-      <section style={{ background: '#0F172A', padding: '5rem 1.5rem' }}>
+      <section className="bg-[#0F172A] py-16 md:py-24 px-4 sm:px-6 md:px-12">
         <div style={{ maxWidth: 1280, margin: '0 auto' }}>
 
           <motion.div
@@ -382,11 +369,7 @@ export default function ServicesPage() {
             whileInView="show"
             viewport={{ once: true, margin: '-80px' }}
             variants={stagger}
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-              gap: '1.5rem',
-            }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
           >
             {SERVICES.map((svc, i) => (
               <ServiceCard
@@ -402,7 +385,7 @@ export default function ServicesPage() {
       </section>
 
       {/* ── PROCESS ──────────────────────────────────────────────────────────── */}
-      <section style={{ background: '#1E293B', padding: '6rem 1.5rem' }}>
+      <section className="bg-[#1E293B] py-16 md:py-24 px-4 sm:px-6 md:px-12">
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
 
           {/* header */}
@@ -411,7 +394,7 @@ export default function ServicesPage() {
             whileInView="show"
             viewport={{ once: true }}
             variants={stagger}
-            style={{ textAlign: 'center', marginBottom: '4rem' }}
+            className="text-center mb-12 md:mb-16"
           >
             <motion.div variants={fadeUp}>
               <GoldEyebrow text="Our Approach" />
@@ -443,11 +426,7 @@ export default function ServicesPage() {
             whileInView="show"
             viewport={{ once: true, margin: '-60px' }}
             variants={stagger}
-            style={{
-              display: 'flex',
-              gap: '1.25rem',
-              flexWrap: 'wrap',
-            }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
           >
             {PROCESS_STEPS.map((step, i) => (
               <ProcessCard key={step.num} step={step} index={i} />
@@ -459,13 +438,7 @@ export default function ServicesPage() {
 
       {/* ── CTA STRIP ────────────────────────────────────────────────────────── */}
       <section
-        style={{
-          background: '#0F172A',
-          padding: '6rem 1.5rem',
-          textAlign: 'center',
-          position: 'relative',
-          overflow: 'hidden',
-        }}
+        className="bg-[#0F172A] py-16 md:py-24 px-4 sm:px-6 text-center relative overflow-hidden"
       >
         {/* glow */}
         <div
