@@ -32,6 +32,26 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
+// Root endpoint
+app.get("/", (req: Request, res: Response) => {
+  res.json({
+    status: "ok",
+    service: "Virtue IN Agency Backend API",
+    message: "Server is up and running! 🚀",
+    version: "1.0.0",
+    endpoints: {
+      health: "/api/health",
+      projects: "/api/projects",
+      gallery: "/api/gallery",
+      enquiries: "/api/enquiries",
+      sendEmail: "/api/send-email",
+      stats: "/api/stats",
+      upload: "/api/upload",
+    },
+    timestamp: new Date().toISOString(),
+  });
+});
+
 // Health check endpoint
 app.get("/api/health", (req: Request, res: Response) => {
   res.json({
@@ -50,6 +70,15 @@ app.use("/api/enquiries", enquiriesRoutes);
 app.use("/api/send-enquiry", enquiriesRoutes); // Aliased for website form
 app.use("/api/send-email", emailRoutes);
 app.use("/api/stats", statsRoutes);
+
+// 404 Catch-All Handler
+app.use((req: Request, res: Response) => {
+  res.status(404).json({
+    success: false,
+    error: `Route not found: ${req.method} ${req.originalUrl}`,
+    availableEndpoints: ["/", "/api/health", "/api/projects", "/api/gallery", "/api/enquiries", "/api/stats", "/api/upload"],
+  });
+});
 
 // Global Error Handler
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
