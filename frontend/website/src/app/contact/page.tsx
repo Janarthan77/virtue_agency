@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MapPin, Phone, Mail, Clock, Info, ExternalLink, ArrowRight, Send, CheckCircle2, AlertCircle, Loader2, Sparkles, RefreshCw } from "lucide-react";
-import { submitEnquiry, EnquiryInput } from "@/lib/api";
+import { submitEnquiry, fetchLiveSettings, EnquiryInput, CompanySettings } from "@/lib/api";
 
 /* ─── Reveal helper ─────────────────────────────────────── */
 function Reveal({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
@@ -46,6 +46,24 @@ export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successInfo, setSuccessInfo] = useState<{ id?: string; email?: string } | null>(null);
+
+  // Dynamic live company settings
+  const [settings, setSettings] = useState<CompanySettings>({
+    phone: "+91 74010 30000",
+    email: "plan@virtuein.agency",
+    address_line1: "28, Judge Jambulingam Road,",
+    address_line2: "Mylapore, Chennai – 600 004",
+    city_state_pin: "Tamil Nadu, India",
+    working_hours_mon_sat: "Monday – Saturday: 9:00 AM – 7:00 PM IST",
+    working_hours_sun: "Sunday: By Appointment",
+    map_embed_url: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3886.852445300305!2d80.2642874148231!3d13.044439090807693!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a52662c14041b31%3A0xc3b5e40882e3bc01!2sJudge%20Jambulingam%20Rd%2C%20Dr%20Radhakrishnan%20Salai%2C%20Mylapore%2C%20Chennai%2C%20Tamil%20Nadu%20600004!5e0!3m2!1sen!2sin!4v1682156434444!5m2!1sen!2sin",
+  });
+
+  useEffect(() => {
+    fetchLiveSettings().then((data) => {
+      if (data) setSettings((prev) => ({ ...prev, ...data }));
+    });
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -110,26 +128,36 @@ export default function Contact() {
         </div>
       </div>
 
-      {/* ══ INFO CARDS ══════════════════════════════════════ */}
+      {/* ══ INFO CARDS (DYNAMIC FROM BACKEND / ADMIN CMS) ════ */}
       <div className="container mx-auto px-6 max-w-7xl mb-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {[
             {
               icon: MapPin,
               label: "Office Address",
-              lines: ["28, Judge Jambulingam Road,", "Mylapore, Chennai – 600 004", "Tamil Nadu, India"],
+              lines: [
+                settings.address_line1 || "28, Judge Jambulingam Road,",
+                settings.address_line2 || "Mylapore, Chennai – 600 004",
+                settings.city_state_pin || "Tamil Nadu, India",
+              ],
               color: "#FFFFFF",
             },
             {
               icon: Phone,
               label: "Call & Email",
-              lines: ["+91 74010 30000", "plan@virtuein.agency"],
+              lines: [
+                settings.phone || "+91 74010 30000",
+                settings.email || "plan@virtuein.agency",
+              ],
               color: "#FFB800",
             },
             {
               icon: Clock,
               label: "Working Hours",
-              lines: ["Monday – Saturday", "9:00 AM – 7:00 PM IST", "Sunday: By Appointment"],
+              lines: [
+                settings.working_hours_mon_sat || "Monday – Saturday: 9:00 AM – 7:00 PM IST",
+                settings.working_hours_sun || "Sunday: By Appointment",
+              ],
               color: "#CBD5E1",
             },
           ].map((item, i) => {
@@ -173,7 +201,7 @@ export default function Contact() {
                 <div className="px-5 py-4 border-b border-white/[0.07] flex items-center justify-between">
                   <div>
                     <p className="text-[10px] font-black tracking-[0.18em] text-[#FFFFFF] uppercase mb-0.5">Find Us On Map</p>
-                    <p className="text-gray-400 text-xs">Virtue IN Agency, Mylapore</p>
+                    <p className="text-gray-400 text-xs">{settings.company_name || "Virtue IN Agency"}, Mylapore</p>
                   </div>
                   <a
                     href="https://maps.google.com"
@@ -186,7 +214,7 @@ export default function Contact() {
                 </div>
                 <div className="h-56 w-full">
                   <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3886.852445300305!2d80.2642874148231!3d13.044439090807693!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a52662c14041b31%3A0xc3b5e40882e3bc01!2sJudge%20Jambulingam%20Rd%2C%20Dr%20Radhakrishnan%20Salai%2C%20Mylapore%2C%20Chennai%2C%20Tamil%20Nadu%20600004!5e0!3m2!1sen!2sin!4v1682156434444!5m2!1sen!2sin"
+                    src={settings.map_embed_url || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3886.852445300305!2d80.2642874148231!3d13.044439090807693!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a52662c14041b31%3A0xc3b5e40882e3bc01!2sJudge%20Jambulingam%20Rd%2C%20Dr%20Radhakrishnan%20Salai%2C%20Mylapore%2C%20Chennai%2C%20Tamil%20Nadu%20600004!5e0!3m2!1sen!2sin!4v1682156434444!5m2!1sen!2sin"}
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}
@@ -203,8 +231,8 @@ export default function Contact() {
                 <p className="text-[10px] font-black tracking-[0.18em] text-[#FFB800] uppercase mb-6">Quick Contact</p>
                 <div className="space-y-5">
                   {[
-                    { Icon: Phone, label: "Call Us", value: "+91 74010 30000", color: "#FFFFFF" },
-                    { Icon: Mail, label: "Email Us", value: "plan@virtuein.agency", color: "#FFB800" },
+                    { Icon: Phone, label: "Call Us", value: settings.phone || "+91 74010 30000", color: "#FFFFFF" },
+                    { Icon: Mail, label: "Email Us", value: settings.email || "plan@virtuein.agency", color: "#FFB800" },
                   ].map(({ Icon, label, value, color }, i) => (
                     <div key={i} className="flex items-center gap-4">
                       <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
@@ -238,301 +266,240 @@ export default function Contact() {
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95 }}
                     transition={{ duration: 0.4 }}
-                    className="flex flex-col items-center justify-center py-12 text-center"
+                    className="py-12 flex flex-col items-center text-center gap-6"
                   >
-                    <div className="w-20 h-20 rounded-full flex items-center justify-center mb-6 relative"
-                      style={{ background: "linear-gradient(135deg, rgba(255,184,0,0.2), rgba(255,255,255,0.05))", border: "1px solid rgba(255,184,0,0.4)" }}>
-                      <CheckCircle2 size={40} className="text-[#FFB800]" />
+                    <div className="relative">
+                      <div className="w-24 h-24 rounded-full bg-[#FFB800]/10 border border-[#FFB800]/30 flex items-center justify-center">
+                        <CheckCircle2 size={48} className="text-[#FFB800]" />
+                      </div>
+                      <span className="absolute -top-1 -right-1 flex h-4 w-4">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FFB800] opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-4 w-4 bg-[#FFB800]"></span>
+                      </span>
                     </div>
 
-                    <span className="px-3.5 py-1 rounded-full text-xs font-black uppercase tracking-widest bg-[#FFB800]/10 text-[#FFB800] border border-[#FFB800]/30 mb-3">
-                      Enquiry Logged &amp; Verified
-                    </span>
-
-                    <h3 className="text-3xl font-black text-white mb-3">
-                      Thank You, {formData.name || "Client"}!
-                    </h3>
-
-                    <p className="text-gray-300 max-w-md text-sm leading-relaxed mb-6">
-                      Your event enquiry has been routed directly to our lead producers. An automated confirmation summary has been dispatched to <strong className="text-white">{successInfo?.email}</strong> via Resend.
-                    </p>
-
-                    <div className="w-full max-w-md bg-[#0F172A] border border-white/[0.08] rounded-xl p-4 mb-8 text-left text-xs space-y-2">
-                      <div className="flex justify-between text-gray-400">
-                        <span>Event Type:</span>
-                        <span className="text-white font-bold">{formData.event_type || "N/A"}</span>
+                    <div className="max-w-md">
+                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold mb-3">
+                        <Sparkles size={13} /> Enquiry Received &amp; Logged in Admin
                       </div>
-                      <div className="flex justify-between text-gray-400">
-                        <span>Company:</span>
-                        <span className="text-white font-bold">{formData.company || "N/A"}</span>
-                      </div>
-                      <div className="flex justify-between text-gray-400">
-                        <span>Location:</span>
-                        <span className="text-white font-bold">{formData.venue || "N/A"}</span>
-                      </div>
-                      {formData.budget && (
-                        <div className="flex justify-between text-gray-400">
-                          <span>Budget:</span>
-                          <span className="text-[#FFB800] font-bold">{formData.budget}</span>
-                        </div>
+                      <h3 className="text-2xl md:text-3xl font-black text-white mb-3">
+                        Thank You, {formData.name || "Valued Client"}!
+                      </h3>
+                      <p className="text-gray-300 text-sm leading-relaxed mb-2">
+                        Your event brief for <span className="text-[#FFB800] font-semibold">{formData.event_type || "your project"}</span> has been transmitted directly to our executive production team.
+                      </p>
+                      {successInfo?.email && (
+                        <p className="text-xs text-gray-500">
+                          A confirmation reference will be sent to <span className="text-gray-300 font-mono">{successInfo.email}</span>.
+                        </p>
                       )}
                     </div>
 
-                    <div className="flex flex-col sm:flex-row gap-3 w-full max-w-md">
-                      <button
-                        type="button"
-                        onClick={handleReset}
-                        className="flex-1 flex items-center justify-center gap-2 py-3 px-5 rounded-xl border border-white/15 text-gray-300 font-bold text-xs hover:bg-white/5 transition-colors"
-                      >
-                        <RefreshCw size={14} /> Submit Another Enquiry
-                      </button>
-                      <a
-                        href="tel:+917401030000"
-                        className="flex-1 flex items-center justify-center gap-2 py-3 px-5 rounded-xl bg-[#FFB800] text-gray-950 font-black text-xs hover:bg-[#FFC72C] transition-all shadow-lg"
-                      >
-                        <Phone size={14} /> Call +91 74010 30000
-                      </a>
+                    <div className="w-full bg-[#0F172A] border border-white/[0.08] rounded-xl p-4 text-left text-xs space-y-1.5 max-w-md">
+                      <p className="text-gray-500 font-bold uppercase tracking-wider text-[10px]">Next Steps:</p>
+                      <p className="text-gray-300">1. Production Producer reviews venue &amp; requirements.</p>
+                      <p className="text-gray-300">2. Custom proposal &amp; initial quote prepared within 24 hours.</p>
+                      <p className="text-gray-300">3. Strategy call scheduled at your convenience.</p>
                     </div>
+
+                    <button
+                      onClick={handleReset}
+                      className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/[0.07] hover:bg-white/[0.12] border border-white/[0.1] text-gray-300 hover:text-white text-xs font-bold transition-all"
+                    >
+                      <RefreshCw size={13} /> Submit Another Enquiry
+                    </button>
                   </motion.div>
                 ) : (
-                  <motion.div
-                    key="form"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
-                    <div className="flex items-center gap-2 mb-2">
-                      <Sparkles size={16} className="text-[#FFB800]" />
-                      <span className="text-xs font-bold text-[#FFB800] uppercase tracking-widest">Tailored Proposals</span>
+                  <form onSubmit={handleSubmit} className="space-y-6">
+
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="w-2 h-2 rounded-full bg-[#FFB800]" />
+                        <h2 className="text-2xl font-black text-white">Event Enquiry Form</h2>
+                      </div>
+                      <p className="text-gray-400 text-xs">Fill out the details below to receive a personalized proposal.</p>
                     </div>
 
-                    <h2 className="text-2xl md:text-3xl font-black text-white mb-1">
-                      Free Event Budget Consultation
-                    </h2>
-                    <p className="text-gray-400 text-sm mb-8">Fields marked <span className="text-[#FFB800]">*</span> are required.</p>
-
                     {errorMessage && (
-                      <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/30 flex items-start gap-3 text-red-400 text-sm">
-                        <AlertCircle size={18} className="shrink-0 mt-0.5" />
-                        <div>
-                          <p className="font-bold">Submission Error</p>
-                          <p className="text-xs text-red-300/80">{errorMessage}</p>
-                        </div>
+                      <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs flex items-center gap-3">
+                        <AlertCircle size={18} className="shrink-0" />
+                        <span>{errorMessage}</span>
                       </div>
                     )}
 
-                    <form onSubmit={handleSubmit} className="space-y-6">
-
-                      {/* Row 1 */}
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                          <label className={labelCls}>Your Name <span className="text-[#FFB800]">*</span></label>
-                          <input
-                            type="text"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            placeholder="John Doe"
-                            className={inputCls}
-                            required
-                            disabled={isSubmitting}
-                          />
-                        </div>
-                        <div>
-                          <label className={labelCls}>Official Email <span className="text-[#FFB800]">*</span></label>
-                          <input
-                            type="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            placeholder="example@domain.com"
-                            className={inputCls}
-                            required
-                            disabled={isSubmitting}
-                          />
-                        </div>
-                        <div>
-                          <label className={labelCls}>Phone Number <span className="text-[#FFB800]">*</span></label>
-                          <div className="flex">
-                            <select
-                              name="country_code"
-                              value={formData.country_code}
-                              onChange={handleChange}
-                              disabled={isSubmitting}
-                              className="bg-[#0F172A] border border-white/[0.09] border-r-0 rounded-l-xl px-3 py-3.5 text-gray-300 text-sm focus:outline-none"
-                            >
-                              <option value="+91">+91</option>
-                              <option value="+1">+1</option>
-                              <option value="+44">+44</option>
-                              <option value="+971">+971</option>
-                              <option value="+65">+65</option>
-                            </select>
-                            <input
-                              type="tel"
-                              name="phone"
-                              value={formData.phone}
-                              onChange={handleChange}
-                              placeholder="74010 30000"
-                              className={`${inputCls} rounded-l-none`}
-                              required
-                              disabled={isSubmitting}
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Row 2 */}
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                          <label className={labelCls}>Company Name <span className="text-[#FFB800]">*</span></label>
-                          <input
-                            type="text"
-                            name="company"
-                            value={formData.company}
-                            onChange={handleChange}
-                            placeholder="Acme Corp"
-                            className={inputCls}
-                            required
-                            disabled={isSubmitting}
-                          />
-                        </div>
-                        <div>
-                          <label className={labelCls}>Location / Venue <span className="text-[#FFB800]">*</span></label>
-                          <input
-                            type="text"
-                            name="venue"
-                            value={formData.venue}
-                            onChange={handleChange}
-                            placeholder="Chennai / Bangalore"
-                            className={inputCls}
-                            required
-                            disabled={isSubmitting}
-                          />
-                        </div>
-                        <div>
-                          <label className={labelCls}>Type of Event <span className="text-[#FFB800]">*</span></label>
-                          <select
-                            name="event_type"
-                            value={formData.event_type}
-                            onChange={handleChange}
-                            className={inputCls}
-                            required
-                            disabled={isSubmitting}
-                          >
-                            <option value="" disabled>Select event type...</option>
-                            <option value="Corporate Annual Summit">Corporate Annual Summit</option>
-                            <option value="Product Launch & Gala">Product Launch &amp; Gala</option>
-                            <option value="MICE Conference">MICE Conference</option>
-                            <option value="Entertainment & Concert">Entertainment &amp; Concert</option>
-                            <option value="Destination Luxury Event">Destination Luxury Event</option>
-                            <option value="Awards & Fashion Night">Awards &amp; Fashion Night</option>
-                          </select>
-                        </div>
-                      </div>
-
-                      {/* Info banner */}
-                      <div className="flex gap-3 bg-[#FFFFFF]/5 border border-[#FFFFFF]/10 rounded-xl p-4 text-sm text-gray-300">
-                        <Info size={16} className="text-[#FFB800] shrink-0 mt-0.5" />
-                        <p>The more details you share, the more curated and personalized we can make the proposal.</p>
-                      </div>
-
-                      {/* Divider */}
-                      <div className="relative py-2">
-                        <div className="absolute inset-0 flex items-center">
-                          <div className="w-full border-t border-white/[0.07]" />
-                        </div>
-                        <div className="relative flex justify-center">
-                          <span className="bg-[#1E293B] px-4 text-[10px] font-black text-gray-500 uppercase tracking-widest">
-                            Optional Details
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Row 3 — Optional */}
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                          <label className={labelCls}>Team Size</label>
-                          <select
-                            name="team_size"
-                            value={formData.team_size}
-                            onChange={handleChange}
-                            className={inputCls}
-                            disabled={isSubmitting}
-                          >
-                            <option value="">Select size...</option>
-                            <option value="Up to 50">Up to 50</option>
-                            <option value="51 – 100">51 – 100</option>
-                            <option value="101 – 200">101 – 200</option>
-                            <option value="200+">200+</option>
-                          </select>
-                        </div>
-                        <div>
-                          <label className={labelCls}>Budget</label>
-                          <select
-                            name="budget"
-                            value={formData.budget}
-                            onChange={handleChange}
-                            className={inputCls}
-                            disabled={isSubmitting}
-                          >
-                            <option value="">Select budget...</option>
-                            <option value="₹50K – ₹2L">₹50K – ₹2L</option>
-                            <option value="₹2L – ₹5L">₹2L – ₹5L</option>
-                            <option value="₹5L – ₹10L">₹5L – ₹10L</option>
-                            <option value="₹10L+">₹10L+</option>
-                          </select>
-                        </div>
-                        <div>
-                          <label className={labelCls}>Preferred Date</label>
-                          <input
-                            type="date"
-                            name="preferred_date"
-                            value={formData.preferred_date}
-                            onChange={handleChange}
-                            className={inputCls}
-                            disabled={isSubmitting}
-                          />
-                        </div>
-                      </div>
-
-                      {/* How did you hear */}
+                    {/* Row 1: Name & Email */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                       <div>
-                        <label className={labelCls}>How did you hear about us?</label>
+                        <label className={labelCls}>Your Name *</label>
                         <input
                           type="text"
-                          name="source"
-                          value={formData.source}
+                          name="name"
+                          value={formData.name}
                           onChange={handleChange}
-                          placeholder="Google / LinkedIn / Referral / Word of mouth"
+                          placeholder="e.g. Anand Kumar"
+                          required
                           className={inputCls}
-                          disabled={isSubmitting}
                         />
                       </div>
+                      <div>
+                        <label className={labelCls}>Work Email *</label>
+                        <input
+                          type="email"
+                          name="email"
+                          value={formData.email}
+                          onChange={handleChange}
+                          placeholder="anand@company.com"
+                          required
+                          className={inputCls}
+                        />
+                      </div>
+                    </div>
 
-                      {/* Submit */}
-                      <button
-                        type="submit"
-                        disabled={isSubmitting}
-                        className="w-full flex items-center justify-center gap-3 py-4 rounded-xl text-gray-900 font-black text-base tracking-wide transition-all duration-300 hover:scale-[1.01] hover:shadow-[0_16px_40px_-10px_rgba(255,255,255,0.4)] disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
-                        style={{ background: "linear-gradient(135deg,#FFFFFF,#E2E8F0)" }}
-                      >
-                        {isSubmitting ? (
-                          <>
-                            <Loader2 size={18} className="animate-spin text-gray-900" />
-                            Connecting to Virtue IN Server...
-                          </>
-                        ) : (
-                          <>
-                            Get Free Consultation <ArrowRight size={18} />
-                          </>
-                        )}
-                      </button>
+                    {/* Row 2: Phone & Company */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                      <div>
+                        <label className={labelCls}>Contact Phone *</label>
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            name="country_code"
+                            value={formData.country_code}
+                            onChange={handleChange}
+                            placeholder="+91"
+                            className="w-20 bg-[#0F172A] border border-white/[0.09] rounded-xl px-3 py-3.5 text-gray-200 text-sm font-medium text-center focus:outline-none focus:ring-2 focus:ring-[#FFB800]/50"
+                          />
+                          <input
+                            type="tel"
+                            name="phone"
+                            value={formData.phone}
+                            onChange={handleChange}
+                            placeholder="98401 23456"
+                            required
+                            className={inputCls}
+                          />
+                        </div>
+                      </div>
 
-                      <p className="text-center text-[11px] text-gray-500 mt-2">
-                        By submitting, you agree to receive email confirmation and proposal communication from Virtue IN Agency.
-                      </p>
-                    </form>
-                  </motion.div>
+                      <div>
+                        <label className={labelCls}>Company / Organization</label>
+                        <input
+                          type="text"
+                          name="company"
+                          value={formData.company}
+                          onChange={handleChange}
+                          placeholder="e.g. TVS Motor Company"
+                          className={inputCls}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Row 3: Event Type & Preferred Venue */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                      <div>
+                        <label className={labelCls}>Event Category *</label>
+                        <select
+                          name="event_type"
+                          value={formData.event_type}
+                          onChange={handleChange}
+                          required
+                          className={inputCls}
+                        >
+                          <option value="">Select Category</option>
+                          <option value="Corporate Annual Summit">Corporate Annual Summit</option>
+                          <option value="Product Launch & Gala">Product Launch &amp; Gala</option>
+                          <option value="MICE Conference">MICE &amp; Conference</option>
+                          <option value="Exhibition & Stall Design">Exhibition &amp; Stall Design</option>
+                          <option value="Automotive & Brand Experience">Automotive &amp; Brand Experience</option>
+                          <option value="Entertainment & Concert">Entertainment &amp; Concert</option>
+                          <option value="Other Bespoke Production">Other Bespoke Production</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label className={labelCls}>Preferred City / Venue</label>
+                        <input
+                          type="text"
+                          name="venue"
+                          value={formData.venue}
+                          onChange={handleChange}
+                          placeholder="e.g. Chennai, ITC Grand Chola"
+                          className={inputCls}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Row 4: Team Size & Budget */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                      <div>
+                        <label className={labelCls}>Expected Guests</label>
+                        <select
+                          name="team_size"
+                          value={formData.team_size}
+                          onChange={handleChange}
+                          className={inputCls}
+                        >
+                          <option value="">Estimated Attendance</option>
+                          <option value="50 – 100 Guests">50 – 100 Guests</option>
+                          <option value="101 – 300 Guests">101 – 300 Guests</option>
+                          <option value="301 – 600 Guests">301 – 600 Guests</option>
+                          <option value="600+ Large Production">600+ Large Production</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label className={labelCls}>Approximate Budget Range</label>
+                        <select
+                          name="budget"
+                          value={formData.budget}
+                          onChange={handleChange}
+                          className={inputCls}
+                        >
+                          <option value="">Select Range</option>
+                          <option value="₹3L – ₹5L">₹3L – ₹5L</option>
+                          <option value="₹5L – ₹10L">₹5L – ₹10L</option>
+                          <option value="₹10L – ₹25L">₹10L – ₹25L</option>
+                          <option value="₹25L+ Signature Scale">₹25L+ Signature Scale</option>
+                          <option value="Flexible / To be planned">Flexible / To be planned</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    {/* Row 5: Preferred Date */}
+                    <div>
+                      <label className={labelCls}>Target Event Date (or Month)</label>
+                      <input
+                        type="date"
+                        name="preferred_date"
+                        value={formData.preferred_date}
+                        onChange={handleChange}
+                        className={inputCls}
+                      />
+                    </div>
+
+                    {/* Submit Button */}
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full group/btn relative overflow-hidden bg-gradient-to-r from-[#FFFFFF] to-[#E2E8F0] hover:from-white hover:to-white text-[#0F172A] font-black text-sm uppercase tracking-[0.2em] py-4 rounded-xl shadow-[0_0_30px_rgba(255,255,255,0.3)] hover:shadow-[0_0_45px_rgba(255,255,255,0.5)] transition-all duration-300 flex items-center justify-center gap-3 cursor-pointer disabled:opacity-50"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 size={18} className="animate-spin text-[#0F172A]" />
+                          <span>Dispatching Enquiry...</span>
+                        </>
+                      ) : (
+                        <>
+                          <span>Submit Event Brief</span>
+                          <ArrowRight size={18} className="group-hover/btn:translate-x-1 transition-transform" />
+                        </>
+                      )}
+                    </button>
+
+                    <p className="text-[11px] text-gray-500 text-center">
+                      🔒 Your details are kept strictly confidential. We usually respond within 24 hours.
+                    </p>
+
+                  </form>
                 )}
               </AnimatePresence>
             </div>

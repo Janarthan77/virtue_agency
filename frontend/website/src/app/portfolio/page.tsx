@@ -17,12 +17,15 @@ interface PortfolioProject {
   tag: string;
   gallery: string[];
   location: string;
-  time: string;
-  date: string;
-  month: string;
+  time?: string;
+  date?: string;
+  month?: string;
   description: string;
   highlights: string[];
+  sort_order?: number;
 }
+
+
 
 const portfolioProjects: PortfolioProject[] = [
   {
@@ -486,7 +489,10 @@ export default function Portfolio() {
   useEffect(() => {
     fetchLiveProjects().then((liveList) => {
       if (liveList && liveList.length > 0) {
-        const mapped = liveList.map((p) => ({
+        const sorted = [...liveList].sort(
+          (a, b) => (Number(a.sort_order) || Number(a.id) || 1) - (Number(b.sort_order) || Number(b.id) || 1)
+        );
+        const mapped = sorted.map((p) => ({
           id: typeof p.id === "number" ? p.id : parseInt(String(p.id)) || 1,
           title: p.title,
           year: p.year || "2026",
@@ -501,11 +507,13 @@ export default function Portfolio() {
           month: p.month,
           description: p.description || "",
           highlights: p.highlights || [],
+          sort_order: p.sort_order,
         }));
         setAllProjects(mapped);
       }
     });
   }, []);
+
 
   const filtered =
     filter === "All"

@@ -11,16 +11,18 @@ export interface EventItem {
   title: string;
   category: string;
   subtitle: string;
-  date: string;
-  month: string;
-  time: string;
+  date?: string;
+  month?: string;
+  time?: string;
   location: string;
   image: string;
   gallery?: string[];
   description?: string;
   highlights?: string[];
   attendees?: string;
+  year?: string;
 }
+
 
 interface EventDetailsModalProps {
   event: EventItem | null;
@@ -226,34 +228,25 @@ export default function EventDetailsModal({ event, onClose }: EventDetailsModalP
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
                 <div className="p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-white/[0.03] border border-white/[0.06] flex items-center gap-2.5 sm:gap-3">
                   <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-[#FFB800]/10 text-[#FFB800] flex items-center justify-center shrink-0">
-                    <Calendar size={14} />
+                    <MapPin size={14} />
                   </div>
                   <div className="min-w-0">
-                    <p className="text-[9px] sm:text-[10px] text-gray-400 uppercase tracking-widest font-semibold">Date</p>
-                    <p className="text-white text-xs font-bold truncate">{event.date} {event.month} 2026</p>
+                    <p className="text-[9px] sm:text-[10px] text-gray-400 uppercase tracking-widest font-semibold">Venue Location</p>
+                    <p className="text-white text-xs font-bold truncate">{event.location || "Chennai, India"}</p>
                   </div>
                 </div>
 
                 <div className="p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-white/[0.03] border border-white/[0.06] flex items-center gap-2.5 sm:gap-3">
                   <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-[#FFB800]/10 text-[#FFB800] flex items-center justify-center shrink-0">
-                    <Clock size={14} />
+                    <Sparkles size={14} />
                   </div>
                   <div className="min-w-0">
-                    <p className="text-[9px] sm:text-[10px] text-gray-400 uppercase tracking-widest font-semibold">Timings</p>
-                    <p className="text-white text-xs font-bold truncate">{event.time}</p>
-                  </div>
-                </div>
-
-                <div className="p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-white/[0.03] border border-white/[0.06] flex items-center gap-2.5 sm:gap-3 sm:col-span-2">
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-[#FFB800]/10 text-[#FFB800] flex items-center justify-center shrink-0">
-                    <MapPin size={14} />
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-[9px] sm:text-[10px] text-gray-400 uppercase tracking-widest font-semibold">Venue Location</p>
-                    <p className="text-white text-xs font-bold truncate">{event.location}</p>
+                    <p className="text-[9px] sm:text-[10px] text-gray-400 uppercase tracking-widest font-semibold">Production Type</p>
+                    <p className="text-white text-xs font-bold truncate">{event.category || "Corporate"}</p>
                   </div>
                 </div>
               </div>
+
 
               {/* Overview Section */}
               <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-white/[0.02] border border-white/[0.05]">

@@ -3,7 +3,8 @@
 import { useState, useTransition, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Clock, MapPin, Mic, Briefcase, Music, LayoutGrid, ArrowRight, Eye } from "lucide-react";
+import { Clock, MapPin, Mic, Briefcase, Music, LayoutGrid, ArrowRight, Eye, Sparkles } from "lucide-react";
+
 import EventDetailsModal, { EventItem } from "@/components/EventDetailsModal";
 import { fetchLiveProjects } from "@/lib/api";
 
@@ -318,10 +319,14 @@ export function ProjectsSection() {
   useEffect(() => {
     fetchLiveProjects().then((liveList) => {
       if (liveList && liveList.length > 0) {
-        setAllEvents(liveList as unknown as EventItem[]);
+        const sorted = [...liveList].sort(
+          (a, b) => (Number(a.sort_order) || Number(a.id) || 1) - (Number(b.sort_order) || Number(b.id) || 1)
+        );
+        setAllEvents(sorted as unknown as EventItem[]);
       }
     });
   }, []);
+
 
   const handleTabChange = (tabId: string) => {
     startTransition(() => {
@@ -429,13 +434,13 @@ export function ProjectsSection() {
                     </span>
                   </div>
 
-                  {/* Date badge */}
+                  {/* Showcase Tag Badge */}
                   <div
-                    className="absolute top-4 left-4 w-14 h-14 rounded-xl flex flex-col items-center justify-center shadow-lg"
-                    style={{ background: "linear-gradient(135deg, #FFFFFF, #E2E8F0)" }}
+                    className="absolute top-4 left-4 px-3 py-1.5 rounded-xl flex items-center gap-1.5 shadow-lg backdrop-blur-md"
+                    style={{ background: "rgba(15,23,42,0.85)", border: "1px solid rgba(255,255,255,0.12)" }}
                   >
-                    <span className="text-gray-900 text-xl font-black leading-none">{event.date}</span>
-                    <span className="text-gray-600 text-[9px] font-black tracking-widest uppercase mt-0.5">{event.month}</span>
+                    <Sparkles size={13} className="text-[#FFB800]" />
+                    <span className="text-white text-[10px] font-black uppercase tracking-wider">{event.year || "2026"}</span>
                   </div>
 
                   {/* Category tag */}
@@ -466,17 +471,12 @@ export function ProjectsSection() {
                   <div className="space-y-2.5 mb-6 flex-1">
                     <div className="flex items-center gap-2.5 text-sm text-gray-400">
                       <div className="w-7 h-7 rounded-lg bg-[#0F172A] flex items-center justify-center shrink-0">
-                        <Clock size={13} className="text-[#FFB800]" />
-                      </div>
-                      {event.time}
-                    </div>
-                    <div className="flex items-center gap-2.5 text-sm text-gray-400">
-                      <div className="w-7 h-7 rounded-lg bg-[#0F172A] flex items-center justify-center shrink-0">
                         <MapPin size={13} className="text-[#FFB800]" />
                       </div>
-                      {event.location}
+                      <span className="truncate">{event.location || "Chennai, India"}</span>
                     </div>
                   </div>
+
 
                   {/* View Details Button triggers popup modal */}
                   <button

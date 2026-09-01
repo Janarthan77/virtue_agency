@@ -30,10 +30,9 @@ export default function ProjectFormModal({
   const [title, setTitle] = useState("");
   const [subtitle, setSubtitle] = useState("");
   const [category, setCategory] = useState("Corporate");
-  const [date, setDate] = useState("22");
-  const [month, setMonth] = useState("AUG");
-  const [time, setTime] = useState("09:00am – 06:00pm");
   const [location, setLocation] = useState("");
+  const [year, setYear] = useState("2026");
+  const [sortOrder, setSortOrder] = useState<number>(1);
   const [description, setDescription] = useState("");
   const [highlights, setHighlights] = useState<string[]>([]);
   const [newHighlight, setNewHighlight] = useState("");
@@ -47,10 +46,9 @@ export default function ProjectFormModal({
       setTitle(project.title || "");
       setSubtitle(project.subtitle || "");
       setCategory(project.category || "Corporate");
-      setDate(project.date || "");
-      setMonth(project.month || "AUG");
-      setTime(project.time || "");
       setLocation(project.location || "");
+      setYear(project.year || "2026");
+      setSortOrder(project.sort_order !== undefined ? Number(project.sort_order) : 1);
       setDescription(project.description || "");
       setHighlights(project.highlights || []);
       setImage(project.image || "");
@@ -59,10 +57,9 @@ export default function ProjectFormModal({
       setTitle("");
       setSubtitle("");
       setCategory("Corporate");
-      setDate("15");
-      setMonth("AUG");
-      setTime("10:00am – 05:00pm");
       setLocation("Chennai, India");
+      setYear("2026");
+      setSortOrder(1);
       setDescription("");
       setHighlights(["Interactive Stage Setup", "VIP Hospitality Experience", "Live AV & Staging"]);
       setImage("");
@@ -70,6 +67,7 @@ export default function ProjectFormModal({
     }
     setErrorMessage(null);
   }, [project, isOpen]);
+
 
   if (!isOpen) return null;
 
@@ -99,19 +97,21 @@ export default function ProjectFormModal({
         title: title.trim(),
         subtitle: subtitle.trim(),
         category,
-        date: date.trim(),
-        month: month.trim().toUpperCase(),
-        time: time.trim(),
+        date: "",
+        month: "",
+        time: "",
         location: location.trim(),
         description: description.trim(),
         highlights,
         image,
         gallery: gallery.length > 0 ? gallery : [image],
         client: subtitle.trim() || title.trim(),
-        year: "2026",
+        year: year.trim() || "2026",
         tag: category.toUpperCase(),
         is_featured: true,
+        sort_order: Number(sortOrder) || 1,
       };
+
 
       await onSave(payload);
       onClose();
@@ -121,6 +121,7 @@ export default function ProjectFormModal({
       setIsSaving(false);
     }
   };
+
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/60 backdrop-blur-sm overflow-y-auto">
@@ -209,48 +210,9 @@ export default function ProjectFormModal({
             />
           </div>
 
-          {/* Row 3: Date, Month, Time, Venue Location */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-            <div>
-              <label className="text-xs font-semibold uppercase tracking-wider text-slate-700 block mb-1.5">
-                Day (Date)
-              </label>
-              <input
-                type="text"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                placeholder="e.g. 22"
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 font-medium focus:bg-white focus:outline-none"
-              />
-            </div>
-
-            <div>
-              <label className="text-xs font-semibold uppercase tracking-wider text-slate-700 block mb-1.5">
-                Month
-              </label>
-              <input
-                type="text"
-                value={month}
-                onChange={(e) => setMonth(e.target.value.toUpperCase())}
-                placeholder="e.g. AUG"
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 font-medium focus:bg-white focus:outline-none"
-              />
-            </div>
-
-            <div>
-              <label className="text-xs font-semibold uppercase tracking-wider text-slate-700 block mb-1.5">
-                Timings
-              </label>
-              <input
-                type="text"
-                value={time}
-                onChange={(e) => setTime(e.target.value)}
-                placeholder="e.g. 09:00am – 06:00pm"
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 font-medium focus:bg-white focus:outline-none"
-              />
-            </div>
-
-            <div>
+          {/* Row 3: Venue Location, Year & Display Order */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="md:col-span-2">
               <label className="text-xs font-semibold uppercase tracking-wider text-slate-700 block mb-1.5">
                 Venue Location
               </label>
@@ -259,10 +221,40 @@ export default function ProjectFormModal({
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 placeholder="e.g. TVS Emerald, Chennai"
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 font-medium focus:bg-white focus:outline-none"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20"
+              />
+            </div>
+
+            <div>
+              <label className="text-xs font-semibold uppercase tracking-wider text-slate-700 block mb-1.5">
+                Year
+              </label>
+              <input
+                type="text"
+                value={year}
+                onChange={(e) => setYear(e.target.value)}
+                placeholder="e.g. 2026"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20"
+              />
+            </div>
+
+            <div>
+              <label className="text-xs font-semibold uppercase tracking-wider text-slate-700 block mb-1.5">
+                Display Order #
+              </label>
+              <input
+                type="number"
+                min="1"
+                max="999"
+                value={sortOrder}
+                onChange={(e) => setSortOrder(parseInt(e.target.value) || 1)}
+                placeholder="1"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 font-bold focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20"
               />
             </div>
           </div>
+
+
 
           {/* Row 4: Event Overview Description */}
           <div>

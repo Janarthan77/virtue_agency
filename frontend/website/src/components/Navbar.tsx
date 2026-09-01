@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { fetchLiveSettings, CompanySettings } from "@/lib/api";
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -18,7 +19,18 @@ const navLinks = [
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [settings, setSettings] = useState<CompanySettings>({
+    phone: "+91 74010 30000",
+    email: "plan@virtuein.agency",
+  });
   const pathname = usePathname();
+
+  useEffect(() => {
+    fetchLiveSettings().then((data) => {
+      if (data) setSettings((prev) => ({ ...prev, ...data }));
+    });
+  }, []);
+
 
   // Close mobile menu on route change
   useEffect(() => {
@@ -175,18 +187,19 @@ export default function Navbar() {
                 PLAN YOUR EVENT
               </Link>
               <div className="flex justify-center gap-6 pt-2">
-                <a href="tel:+917401030000" className="text-gray-500 text-sm hover:text-white transition-colors">
-                  +91 74010 30000
+                <a href={`tel:${settings.phone || "+917401030000"}`} className="text-gray-400 text-sm hover:text-white transition-colors">
+                  {settings.phone || "+91 74010 30000"}
                 </a>
                 <span className="text-gray-700">·</span>
-                <a href="mailto:plan@virtuein.agency" className="text-gray-500 text-sm hover:text-white transition-colors">
-                  plan@virtuein.agency
+                <a href={`mailto:${settings.email || "plan@virtuein.agency"}`} className="text-gray-400 text-sm hover:text-white transition-colors">
+                  {settings.email || "plan@virtuein.agency"}
                 </a>
               </div>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
+
     </>
   );
 }

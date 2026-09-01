@@ -3,14 +3,66 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useInView } from "framer-motion";
-import { useRef } from "react";
-import { ArrowRight, Star, CalendarDays, Settings, Mic, ClipboardCheck, MapPin, Building, Palette, Music, Hammer, Store, Megaphone, Activity, Globe, PenTool, Radio } from "lucide-react";
+import { useRef, useState, useEffect } from "react";
+import {
+  ArrowRight,
+  Star,
+  CalendarDays,
+  Settings,
+  Mic,
+  ClipboardCheck,
+  MapPin,
+  Building,
+  Palette,
+  Music,
+  Hammer,
+  Store,
+  Megaphone,
+  Activity,
+  Globe,
+  PenTool,
+  Radio,
+  Sparkles,
+  Layers,
+  Camera,
+  Video,
+  Award,
+  Shield,
+  Zap,
+} from "lucide-react";
 import { HeroSlider } from "@/components/HeroSlider";
 import { AboutSection } from "@/components/AboutSection";
 import { ProjectsSection } from "@/components/ProjectsSection";
 import { GallerySection } from "@/components/GallerySection";
 import { VenuesSection } from "@/components/VenuesSection";
 import { FAQSection } from "@/components/FAQSection";
+import { fetchLiveServices } from "@/lib/api";
+
+const ICON_MAP: Record<string, any> = {
+  CalendarDays,
+  Settings,
+  Mic,
+  ClipboardCheck,
+  MapPin,
+  Building,
+  Palette,
+  Music,
+  Hammer,
+  Store,
+  Megaphone,
+  Activity,
+  Globe,
+  PenTool,
+  Radio,
+  Sparkles,
+  Layers,
+  Camera,
+  Video,
+  Award,
+  Shield,
+  Zap,
+};
+
 
 /* ─── Brand data ─────────────────────────────────────────────── */
 const row1Brands = [
@@ -376,9 +428,26 @@ const servicesData = [
   }
 ];
 
-/* ─── Services Section with GSAP & Slider ───────────────────────────────── */
+/* ─── Services Section with Dynamic API Data ───────────────────────────────── */
 function ServicesSection() {
-  const displayedServices = servicesData.slice(0, 6);
+  const [liveList, setLiveList] = useState<any[]>(servicesData);
+
+  useEffect(() => {
+    fetchLiveServices().then((data) => {
+      if (data && data.length > 0) {
+        const mapped = data.map((item, idx) => ({
+          num: item.num || (idx + 1 < 10 ? `0${idx + 1}` : `${idx + 1}`),
+          title: item.title,
+          desc: item.description,
+          icon: (item.icon && (ICON_MAP as any)[item.icon]) ? (ICON_MAP as any)[item.icon] : Sparkles,
+          image: item.image || servicesData[idx % servicesData.length]?.image || "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Southern%20HOG%20Rally/image-5.webp",
+        }));
+        setLiveList(mapped);
+      }
+    });
+  }, []);
+
+  const displayedServices = liveList.slice(0, 6);
 
   return (
     <section className="bg-[#0F172A] relative pt-32 pb-32">
@@ -415,7 +484,7 @@ function ServicesSection() {
           {/* Right Side: Scrolling Cards */}
           <div className="lg:w-2/3 flex flex-col gap-12 relative mt-12 lg:mt-0 z-20">
             {displayedServices.map((s, i) => {
-              const Icon = s.icon;
+              const Icon = s.icon || Sparkles;
               return (
                 <Link
                   key={i}
@@ -458,6 +527,7 @@ function ServicesSection() {
     </section>
   );
 }
+
 
 /* ─── Testimonials Section ─────────────────────────────────────── */
 function TestimonialsSection() {

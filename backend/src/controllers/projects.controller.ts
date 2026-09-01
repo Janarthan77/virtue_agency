@@ -5,6 +5,7 @@ import { supabase, ProjectRecord } from "../services/supabase.service.js";
 export const fallbackProjects: ProjectRecord[] = [
   {
     id: 1,
+    sort_order: 1,
     title: "Rotary Club of Madras West",
     category: "Corporate",
     subtitle: "President Installation 2026–27 @ ITC Grand Chola",
@@ -28,6 +29,7 @@ export const fallbackProjects: ProjectRecord[] = [
   },
   {
     id: 2,
+    sort_order: 2,
     title: "TVS Emerald – Home Debut",
     category: "Product Launch",
     subtitle: "Peninsula & Green Enclave Launch",
@@ -52,6 +54,7 @@ export const fallbackProjects: ProjectRecord[] = [
   },
   {
     id: 3,
+    sort_order: 3,
     title: "NeXHS Annual Foundation Day",
     category: "Corporate",
     subtitle: "Next Generation Hybrid Systems",
@@ -74,6 +77,7 @@ export const fallbackProjects: ProjectRecord[] = [
   },
   {
     id: 4,
+    sort_order: 4,
     title: "JLL – Day Outing",
     category: "Corporate",
     subtitle: "Jones Lang LaSalle",
@@ -97,6 +101,7 @@ export const fallbackProjects: ProjectRecord[] = [
   },
   {
     id: 5,
+    sort_order: 5,
     title: "Audi Chennai Conference Meeting",
     category: "Corporate",
     subtitle: "BNI B Region – Audi Chennai",
@@ -120,6 +125,7 @@ export const fallbackProjects: ProjectRecord[] = [
   },
   {
     id: 6,
+    sort_order: 6,
     title: "IIMM Conference – Spectrum 2024",
     category: "Corporate",
     subtitle: "Indian Institute of Material Management",
@@ -141,6 +147,7 @@ export const fallbackProjects: ProjectRecord[] = [
   },
   {
     id: 7,
+    sort_order: 7,
     title: "Radiant Raising Day 2023",
     category: "Corporate",
     subtitle: "Radiant Dental Care – Annual Day",
@@ -162,6 +169,7 @@ export const fallbackProjects: ProjectRecord[] = [
   },
   {
     id: 8,
+    sort_order: 8,
     title: "Radiant Raising Day 2024",
     category: "Corporate",
     subtitle: "Radiant Dental Care – Day Outing & Annual Day",
@@ -184,6 +192,7 @@ export const fallbackProjects: ProjectRecord[] = [
   },
   {
     id: 9,
+    sort_order: 9,
     title: "10th Southern HOG Rally",
     category: "Automotive",
     subtitle: "Harley-Davidson Marina Chapter",
@@ -207,6 +216,7 @@ export const fallbackProjects: ProjectRecord[] = [
   },
   {
     id: 10,
+    sort_order: 10,
     title: "Doordarshan Election Conclave",
     category: "Corporate",
     subtitle: "Prasar Bharati",
@@ -228,6 +238,7 @@ export const fallbackProjects: ProjectRecord[] = [
   },
   {
     id: 11,
+    sort_order: 11,
     title: "NYE Beach Night 2025",
     category: "Entertainment",
     subtitle: "Fortune Beach Resort",
@@ -251,6 +262,7 @@ export const fallbackProjects: ProjectRecord[] = [
   },
   {
     id: 12,
+    sort_order: 12,
     title: "BNP Paribas Annual Meet",
     category: "Corporate",
     subtitle: "BNP Paribas",
@@ -273,6 +285,7 @@ export const fallbackProjects: ProjectRecord[] = [
   },
   {
     id: 13,
+    sort_order: 13,
     title: "Save a Child Marathon",
     category: "Corporate",
     subtitle: "Saveetha Eco Pupil School – Ekam NGO",
@@ -295,6 +308,7 @@ export const fallbackProjects: ProjectRecord[] = [
   },
   {
     id: 14,
+    sort_order: 14,
     title: "Toyota Hilux – Product Reveal",
     category: "Product Launch",
     subtitle: "Lanson Toyota",
@@ -317,6 +331,7 @@ export const fallbackProjects: ProjectRecord[] = [
   },
   {
     id: 15,
+    sort_order: 15,
     title: "Madarase Fashion Talent Hunt",
     category: "Entertainment",
     subtitle: "Phoenix Marketcity Chennai",
@@ -347,7 +362,7 @@ export async function getProjects(req: Request, res: Response): Promise<void> {
   try {
     const { category, search } = req.query;
 
-    let query = supabase.from("projects").select("*").order("id", { ascending: false });
+    let query = supabase.from("projects").select("*").order("sort_order", { ascending: true, nullsFirst: false }).order("id", { ascending: true });
 
     if (category && category !== "All") {
       query = query.eq("category", category as string);
@@ -360,7 +375,7 @@ export async function getProjects(req: Request, res: Response): Promise<void> {
 
     if (error || !data || data.length === 0) {
       if (error) console.warn("Supabase query fallback (projects):", error.message);
-      let list = [...fallbackProjects];
+      let list = [...fallbackProjects].sort((a, b) => (a.sort_order ?? Number(a.id)) - (b.sort_order ?? Number(b.id)));
       if (category && category !== "All") {
         list = list.filter((p) => p.category.toLowerCase().includes((category as string).toLowerCase()));
       }
@@ -416,6 +431,7 @@ export async function createProject(req: Request, res: Response): Promise<void> 
 
     const newProject = {
       title: body.title,
+      sort_order: body.sort_order !== undefined ? Number(body.sort_order) : 1,
       category: body.category,
       subtitle: body.subtitle || "",
       date: body.date || "",

@@ -1,6 +1,8 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 import {
   ArrowRight,
@@ -19,56 +21,58 @@ import {
   Globe,
   PenTool,
   Radio,
+  Camera,
+  Video,
+  Award,
+  Shield,
+  Zap,
+  Users,
+  Layers,
+  Sparkles,
   CheckCircle2,
 } from 'lucide-react'
+import { fetchLiveServices, ServiceItem, DEFAULT_SERVICES } from '@/lib/api'
 
-/* ─── Data ─────────────────────────────────────────────────────────────────── */
+/* ─── Icon Component Resolver ─────────────────────────────────────────────── */
+const ICON_MAP: Record<string, React.ComponentType<{ size?: number; className?: string; style?: React.CSSProperties }>> = {
+  CalendarDays,
+  Settings,
+  Mic,
+  ClipboardCheck,
+  MapPin,
+  Building,
+  Palette,
+  Music,
+  Hammer,
+  Store,
+  Megaphone,
+  Activity,
+  Globe,
+  PenTool,
+  Radio,
+  Camera,
+  Video,
+  Award,
+  Shield,
+  Zap,
+  Users,
+  Layers,
+  Sparkles,
+};
 
-const ACCENT_CYCLE = ['#FFFFFF', '#FFB800', '#CBD5E1', '#34d399', '#f472b6', '#60a5fa']
+function ResolveIcon({ name, size = 20, style, className }: { name?: string; size?: number; style?: React.CSSProperties; className?: string }) {
+  const IconComp = (name && ICON_MAP[name]) ? ICON_MAP[name] : Sparkles;
+  return <IconComp size={size} style={style} className={className} />;
+}
 
-const SERVICES = [
-  { num: '01', title: 'End to End Event Management',       desc: 'Comprehensive management from concept to execution for all types of events.',                                      icon: CalendarDays   },
-  { num: '02', title: 'End to End Event Production',       desc: 'Full-scale technical and stage production, ensuring flawless audio, visual, and lighting.',                        icon: Settings       },
-  { num: '03', title: 'Conference Management – MICE',      desc: 'Expert handling of Meetings, Incentives, Conferences, and Exhibitions.',                                           icon: Mic            },
-  { num: '04', title: 'Event Planning & Operations',       desc: 'Strategic planning, logistics, and operational consulting to make your events seamless.',                          icon: ClipboardCheck  },
-  { num: '05', title: 'Destination Management',            desc: 'Complete travel, logistics, and localized event planning across premier destinations.',                             icon: MapPin         },
-  { num: '06', title: 'Venue Sourcing',                    desc: "Finding the perfect backdrop tailored to your event's scale, style, and unique requirements.",                     icon: Building       },
-  { num: '07', title: 'Décor Hire & Styling',              desc: 'Creative set designs, floral arrangements, and thematic styling for immersive environments.',                      icon: Palette        },
-  { num: '08', title: 'Entertainment & Artist Management', desc: 'Curating top-tier talent, bands, speakers, and artists for captivating performances.',                             icon: Music          },
-  { num: '09', title: 'Custom Build Setups',               desc: 'Bespoke structural designs, custom staging, and immersive fabrications.',                                         icon: Hammer         },
-  { num: '10', title: 'Exhibition – Stall Fabrication',    desc: 'Designing and building interactive exhibition stalls and corporate booths.',                                       icon: Store          },
-  { num: '11', title: 'Signage',                           desc: 'High-quality, custom event signage and branding materials for impactful visibility.',                             icon: Megaphone      },
-  { num: '12', title: 'BTL Activations',                   desc: 'Below-the-line marketing activations focused on direct, meaningful consumer engagement.',                          icon: Activity       },
-  { num: '13', title: 'Public Relations & Media',          desc: "Strategic PR campaigns and comprehensive media management to amplify your event's reach.",                         icon: Globe          },
-  { num: '14', title: 'Creative Design & Print Media',     desc: 'Exceptional graphic design and printing services for all your event collaterals.',                                 icon: PenTool        },
-  { num: '15', title: 'ATL Management',                    desc: 'Above-the-line mass media advertising and large-scale brand awareness campaigns.',                                 icon: Radio          },
-]
+const ACCENT_CYCLE = ['#FFFFFF', '#FFB800', '#CBD5E1', '#34d399', '#f472b6', '#60a5fa'];
 
 const PROCESS_STEPS = [
-  { num: '01', title: 'Discovery',   desc: 'We deep-dive into your vision, goals, and audience to build a solid strategic foundation.' },
-  { num: '02', title: 'Planning',    desc: 'Every detail is mapped—timelines, budgets, vendors, and creative direction—before a single thing moves.' },
-  { num: '03', title: 'Production',  desc: 'Our on-ground team brings the blueprint to life with flawless precision and energy.' },
-  { num: '04', title: 'Delivery',    desc: 'We deliver an unforgettable experience, then debrief to ensure every benchmark is met.' },
-]
-
-const STATS = [
-  { value: '15+', label: 'Services'      },
-  { value: '150+', label: 'Events Delivered' },
-  { value: '10+',  label: 'Years of Excellence' },
-]
-
-/* ─── Animations ────────────────────────────────────────────────────────────── */
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 32 },
-  show:   { opacity: 1, y: 0,  transition: { duration: 0.55, ease: 'easeOut' } },
-} as const
-
-const stagger = {
-  show: { transition: { staggerChildren: 0.08 } },
-} as const
-
-/* ─── Sub-components ────────────────────────────────────────────────────────── */
+  { num: '01', title: 'Discovery & Brief', desc: 'We deep-dive into your vision, target audience, brand ethos, and operational goals to establish a strategic blueprint.' },
+  { num: '02', title: 'Design & Engineering', desc: '3D renders, stage mockups, technical acoustics, and budgets are drafted with meticulous precision before execution.' },
+  { num: '03', title: 'Live Production', desc: 'Our on-ground production directors, engineers, and hospitality managers coordinate every cue in real time.' },
+  { num: '04', title: 'Flawless Delivery', desc: 'We deliver an unforgettable attendee experience, followed by data debriefs and media asset transfers.' },
+];
 
 function GoldEyebrow({ text }: { text: string }) {
   return (
@@ -82,134 +86,115 @@ function GoldEyebrow({ text }: { text: string }) {
   )
 }
 
-function ServiceCard({
+/* ─── Modern Image-Powered Service Card ─────────────────────────────────────── */
+function ModernServiceCard({
   service,
   accentColor,
   index,
 }: {
-  service: (typeof SERVICES)[0]
+  service: ServiceItem
   accentColor: string
   index: number
 }) {
-  const Icon = service.icon
+  const displayNum = service.num || (index + 1 < 10 ? `0${index + 1}` : `${index + 1}`);
+  const effectiveColor = service.accent_color || accentColor;
+  const imageUrl = service.image || DEFAULT_SERVICES[index % DEFAULT_SERVICES.length]?.image || 'https://pub-e796496b65134e82b311969a354b7898.r2.dev/BNI%20Futurz%20chapter%20Meeting%20at%20Audi%20chennai/image-1.webp';
+
   return (
     <motion.div
-      variants={fadeUp}
-      whileHover={{ y: -4 }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, delay: Math.min(index * 0.04, 0.4), ease: 'easeOut' }}
+      whileHover={{ y: -6 }}
+      className="group relative bg-[#1E293B] rounded-[1.75rem] border border-white/[0.08] hover:border-white/30 overflow-hidden flex flex-col justify-between shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_45px_-12px_rgba(0,0,0,0.7)] transition-all duration-500"
       style={{
-        position: 'relative',
-        background: '#1E293B',
-        borderRadius: 20,
-        border: '1px solid rgba(255,255,255,0.07)',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '1rem',
-        overflow: 'hidden',
-        transition: 'border-color 0.3s, box-shadow 0.3s, transform 0.3s',
-        cursor: 'default',
+        transformStyle: 'preserve-3d',
       }}
-      className="services-card group p-6 sm:p-8 h-full"
     >
-      {/* top gradient accent line */}
-      <span
+      {/* Top Accent Gradient Border */}
+      <div
+        className="absolute top-0 left-0 right-0 h-[3px] z-30 opacity-90 transition-opacity duration-300"
         style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          height: 3,
-          borderRadius: '20px 20px 0 0',
-          background: `linear-gradient(to right, ${accentColor}, ${accentColor}88)`,
+          background: `linear-gradient(90deg, ${effectiveColor}, ${effectiveColor}66, transparent)`,
         }}
       />
 
-      {/* header row */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
-        {/* icon box */}
-        <div
-          style={{
-            width: 48,
-            height: 48,
-            borderRadius: 12,
-            background: `${accentColor}20`,
-            border: `1px solid ${accentColor}40`,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexShrink: 0,
-          }}
-        >
-          <Icon size={22} style={{ color: accentColor }} />
+      <div>
+        {/* ── Top Cover Image Section ── */}
+        <div className="relative h-52 sm:h-56 w-full overflow-hidden bg-slate-900">
+          <Image
+            src={imageUrl}
+            alt={service.title}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
+          />
+          {/* Dark vignette overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#1E293B] via-[#1E293B]/40 to-black/30" />
+
+          {/* Floating Icon Box (Top Left - Never Cropped) */}
+          <div className="absolute top-4 left-4 z-20">
+            <div
+              className="w-11 h-11 rounded-xl flex items-center justify-center shadow-xl backdrop-blur-md transition-transform duration-300 group-hover:scale-110"
+              style={{
+                background: 'rgba(15, 23, 42, 0.85)',
+                border: `1.5px solid ${effectiveColor}70`,
+                boxShadow: `0 8px 24px -4px ${effectiveColor}40`,
+              }}
+            >
+              <ResolveIcon
+                name={service.icon}
+                size={20}
+                style={{ color: effectiveColor === '#FFFFFF' ? '#FFFFFF' : effectiveColor }}
+              />
+            </div>
+          </div>
+
+          {/* Number badge (Top Right) */}
+          <div className="absolute top-4 right-4 z-20">
+            <span
+              className="px-3 py-1 rounded-full text-xs font-black tracking-wider uppercase backdrop-blur-md shadow-md"
+              style={{
+                background: 'rgba(15, 23, 42, 0.85)',
+                color: '#FFB800',
+                border: '1px solid rgba(255, 184, 0, 0.4)',
+              }}
+            >
+              {displayNum}
+            </span>
+          </div>
         </div>
 
-        {/* numbered badge */}
-        <span
-          style={{
-            fontSize: 11,
-            fontWeight: 800,
-            color: '#FFB800',
-            background: 'rgba(255,184,0,0.1)',
-            border: '1px solid rgba(255,184,0,0.25)',
-            borderRadius: 8,
-            padding: '3px 10px',
-            letterSpacing: '0.1em',
-            flexShrink: 0,
-          }}
-        >
-          {service.num}
-        </span>
+        {/* ── Text Content Section ── */}
+        <div className="p-6 sm:p-7 pb-4">
+          <h3
+            className="text-lg sm:text-xl font-black text-white leading-snug tracking-tight mb-2.5 group-hover:text-[#FFB800] transition-colors duration-300 line-clamp-2"
+          >
+            {service.title}
+          </h3>
+
+          <p className="text-gray-300 text-xs sm:text-sm leading-relaxed line-clamp-3">
+            {service.description}
+          </p>
+        </div>
       </div>
 
-      {/* title */}
-      <h3
-        className="card-title"
-        style={{
-          fontSize: 17,
-          fontWeight: 900,
-          color: '#FFFFFF',
-          lineHeight: 1.35,
-          transition: 'color 0.25s',
-        }}
-      >
-        {service.title}
-      </h3>
+      {/* ── Bottom Action Row ── */}
+      <div className="px-6 sm:px-7 pb-6 pt-3 border-t border-white/[0.05] flex items-center justify-between mt-auto">
+        <span className="text-[11px] font-semibold text-gray-400 flex items-center gap-1.5">
+          <CheckCircle2 size={13} className="text-emerald-400" />
+          Signature Capability
+        </span>
 
-      {/* description */}
-      <p style={{ fontSize: 14, color: '#94a3b8', lineHeight: 1.7, flexGrow: 1 }}>
-        {service.desc}
-      </p>
-
-      {/* cta link */}
-      <Link
-        href="/contact"
-        style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: 6,
-          fontSize: 13,
-          fontWeight: 700,
-          color: accentColor,
-          textDecoration: 'none',
-          marginTop: 4,
-          transition: 'gap 0.2s',
-        }}
-        className="card-cta"
-      >
-        Get in Touch <ArrowRight size={14} />
-      </Link>
-
-      <style jsx>{`
-        .services-card:hover {
-          border-color: rgba(255,255,255, 0.4) !important;
-          box-shadow: 0 0 32px rgba(255,255,255, 0.18), 0 8px 40px rgba(0, 0, 0, 0.4) !important;
-        }
-        .services-card:hover .card-title {
-          color: #FFB800 !important;
-        }
-        .services-card:hover .card-cta {
-          gap: 10px !important;
-        }
-      `}</style>
+        <Link
+          href="/contact"
+          className="inline-flex items-center gap-1.5 text-xs font-bold transition-all duration-300 group-hover:gap-2.5 cursor-pointer"
+          style={{ color: effectiveColor }}
+        >
+          <span>Plan This</span>
+          <ArrowRight size={14} className="transform group-hover:translate-x-1 transition-transform" />
+        </Link>
+      </div>
     </motion.div>
   )
 }
@@ -217,36 +202,27 @@ function ServiceCard({
 function ProcessCard({ step, index }: { step: (typeof PROCESS_STEPS)[0]; index: number }) {
   return (
     <motion.div
-      variants={fadeUp}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.4, delay: index * 0.1 }}
       whileHover={{ y: -4 }}
-      style={{
-        background: 'rgba(15,23,42,0.6)',
-        border: '1px solid rgba(255,255,255,0.07)',
-        borderRadius: 20,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        textAlign: 'center',
-        gap: '1.25rem',
-        transition: 'border-color 0.3s, box-shadow 0.3s, transform 0.3s',
-      }}
-      className="p-6 sm:p-8 w-full h-full hover:border-white/20 hover:shadow-[0_16px_36px_-12px_rgba(0,0,0,0.5)]"
+      className="p-6 sm:p-8 w-full h-full bg-[#0F172A]/70 border border-white/[0.08] hover:border-white/25 rounded-3xl flex flex-col items-center text-center gap-5 transition-all duration-300 shadow-lg"
     >
-      {/* gradient circle */}
       <div
         style={{
-          width: 64,
-          height: 64,
+          width: 60,
+          height: 60,
           borderRadius: '50%',
           background: 'linear-gradient(135deg, #FFFFFF, #CBD5E1)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: 20,
+          fontSize: 18,
           fontWeight: 900,
           color: '#0F172A',
           letterSpacing: '0.05em',
-          boxShadow: '0 0 24px rgba(255,255,255,0.4)',
+          boxShadow: '0 0 24px rgba(255,255,255,0.3)',
           flexShrink: 0,
         }}
       >
@@ -254,272 +230,167 @@ function ProcessCard({ step, index }: { step: (typeof PROCESS_STEPS)[0]; index: 
       </div>
 
       <div>
-        <h4 style={{ fontSize: 18, fontWeight: 800, color: '#fff', marginBottom: 10 }}>
+        <h4 className="text-base sm:text-lg font-bold text-white mb-2">
           {step.title}
         </h4>
-        <p style={{ fontSize: 14, color: '#94a3b8', lineHeight: 1.7 }}>{step.desc}</p>
+        <p className="text-xs sm:text-sm text-gray-400 leading-relaxed">{step.desc}</p>
       </div>
     </motion.div>
   )
 }
 
-/* ─── Page ──────────────────────────────────────────────────────────────────── */
-
+/* ─── Main Page ─────────────────────────────────────────────────────────────── */
 export default function ServicesPage() {
+  const [servicesList, setServicesList] = useState<ServiceItem[]>(DEFAULT_SERVICES);
+
+  useEffect(() => {
+    fetchLiveServices().then((data) => {
+      if (data && data.length > 0) {
+        setServicesList(data);
+      }
+    });
+  }, []);
+
+  const stats = [
+    { value: `10+`, label: 'Agency Services' },
+    { value: '300+', label: 'Events Delivered' },
+    { value: '100+', label: 'Clients' },
+    { value: '12', label: 'Years of Excellence' },
+  ];
+
   return (
-    <main style={{ background: '#0F172A', color: '#fff', fontFamily: 'inherit', overflowX: 'hidden' }}>
+    <main className="bg-[#0F172A] text-white min-h-screen font-sans overflow-x-hidden">
 
       {/* ── HERO ─────────────────────────────────────────────────────────────── */}
-      <section
-        className="relative bg-[#0F172A] pt-28 md:pt-36 pb-16 md:pb-24 text-center overflow-hidden"
-      >
-        {/* glow blobs */}
+      <section className="relative bg-[#0F172A] pt-28 md:pt-36 pb-16 md:pb-24 text-center overflow-hidden">
+        {/* Glow backdrop blobs */}
         <div
           aria-hidden
-          style={{
-            position: 'absolute', top: '-10%', left: '50%', transform: 'translateX(-50%)',
-            width: 700, height: 500,
-            background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.18) 0%, transparent 70%)',
-            pointerEvents: 'none',
-          }}
+          className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-radial from-white/[0.14] to-transparent pointer-events-none blur-3xl"
         />
         <div
           aria-hidden
-          style={{
-            position: 'absolute', bottom: 0, right: '-10%',
-            width: 400, height: 400,
-            background: 'radial-gradient(ellipse at center, rgba(255,184,0,0.08) 0%, transparent 70%)',
-            pointerEvents: 'none',
-          }}
+          className="absolute bottom-0 right-[-10%] w-[400px] h-[400px] bg-radial from-[#FFB800]/[0.08] to-transparent pointer-events-none blur-2xl"
         />
 
-        <div style={{ position: 'relative', zIndex: 1, maxWidth: 780, margin: '0 auto', padding: '0 1.5rem' }}>
+        <div className="relative z-10 max-w-4xl mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <GoldEyebrow text="Our Capabilities" />
 
-          <motion.div initial="hidden" animate="show" variants={stagger}>
-
-            <motion.div variants={fadeUp}>
-              <GoldEyebrow text="Our Expertise" />
-            </motion.div>
-
-            <motion.h1
-              variants={fadeUp}
-              style={{
-                fontSize: 'clamp(2.4rem, 5.5vw, 4rem)',
-                fontWeight: 900,
-                lineHeight: 1.15,
-                color: '#FFFFFF',
-                marginBottom: '1.25rem',
-              }}
-            >
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-white leading-tight tracking-tight mb-5">
               Comprehensive Event{' '}
-              <span style={{ color: '#FFB800' }}>Services</span>
-            </motion.h1>
+              <span className="text-[#FFB800]">Services</span>
+            </h1>
 
-            <motion.p
-              variants={fadeUp}
-              style={{
-                fontSize: 'clamp(1rem, 2vw, 1.15rem)',
-                color: '#94a3b8',
-                lineHeight: 1.75,
-                maxWidth: 600,
-                margin: '0 auto 3rem',
-              }}
-            >
-              From intimate gatherings to grand-scale productions, Virtue Agency delivers
-              end-to-end event solutions crafted with precision, creativity, and unmatched
-              attention to detail.
-            </motion.p>
+            <p className="text-gray-300 text-sm sm:text-base md:text-lg leading-relaxed max-w-2xl mx-auto mb-10">
+              From executive boardroom symposiums to 50,000+ attendee stadium productions,
+              Virtue IN delivers full-throttle event engineering with unparalleled stagecraft,
+              acoustics, and precision logistics.
+            </p>
 
-            {/* stat row */}
-            <motion.div
-              variants={fadeUp}
-              className="flex justify-center flex-wrap gap-8 sm:gap-12 md:gap-16"
-            >
-              {STATS.map((s) => (
-                <div key={s.label} style={{ textAlign: 'center' }}>
+            {/* Stat Row */}
+            <div className="flex justify-center flex-wrap gap-8 sm:gap-14">
+              {stats.map((s) => (
+                <div key={s.label} className="text-center">
                   <div
+                    className="text-3xl sm:text-4xl md:text-5xl font-black leading-none"
                     style={{
-                      fontSize: 'clamp(1.8rem, 4vw, 2.5rem)',
-                      fontWeight: 900,
                       background: 'linear-gradient(135deg, #FFB800, #ffd76b)',
                       WebkitBackgroundClip: 'text',
                       WebkitTextFillColor: 'transparent',
-                      lineHeight: 1.1,
                     }}
                   >
                     {s.value}
                   </div>
-                  <div style={{ fontSize: 13, color: '#64748b', marginTop: 4, letterSpacing: '0.08em', fontWeight: 600 }}>
+                  <div className="text-xs text-gray-400 mt-2 uppercase tracking-widest font-semibold">
                     {s.label}
                   </div>
                 </div>
               ))}
-            </motion.div>
+            </div>
 
           </motion.div>
         </div>
       </section>
 
-      {/* ── SERVICES GRID ────────────────────────────────────────────────────── */}
+      {/* ── SERVICES GRID (ALL 15 CARDS VISIBLE IMMEDIATELY) ──────────────────── */}
       <section className="bg-[#0F172A] py-16 md:py-24 px-4 sm:px-6 md:px-12">
-        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+        <div className="max-w-7xl mx-auto">
 
-          <motion.div
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: '-80px' }}
-            variants={stagger}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-          >
-            {SERVICES.map((svc, i) => (
-              <ServiceCard
-                key={svc.num}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
+            {servicesList.map((svc, i) => (
+              <ModernServiceCard
+                key={svc.id || svc.num || i}
                 service={svc}
                 accentColor={ACCENT_CYCLE[i % ACCENT_CYCLE.length]}
                 index={i}
               />
             ))}
-          </motion.div>
+          </div>
 
         </div>
       </section>
 
-      {/* ── PROCESS ──────────────────────────────────────────────────────────── */}
-      <section className="bg-[#1E293B] py-16 md:py-24 px-4 sm:px-6 md:px-12">
-        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+      {/* ── HOW WE WORK (PROCESS) ────────────────────────────────────────────── */}
+      <section className="bg-[#1E293B]/70 border-y border-white/[0.06] py-16 md:py-24 px-4 sm:px-6 md:px-12">
+        <div className="max-w-7xl mx-auto">
 
-          {/* header */}
-          <motion.div
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
-            variants={stagger}
-            className="text-center mb-12 md:mb-16"
-          >
-            <motion.div variants={fadeUp}>
-              <GoldEyebrow text="Our Approach" />
-            </motion.div>
-            <motion.h2
-              variants={fadeUp}
-              style={{
-                fontSize: 'clamp(2rem, 4vw, 3rem)',
-                fontWeight: 900,
-                color: '#fff',
-              }}
-            >
-              How We{' '}
-              <span
-                style={{
-                  background: 'linear-gradient(135deg, #FFFFFF, #CBD5E1)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                }}
-              >
-                Work
-              </span>
-            </motion.h2>
-          </motion.div>
+          <div className="text-center mb-14">
+            <GoldEyebrow text="Execution Methodology" />
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight">
+              How We Bring Your Vision To{' '}
+              <span className="text-[#FFB800]">Life</span>
+            </h2>
+          </div>
 
-          {/* steps */}
-          <motion.div
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: '-60px' }}
-            variants={stagger}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
-          >
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {PROCESS_STEPS.map((step, i) => (
               <ProcessCard key={step.num} step={step} index={i} />
             ))}
-          </motion.div>
+          </div>
 
         </div>
       </section>
 
-      {/* ── CTA STRIP ────────────────────────────────────────────────────────── */}
-      <section
-        className="bg-[#0F172A] py-16 md:py-24 px-4 sm:px-6 text-center relative overflow-hidden"
-      >
-        {/* glow */}
+      {/* ── CTA BANNER ───────────────────────────────────────────────────────── */}
+      <section className="bg-[#0F172A] py-20 px-6 text-center relative overflow-hidden">
         <div
           aria-hidden
-          style={{
-            position: 'absolute', top: '50%', left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: 800, height: 400,
-            background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.15) 0%, transparent 70%)',
-            pointerEvents: 'none',
-          }}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-radial from-white/[0.12] to-transparent pointer-events-none blur-3xl"
         />
 
-        <div style={{ position: 'relative', zIndex: 1, maxWidth: 680, margin: '0 auto' }}>
+        <div className="relative z-10 max-w-2xl mx-auto">
           <motion.div
-            initial="hidden"
-            whileInView="show"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            variants={stagger}
           >
-            <motion.div variants={fadeUp}>
-              <GoldEyebrow text="Let's Collaborate" />
-            </motion.div>
+            <GoldEyebrow text="Direct Consultation" />
 
-            <motion.h2
-              variants={fadeUp}
-              style={{
-                fontSize: 'clamp(2rem, 4.5vw, 3.2rem)',
-                fontWeight: 900,
-                color: '#fff',
-                marginBottom: '1.25rem',
-              }}
-            >
-              Ready to plan your{' '}
-              <span style={{ color: '#FFB800' }}>next event?</span>
-            </motion.h2>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4">
+              Ready to produce your <span className="text-[#FFB800]">next landmark event?</span>
+            </h2>
 
-            <motion.p
-              variants={fadeUp}
-              style={{
-                fontSize: 16,
-                color: '#94a3b8',
-                lineHeight: 1.7,
-                marginBottom: '2.5rem',
-              }}
-            >
-              Let's turn your vision into an extraordinary experience. Our team is ready
-              to craft something remarkable for you.
-            </motion.p>
+            <p className="text-gray-300 text-sm sm:text-base leading-relaxed mb-8">
+              Connect directly with our Lead Event Producers to discuss creative concepts,
+              venue selection, audio-visual technicals, and turnkey delivery.
+            </p>
 
-            <motion.div variants={fadeUp}>
+            <div>
               <Link
                 href="/contact"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: 10,
-                  background: 'linear-gradient(135deg, #FFFFFF, #E2E8F0)',
-                  color: '#0F172A',
-                  fontWeight: 700,
-                  fontSize: 16,
-                  padding: '0.875rem 2.25rem',
-                  borderRadius: 50,
-                  textDecoration: 'none',
-                  boxShadow: '0 0 32px rgba(255,255,255,0.35)',
-                  transition: 'transform 0.2s, box-shadow 0.2s',
-                }}
-                className="cta-btn"
+                className="inline-flex items-center gap-2.5 bg-gradient-to-r from-white to-slate-200 text-slate-900 font-extrabold text-sm sm:text-base px-8 py-4 rounded-full shadow-[0_0_30px_rgba(255,255,255,0.35)] hover:shadow-[0_0_45px_rgba(255,255,255,0.55)] hover:scale-105 transition-all duration-300 cursor-pointer"
               >
-                Plan Your Event <ArrowRight size={18} />
+                <span>Plan Your Event</span>
+                <ArrowRight size={18} />
               </Link>
-            </motion.div>
+            </div>
           </motion.div>
         </div>
-
-        <style jsx>{`
-          .cta-btn:hover {
-            transform: translateY(-2px) scale(1.04);
-            box-shadow: 0 0 48px rgba(255,255,255, 0.55) !important;
-          }
-        `}</style>
       </section>
 
     </main>

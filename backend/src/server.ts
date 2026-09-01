@@ -8,6 +8,8 @@ import galleryRoutes from "./routes/gallery.routes.js";
 import enquiriesRoutes from "./routes/enquiries.routes.js";
 import emailRoutes from "./routes/email.routes.js";
 import statsRoutes from "./routes/stats.routes.js";
+import servicesRoutes from "./routes/services.routes.js";
+import settingsRoutes from "./routes/settings.routes.js";
 
 dotenv.config();
 
@@ -42,8 +44,10 @@ app.get("/", (req: Request, res: Response) => {
     endpoints: {
       health: "/api/health",
       projects: "/api/projects",
+      services: "/api/services",
       gallery: "/api/gallery",
       enquiries: "/api/enquiries",
+      settings: "/api/settings",
       sendEmail: "/api/send-email",
       stats: "/api/stats",
       upload: "/api/upload",
@@ -65,20 +69,34 @@ app.get("/api/health", (req: Request, res: Response) => {
 // API Routes
 app.use("/api/upload", uploadRoutes);
 app.use("/api/projects", projectsRoutes);
+app.use("/api/services", servicesRoutes);
 app.use("/api/gallery", galleryRoutes);
 app.use("/api/enquiries", enquiriesRoutes);
 app.use("/api/send-enquiry", enquiriesRoutes); // Aliased for website form
 app.use("/api/send-email", emailRoutes);
 app.use("/api/stats", statsRoutes);
+app.use("/api/settings", settingsRoutes);
+
 
 // 404 Catch-All Handler
 app.use((req: Request, res: Response) => {
   res.status(404).json({
     success: false,
     error: `Route not found: ${req.method} ${req.originalUrl}`,
-    availableEndpoints: ["/", "/api/health", "/api/projects", "/api/gallery", "/api/enquiries", "/api/stats", "/api/upload"],
+    availableEndpoints: [
+      "/",
+      "/api/health",
+      "/api/projects",
+      "/api/services",
+      "/api/gallery",
+      "/api/enquiries",
+      "/api/settings",
+      "/api/stats",
+      "/api/upload",
+    ],
   });
 });
+
 
 // Global Error Handler
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {

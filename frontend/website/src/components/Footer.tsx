@@ -1,8 +1,29 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Mail, Phone, MapPin } from "lucide-react";
+import { Mail, Phone, MapPin, Globe } from "lucide-react";
+import { fetchLiveSettings, CompanySettings } from "@/lib/api";
 
 export default function Footer() {
+  const [settings, setSettings] = useState<CompanySettings>({
+    company_name: "Virtue IN Agency",
+    contact_person: "SATHISH RINGESAN",
+    email: "plan@virtuein.agency",
+    alternate_email: "sathish@virtueinagency.com",
+    phone: "+91 74010 30000",
+    alternate_phone: "+91 98843 98514",
+    website_url: "www.virtueinagency.com",
+    full_address: "28, Judge Jambulingam Road, Mylapore, Chennai – 600 004",
+  });
+
+  useEffect(() => {
+    fetchLiveSettings().then((data) => {
+      if (data) setSettings((prev) => ({ ...prev, ...data }));
+    });
+  }, []);
+
   return (
     <footer className="bg-[#0F172A] pt-20 pb-10 border-t border-white/20 relative overflow-hidden">
       <div className="container mx-auto px-6 md:px-12 relative z-10">
@@ -63,23 +84,25 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Contact */}
+          {/* Contact (Dynamic from Admin Settings) */}
           <div>
             <h4 className="text-accent font-semibold mb-6 text-sm tracking-widest uppercase">Get In Touch</h4>
             <ul className="space-y-4">
-              <li className="flex flex-col gap-1 text-gray-300 text-sm mb-4">
-                <span className="font-bold text-white mb-1">SATHISH RINGESAN</span>
+              <li className="flex flex-col gap-1.5 text-gray-300 text-sm mb-4">
+                <span className="font-bold text-white mb-1 uppercase tracking-wide">
+                  {settings.contact_person || "SATHISH RINGESAN"}
+                </span>
                 <span className="flex items-center gap-3">
                   <Phone className="text-accent shrink-0" size={16} />
-                  +91 - 9884398514
+                  {settings.alternate_phone || settings.phone || "+91 - 9884398514"}
                 </span>
-                <span className="flex items-center gap-3 mt-2">
+                <span className="flex items-center gap-3 mt-1">
                   <Mail className="text-accent shrink-0" size={16} />
-                  sathish@virtueinagency.com
+                  {settings.alternate_email || settings.email || "sathish@virtueinagency.com"}
                 </span>
-                <span className="flex items-center gap-3 mt-2">
-                  <MapPin className="text-accent shrink-0" size={16} />
-                  www.virtueinagency.com
+                <span className="flex items-center gap-3 mt-1">
+                  <Globe className="text-accent shrink-0" size={16} />
+                  {settings.website_url ? settings.website_url.replace("https://", "") : "www.virtueinagency.com"}
                 </span>
               </li>
             </ul>

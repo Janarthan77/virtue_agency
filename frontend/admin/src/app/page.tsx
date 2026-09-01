@@ -14,7 +14,6 @@ import {
   Building2,
   MapPin,
   Calendar,
-  DollarSign,
   Users,
   CheckCircle2,
   AlertCircle,
@@ -37,11 +36,35 @@ import {
   Edit2,
   Eye,
   Cloud,
+  Settings,
+  Globe,
+  Save,
+  CalendarDays,
+  Mic,
+  ClipboardCheck,
+  Building,
+  Palette,
+  Music,
+  Hammer,
+  Store,
+  Megaphone,
+  Activity,
+  PenTool,
+  Radio,
+  Camera,
+  Video,
+  Award,
+  Shield,
+  Zap,
 } from "lucide-react";
 import {
   fetchEnquiries,
   fetchProjects,
   fetchGallery,
+  fetchServices,
+  DEFAULT_ADMIN_SERVICES,
+  DEFAULT_ADMIN_SETTINGS,
+  fetchCompanySettings,
   fetchDashboardStats,
   updateEnquiryStatus,
   deleteEnquiry,
@@ -51,16 +74,55 @@ import {
   createGalleryItem,
   updateGalleryItem,
   deleteGalleryItem,
+  createService,
+  updateService,
+  deleteService,
+  updateCompanySettings,
   sendEmailViaResend,
   submitEnquiry,
   EnquiryItem,
   ProjectItem,
   GalleryItem,
+  ServiceItem,
+  CompanySettings,
   DashboardStats,
 } from "@/lib/api";
 import { isAuthenticated, getCurrentAdmin, logoutAdmin, AdminUser } from "@/lib/auth";
 import ProjectFormModal from "@/components/ProjectFormModal";
 import GalleryFormModal from "@/components/GalleryFormModal";
+import ServiceFormModal from "@/components/ServiceFormModal";
+
+// Helper map to dynamically render Lucide icon by string name
+const ICON_MAP: Record<string, React.ComponentType<{ size?: number; className?: string; style?: React.CSSProperties }>> = {
+  CalendarDays,
+  Settings,
+  Mic,
+  ClipboardCheck,
+  MapPin,
+  Building,
+  Palette,
+  Music,
+  Hammer,
+  Store,
+  Megaphone,
+  Activity,
+  Globe,
+  PenTool,
+  Radio,
+  Sparkles,
+  Camera,
+  Video,
+  Award,
+  Shield,
+  Zap,
+  Users,
+  Layers,
+};
+
+function DynamicIcon({ name, size = 18, style, className }: { name?: string; size?: number; style?: React.CSSProperties; className?: string }) {
+  const IconComp = (name && ICON_MAP[name]) ? ICON_MAP[name] : Sparkles;
+  return <IconComp size={size} style={style} className={className} />;
+}
 
 const statusConfig: Record<
   EnquiryItem["status"],
@@ -206,13 +268,31 @@ export default function AdminPortal() {
   const [authChecked, setAuthChecked] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
-  // Active Workspace Tab: 'enquiries' | 'projects' | 'gallery'
-  const [activeTab, setActiveTab] = useState<"enquiries" | "projects" | "gallery">("enquiries");
+  // Active Workspace Tab
+  const [activeTab, setActiveTab] = useState<"enquiries" | "projects" | "services" | "gallery" | "contact">("enquiries");
 
   // Data states
   const [enquiries, setEnquiries] = useState<EnquiryItem[]>([]);
   const [projects, setProjects] = useState<ProjectItem[]>([]);
   const [gallery, setGallery] = useState<GalleryItem[]>([]);
+  const [services, setServices] = useState<ServiceItem[]>(DEFAULT_ADMIN_SERVICES);
+  const [companySettings, setCompanySettings] = useState<CompanySettings>(DEFAULT_ADMIN_SETTINGS);
+  const [_unusedSettings, _setUnused] = useState<any>({
+    company_name: "Virtue IN Agency",
+    contact_person: "SATHISH RINGESAN",
+    email: "plan@virtuein.agency",
+    alternate_email: "sathish@virtueinagency.com",
+    phone: "+91 74010 30000",
+    alternate_phone: "+91 98843 98514",
+    address_line1: "28, Judge Jambulingam Road,",
+    address_line2: "Mylapore, Chennai – 600 004",
+    city_state_pin: "Tamil Nadu, India",
+    full_address: "28, Judge Jambulingam Road, Mylapore, Chennai – 600 004, Tamil Nadu, India",
+    working_hours_mon_sat: "Monday – Saturday: 9:00 AM – 7:00 PM IST",
+    working_hours_sun: "Sunday: By Appointment",
+    map_embed_url: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3886.852445300305!2d80.2642874148231!3d13.044439090807693!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a52662c14041b31%3A0xc3b5e40882e3bc01!2sJudge%20Jambulingam%20Rd%2C%20Dr%20Radhakrishnan%20Salai%2C%20Mylapore%2C%20Chennai%2C%20Tamil%20Nadu%20600004!5e0!3m2!1sen!2sin!4v1682156434444!5m2!1sen!2sin",
+    website_url: "https://www.virtueinagency.com",
+  });
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -227,6 +307,8 @@ export default function AdminPortal() {
   const [editingProject, setEditingProject] = useState<ProjectItem | null>(null);
   const [galleryModalOpen, setGalleryModalOpen] = useState(false);
   const [editingGallery, setEditingGallery] = useState<GalleryItem | null>(null);
+  const [serviceModalOpen, setServiceModalOpen] = useState(false);
+  const [editingService, setEditingService] = useState<ServiceItem | null>(null);
 
   // Mail Modal State
   const [mailModalOpen, setMailModalOpen] = useState(false);
@@ -235,6 +317,10 @@ export default function AdminPortal() {
   const [selectedTemplate, setSelectedTemplate] = useState("proposal");
   const [isSendingMail, setIsSendingMail] = useState(false);
   const [mailFeedback, setMailFeedback] = useState<{ success: boolean; message: string } | null>(null);
+
+  // Settings Save State
+  const [isSavingSettings, setIsSavingSettings] = useState(false);
+  const [settingsFeedback, setSettingsFeedback] = useState<{ success: boolean; message: string } | null>(null);
 
   // Notes state
   const [adminNotes, setAdminNotes] = useState("");
@@ -274,16 +360,34 @@ export default function AdminPortal() {
   const loadData = useCallback(async () => {
     setLoading(true);
     try {
-      const [enqRes, projRes, galRes, statsRes] = await Promise.all([
+      const [enqRes, projRes, galRes, servRes, settRes, statsRes] = await Promise.all([
         fetchEnquiries({ status: statusFilter, search: searchQuery }),
         fetchProjects({ category: categoryFilter, search: searchQuery }),
         fetchGallery(),
+        fetchServices({ search: searchQuery }),
+        fetchCompanySettings(),
         fetchDashboardStats(),
       ]);
 
       if (enqRes.success) setEnquiries(enqRes.enquiries || []);
-      if (projRes.success) setProjects(projRes.projects || []);
+      if (projRes.success && projRes.projects) {
+        const sortedProjects = [...projRes.projects].sort(
+          (a, b) => (Number(a.sort_order) || Number(a.id) || 1) - (Number(b.sort_order) || Number(b.id) || 1)
+        );
+        setProjects(sortedProjects);
+      }
       if (galRes.success) setGallery(galRes.items || []);
+
+      if (servRes && servRes.services && servRes.services.length > 0) {
+        setServices(servRes.services);
+      } else {
+        setServices(DEFAULT_ADMIN_SERVICES);
+      }
+      if (settRes && settRes.settings) {
+        setCompanySettings(settRes.settings);
+      } else {
+        setCompanySettings(DEFAULT_ADMIN_SETTINGS);
+      }
       if (statsRes.success && statsRes.stats) setStats(statsRes.stats);
     } catch (err) {
       console.error("Error loading admin data:", err);
@@ -336,6 +440,70 @@ export default function AdminPortal() {
     if (res.success) {
       setProjects((prev) => prev.filter((p) => p.id !== id));
       loadData();
+    }
+  };
+
+  // ── Services CMS Handlers ──
+  const handleOpenAddService = () => {
+    setEditingService(null);
+    setServiceModalOpen(true);
+  };
+
+  const handleOpenEditService = (s: ServiceItem) => {
+    setEditingService(s);
+    setServiceModalOpen(true);
+  };
+
+  const handleSaveService = async (serviceData: ServiceItem) => {
+    if (editingService?.id) {
+      const res = await updateService(editingService.id, serviceData);
+      if (res.success && res.service) {
+        setServices((prev) => prev.map((s) => (s.id === editingService.id ? res.service! : s)));
+      }
+    } else {
+      const res = await createService(serviceData);
+      if (res.success && res.service) {
+        setServices((prev) => [...prev, res.service!]);
+      }
+    }
+    loadData();
+  };
+
+  const handleDeleteService = async (id: string | number) => {
+    if (!confirm("Are you sure you want to delete this service?")) return;
+    const res = await deleteService(id);
+    if (res.success) {
+      setServices((prev) => prev.filter((s) => s.id !== id));
+      loadData();
+    }
+  };
+
+  // ── Contact & Company Settings Handlers ──
+  const handleSaveSettings = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    setIsSavingSettings(true);
+    setSettingsFeedback(null);
+    try {
+      const res = await updateCompanySettings(companySettings);
+      if (res.success) {
+        setSettingsFeedback({
+          success: true,
+          message: "Company contact & settings updated successfully! Live website reflects all changes.",
+        });
+        if (res.settings) setCompanySettings(res.settings);
+      } else {
+        setSettingsFeedback({
+          success: false,
+          message: res.error || "Failed to update settings.",
+        });
+      }
+    } catch (err: unknown) {
+      setSettingsFeedback({
+        success: false,
+        message: err instanceof Error ? err.message : "Network error updating settings",
+      });
+    } finally {
+      setIsSavingSettings(false);
     }
   };
 
@@ -579,7 +747,25 @@ export default function AdminPortal() {
               )}
             </button>
 
-            {/* Tab 3: Gallery CMS */}
+            {/* Tab 3: Services CMS */}
+            <button
+              onClick={() => setActiveTab("services")}
+              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
+                activeTab === "services"
+                  ? "bg-slate-900 text-white shadow-sm"
+                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+              }`}
+            >
+              <Layers size={18} className={activeTab === "services" ? "text-amber-400" : "text-slate-500"} />
+              {!sidebarCollapsed && <span className="truncate flex-1 text-left">Services CMS</span>}
+              {!sidebarCollapsed && (
+                <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-200/60 text-slate-700">
+                  {services.length}
+                </span>
+              )}
+            </button>
+
+            {/* Tab 4: Gallery CMS */}
             <button
               onClick={() => setActiveTab("gallery")}
               className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
@@ -593,6 +779,24 @@ export default function AdminPortal() {
               {!sidebarCollapsed && (
                 <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-200/60 text-slate-700">
                   {gallery.length}
+                </span>
+              )}
+            </button>
+
+            {/* Tab 5: Contact & Company Settings */}
+            <button
+              onClick={() => setActiveTab("contact")}
+              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
+                activeTab === "contact"
+                  ? "bg-slate-900 text-white shadow-sm"
+                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+              }`}
+            >
+              <Phone size={18} className={activeTab === "contact" ? "text-amber-400" : "text-slate-500"} />
+              {!sidebarCollapsed && <span className="truncate flex-1 text-left">Contact &amp; Info</span>}
+              {!sidebarCollapsed && (
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-100 text-emerald-800">
+                  Live
                 </span>
               )}
             </button>
@@ -638,8 +842,8 @@ export default function AdminPortal() {
                   LP
                 </div>
                 <div className="truncate">
-                  <p className="text-xs font-semibold text-slate-900 truncate">{currentUser?.name || "Lead Producer"}</p>
-                  <p className="text-[11px] text-slate-400 truncate">{currentUser?.email || "admin@virtuein.agency"}</p>
+                  <p className="text-xs font-semibold text-slate-900 truncate">{companySettings.contact_person || currentUser?.name || "Lead Producer"}</p>
+                  <p className="text-[11px] text-slate-400 truncate">{companySettings.email || currentUser?.email || "admin@virtuein.agency"}</p>
                 </div>
               </div>
             )}
@@ -665,7 +869,9 @@ export default function AdminPortal() {
             <h2 className="text-base font-semibold text-slate-900 capitalize truncate">
               {activeTab === "enquiries" && "Enquiries & Lead Management"}
               {activeTab === "projects" && "Projects & Event Showcase CMS"}
+              {activeTab === "services" && "Services & Capabilities CMS"}
               {activeTab === "gallery" && "Gallery Media & Photo CMS"}
+              {activeTab === "contact" && "Company Contact & Website Settings"}
             </h2>
           </div>
 
@@ -705,6 +911,16 @@ export default function AdminPortal() {
               </button>
             )}
 
+            {activeTab === "services" && (
+              <button
+                onClick={handleOpenAddService}
+                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-900 text-white text-xs font-medium hover:bg-slate-800 transition-all shadow-sm active:scale-95 cursor-pointer"
+              >
+                <Plus size={14} className="text-amber-400" />
+                <span>Add Service</span>
+              </button>
+            )}
+
             {activeTab === "gallery" && (
               <button
                 onClick={handleOpenAddGallery}
@@ -712,6 +928,17 @@ export default function AdminPortal() {
               >
                 <Plus size={14} className="text-amber-400" />
                 <span>Add Photo</span>
+              </button>
+            )}
+
+            {activeTab === "contact" && (
+              <button
+                onClick={() => handleSaveSettings()}
+                disabled={isSavingSettings}
+                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-900 text-white text-xs font-medium hover:bg-slate-800 transition-all shadow-sm active:scale-95 cursor-pointer"
+              >
+                {isSavingSettings ? <RefreshCw size={13} className="animate-spin" /> : <Save size={14} className="text-amber-400" />}
+                <span>Save Contact Settings</span>
               </button>
             )}
           </div>
@@ -725,8 +952,8 @@ export default function AdminPortal() {
             {[
               { label: "Total Enquiries", value: stats?.total ?? enquiries.length, icon: FileText, color: "#0F172A", bgIcon: "bg-slate-100 text-slate-800" },
               { label: "Live Projects", value: stats?.totalProjects ?? projects.length, icon: Sparkles, color: "#D97706", bgIcon: "bg-amber-50 text-amber-600" },
+              { label: "Services CMS", value: stats?.totalServices ?? services.length, icon: Layers, color: "#059669", bgIcon: "bg-emerald-50 text-emerald-600" },
               { label: "Gallery Photos", value: stats?.totalGalleryItems ?? gallery.length, icon: ImageIcon, color: "#2563EB", bgIcon: "bg-blue-50 text-blue-600" },
-              { label: "Resend Emails Sent", value: stats?.totalEmailsSent ?? 0, icon: Send, color: "#059669", bgIcon: "bg-emerald-50 text-emerald-600" },
             ].map((card, i) => {
               const Icon = card.icon;
               return (
@@ -973,7 +1200,11 @@ export default function AdminPortal() {
                             <ImageIcon size={10} />
                             {p.gallery?.length || 1} photos
                           </div>
+                          <div className="absolute bottom-2.5 left-3 px-2.5 py-0.5 rounded-lg bg-slate-950/85 backdrop-blur-md text-amber-300 text-[11px] font-black tracking-wider border border-amber-500/40 shadow">
+                            Order #{p.sort_order || 1}
+                          </div>
                         </div>
+
 
                         {/* Details */}
                         <div className="p-4 flex-1 flex flex-col justify-between">
@@ -982,13 +1213,15 @@ export default function AdminPortal() {
                             <p className="text-xs text-amber-700 font-semibold line-clamp-1 mb-3">{p.subtitle}</p>
 
                             <div className="space-y-1.5 text-xs text-slate-500 mb-3">
+                              {p.location && (
+                                <div className="flex items-center gap-2">
+                                  <MapPin size={12} className="text-slate-400 shrink-0" />
+                                  <span className="truncate">{p.location}</span>
+                                </div>
+                              )}
                               <div className="flex items-center gap-2">
-                                <Calendar size={12} className="text-slate-400 shrink-0" />
-                                <span>{p.date} {p.month} 2026</span>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <MapPin size={12} className="text-slate-400 shrink-0" />
-                                <span className="truncate">{p.location}</span>
+                                <Building2 size={12} className="text-slate-400 shrink-0" />
+                                <span>{p.year || "2026"} • {p.client || "Corporate"}</span>
                               </div>
                             </div>
                           </div>
@@ -1026,7 +1259,145 @@ export default function AdminPortal() {
           )}
 
           {/* ══════════════════════════════════════════════════════
-              TAB 3: GALLERY MEDIA & PHOTO CMS
+              TAB 3: SERVICES & CAPABILITIES CMS
+          ══════════════════════════════════════════════════════ */}
+          {activeTab === "services" && (
+            <>
+              <div className="bg-white border border-slate-200/90 rounded-xl px-4 py-2.5 flex flex-col sm:flex-row items-center justify-between gap-2.5 shrink-0 shadow-2xs">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                    Live Agency Services ({services.length})
+                  </span>
+                  <span className="text-[11px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-semibold border border-emerald-200">
+                    Live Sync
+                  </span>
+                </div>
+
+                <div className="relative w-full sm:w-80">
+                  <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search services by title or description..."
+                    className="w-full bg-slate-50 border border-slate-200 rounded-lg pl-9 pr-3.5 py-2 text-xs text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="flex-1 min-h-0 bg-white border border-slate-200/90 rounded-xl p-5 overflow-y-auto shadow-2xs custom-scrollbar">
+                {loading ? (
+                  <div className="h-full flex flex-col items-center justify-center p-8 text-center">
+                    <RefreshCw size={26} className="animate-spin text-slate-600 mb-2.5" />
+                    <p className="text-slate-500 text-sm">Loading services from Supabase...</p>
+                  </div>
+                ) : services.length === 0 ? (
+                  <div className="h-full flex flex-col items-center justify-center p-8 text-center">
+                    <Layers size={38} className="text-slate-300 mb-2.5" />
+                    <h3 className="text-sm font-semibold text-slate-700 mb-1">No services found</h3>
+                    <button
+                      onClick={handleOpenAddService}
+                      className="mt-3 inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-slate-900 text-white font-medium text-xs shadow hover:bg-slate-800 cursor-pointer"
+                    >
+                      <Plus size={14} className="text-amber-400" /> Add New Service
+                    </button>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                    {services.map((s, idx) => (
+                      <div
+                        key={s.id || idx}
+                        className="bg-slate-50 border border-slate-200 rounded-2xl p-5 flex flex-col justify-between hover:shadow-md hover:border-slate-300 transition-all group relative overflow-hidden"
+                      >
+                        {/* Top Accent Line */}
+                        <div
+                          className="absolute top-0 left-0 right-0 h-[3px]"
+                          style={{ background: s.accent_color || "#FFB800" }}
+                        />
+
+                        <div>
+                          {/* Image preview thumbnail */}
+                          {s.image && (
+                            <div className="relative h-32 w-full rounded-xl overflow-hidden mb-3.5 bg-slate-200">
+                              <Image
+                                src={s.image}
+                                alt={s.title}
+                                fill
+                                className="object-cover group-hover:scale-105 transition-transform duration-300"
+                              />
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                            </div>
+                          )}
+
+                          {/* Header row: Icon & Number */}
+                          <div className="flex items-center justify-between gap-3 mb-3.5">
+                            <div
+                              className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm shadow-xs shrink-0"
+                              style={{
+                                background: `${s.accent_color || "#FFB800"}20`,
+                                border: `1px solid ${s.accent_color || "#FFB800"}40`,
+                                color: s.accent_color === "#FFFFFF" ? "#0F172A" : (s.accent_color || "#FFB800"),
+                              }}
+                            >
+                              <DynamicIcon name={s.icon} size={18} />
+                            </div>
+
+                            <div className="flex items-center gap-2">
+                              <span className="text-[11px] font-black tracking-wider px-2.5 py-0.5 rounded-lg bg-amber-100 text-amber-800 border border-amber-200">
+                                {s.num || (idx + 1 < 10 ? `0${idx + 1}` : `${idx + 1}`)}
+                              </span>
+                              {s.is_active ? (
+                                <span className="w-2 h-2 rounded-full bg-emerald-500" title="Active & Live" />
+                              ) : (
+                                <span className="w-2 h-2 rounded-full bg-slate-300" title="Draft / Inactive" />
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Title */}
+                          <h4 className="font-bold text-slate-900 text-sm leading-snug mb-1.5 line-clamp-2">
+                            {s.title}
+                          </h4>
+
+                          {/* Description */}
+                          <p className="text-xs text-slate-500 leading-relaxed line-clamp-3 mb-4">
+                            {s.description}
+                          </p>
+                        </div>
+
+                        {/* Actions */}
+                        <div className="pt-3 border-t border-slate-200/80 flex items-center justify-between mt-auto">
+                          <span className="text-[11px] font-medium text-slate-400 flex items-center gap-1">
+                            <CheckCircle2 size={12} className="text-emerald-600" /> Website /services
+                          </span>
+
+                          <div className="flex items-center gap-1.5">
+                            <button
+                              onClick={() => handleOpenEditService(s)}
+                              className="p-2 rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 hover:text-slate-900 transition-colors shadow-2xs cursor-pointer"
+                              title="Edit Service"
+                            >
+                              <Edit2 size={13} />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteService(s.id!)}
+                              className="p-2 rounded-lg bg-white border border-slate-200 text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors shadow-2xs cursor-pointer"
+                              title="Delete Service"
+                            >
+                              <Trash2 size={13} />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </>
+          )}
+
+          {/* ══════════════════════════════════════════════════════
+              TAB 4: GALLERY MEDIA & PHOTO CMS
           ══════════════════════════════════════════════════════ */}
           {activeTab === "gallery" && (
             <div className="flex-1 min-h-0 bg-white border border-slate-200/90 rounded-xl p-5 overflow-y-auto shadow-2xs custom-scrollbar flex flex-col">
@@ -1095,6 +1466,268 @@ export default function AdminPortal() {
             </div>
           )}
 
+          {/* ══════════════════════════════════════════════════════
+              TAB 5: CONTACT & COMPANY INFORMATION SETTINGS
+          ══════════════════════════════════════════════════════ */}
+          {activeTab === "contact" && (
+            <div className="flex-1 min-h-0 bg-white border border-slate-200/90 rounded-xl p-6 overflow-y-auto shadow-2xs custom-scrollbar">
+              <form onSubmit={handleSaveSettings} className="max-w-5xl mx-auto space-y-6">
+                
+                {settingsFeedback && (
+                  <div
+                    className={`p-4 rounded-xl text-xs font-semibold border flex items-center gap-2 ${
+                      settingsFeedback.success
+                        ? "bg-emerald-50 text-emerald-800 border-emerald-200"
+                        : "bg-red-50 text-red-800 border-red-200"
+                    }`}
+                  >
+                    {settingsFeedback.success ? <CheckCircle2 size={16} /> : <AlertCircle size={16} />}
+                    <span>{settingsFeedback.message}</span>
+                  </div>
+                )}
+
+                {/* Section 1: Official Emails & Phone Numbers */}
+                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-4">
+                  <div className="flex items-center gap-2.5 pb-3 border-b border-slate-200">
+                    <Mail size={18} className="text-amber-600" />
+                    <div>
+                      <h3 className="font-bold text-slate-900 text-sm">Official Contact &amp; Dispatch Details</h3>
+                      <p className="text-xs text-slate-500">
+                        Primary communication channels displayed on /contact, footer, and emails
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-xs font-semibold uppercase tracking-wider text-slate-700 block mb-1.5">
+                        Primary Contact Email *
+                      </label>
+                      <input
+                        type="email"
+                        value={companySettings.email || ""}
+                        onChange={(e) => setCompanySettings({ ...companySettings, email: e.target.value })}
+                        placeholder="e.g. plan@virtuein.agency"
+                        required
+                        className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-amber-500/20"
+                      />
+                      <p className="text-[11px] text-slate-400 mt-1">Displayed on Contact Hero &amp; Navbar</p>
+                    </div>
+
+                    <div>
+                      <label className="text-xs font-semibold uppercase tracking-wider text-slate-700 block mb-1.5">
+                        Alternate / Producer Email
+                      </label>
+                      <input
+                        type="email"
+                        value={companySettings.alternate_email || ""}
+                        onChange={(e) => setCompanySettings({ ...companySettings, alternate_email: e.target.value })}
+                        placeholder="e.g. sathish@virtueinagency.com"
+                        className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-amber-500/20"
+                      />
+                      <p className="text-[11px] text-slate-400 mt-1">Displayed in Website Footer</p>
+                    </div>
+
+                    <div>
+                      <label className="text-xs font-semibold uppercase tracking-wider text-slate-700 block mb-1.5">
+                        Primary Phone Number *
+                      </label>
+                      <input
+                        type="text"
+                        value={companySettings.phone || ""}
+                        onChange={(e) => setCompanySettings({ ...companySettings, phone: e.target.value })}
+                        placeholder="e.g. +91 74010 30000"
+                        required
+                        className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-amber-500/20"
+                      />
+                      <p className="text-[11px] text-slate-400 mt-1">Direct call line on Contact Page &amp; Navbar</p>
+                    </div>
+
+                    <div>
+                      <label className="text-xs font-semibold uppercase tracking-wider text-slate-700 block mb-1.5">
+                        Alternate Phone / Mobile
+                      </label>
+                      <input
+                        type="text"
+                        value={companySettings.alternate_phone || ""}
+                        onChange={(e) => setCompanySettings({ ...companySettings, alternate_phone: e.target.value })}
+                        placeholder="e.g. +91 98843 98514"
+                        className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-amber-500/20"
+                      />
+                      <p className="text-[11px] text-slate-400 mt-1">Direct line shown in Website Footer</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Section 2: Physical Office Address */}
+                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-4">
+                  <div className="flex items-center gap-2.5 pb-3 border-b border-slate-200">
+                    <MapPin size={18} className="text-amber-600" />
+                    <div>
+                      <h3 className="font-bold text-slate-900 text-sm">Physical Office &amp; Headquarters Address</h3>
+                      <p className="text-xs text-slate-500">
+                        Official address rendered on Website Contact Cards &amp; Footer
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <label className="text-xs font-semibold uppercase tracking-wider text-slate-700 block mb-1.5">
+                        Address Line 1
+                      </label>
+                      <input
+                        type="text"
+                        value={companySettings.address_line1 || ""}
+                        onChange={(e) => setCompanySettings({ ...companySettings, address_line1: e.target.value })}
+                        placeholder="e.g. 28, Judge Jambulingam Road,"
+                        className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 font-medium focus:outline-none"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="text-xs font-semibold uppercase tracking-wider text-slate-700 block mb-1.5">
+                        Address Line 2 (Area / Locality)
+                      </label>
+                      <input
+                        type="text"
+                        value={companySettings.address_line2 || ""}
+                        onChange={(e) => setCompanySettings({ ...companySettings, address_line2: e.target.value })}
+                        placeholder="e.g. Mylapore, Chennai – 600 004"
+                        className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 font-medium focus:outline-none"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="text-xs font-semibold uppercase tracking-wider text-slate-700 block mb-1.5">
+                        State &amp; Country
+                      </label>
+                      <input
+                        type="text"
+                        value={companySettings.city_state_pin || ""}
+                        onChange={(e) => setCompanySettings({ ...companySettings, city_state_pin: e.target.value })}
+                        placeholder="e.g. Tamil Nadu, India"
+                        className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 font-medium focus:outline-none"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Section 3: Contact Person & Operating Hours */}
+                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-4">
+                  <div className="flex items-center gap-2.5 pb-3 border-b border-slate-200">
+                    <Building2 size={18} className="text-amber-600" />
+                    <div>
+                      <h3 className="font-bold text-slate-900 text-sm">Lead Contact Person &amp; Working Hours</h3>
+                      <p className="text-xs text-slate-500">
+                        Officer designation and office timings for clients
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <label className="text-xs font-semibold uppercase tracking-wider text-slate-700 block mb-1.5">
+                        Contact Person Name
+                      </label>
+                      <input
+                        type="text"
+                        value={companySettings.contact_person || ""}
+                        onChange={(e) => setCompanySettings({ ...companySettings, contact_person: e.target.value })}
+                        placeholder="e.g. SATHISH RINGESAN"
+                        className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 font-bold focus:outline-none"
+                      />
+                      <p className="text-[11px] text-slate-400 mt-1">Displayed above contact numbers in Footer</p>
+                    </div>
+
+                    <div>
+                      <label className="text-xs font-semibold uppercase tracking-wider text-slate-700 block mb-1.5">
+                        Working Hours (Mon – Sat)
+                      </label>
+                      <input
+                        type="text"
+                        value={companySettings.working_hours_mon_sat || ""}
+                        onChange={(e) => setCompanySettings({ ...companySettings, working_hours_mon_sat: e.target.value })}
+                        placeholder="e.g. Monday – Saturday: 9:00 AM – 7:00 PM IST"
+                        className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 font-medium focus:outline-none"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="text-xs font-semibold uppercase tracking-wider text-slate-700 block mb-1.5">
+                        Sunday Working Hours
+                      </label>
+                      <input
+                        type="text"
+                        value={companySettings.working_hours_sun || ""}
+                        onChange={(e) => setCompanySettings({ ...companySettings, working_hours_sun: e.target.value })}
+                        placeholder="e.g. Sunday: By Appointment"
+                        className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-800 font-medium focus:outline-none"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Section 4: Google Maps Embed URL */}
+                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-4">
+                  <div className="flex items-center gap-2.5 pb-3 border-b border-slate-200">
+                    <Globe size={18} className="text-amber-600" />
+                    <div>
+                      <h3 className="font-bold text-slate-900 text-sm">Google Maps Embed &amp; Live Preview</h3>
+                      <p className="text-xs text-slate-500">
+                        Interactive Google Maps embed iframe source on /contact page
+                      </p>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-semibold uppercase tracking-wider text-slate-700 block mb-1.5">
+                      Google Maps Iframe Embed URL
+                    </label>
+                    <input
+                      type="text"
+                      value={companySettings.map_embed_url || ""}
+                      onChange={(e) => setCompanySettings({ ...companySettings, map_embed_url: e.target.value })}
+                      placeholder="https://www.google.com/maps/embed?pb=..."
+                      className="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 font-mono focus:outline-none"
+                    />
+                  </div>
+
+                  {companySettings.map_embed_url && (
+                    <div className="h-44 w-full rounded-xl overflow-hidden border border-slate-200 shadow-2xs">
+                      <iframe
+                        src={companySettings.map_embed_url}
+                        width="100%"
+                        height="100%"
+                        style={{ border: 0 }}
+                        allowFullScreen
+                        loading="lazy"
+                      />
+                    </div>
+                  )}
+                </div>
+
+                {/* Save Button Bar */}
+                <div className="p-4 bg-slate-900 text-white rounded-2xl flex items-center justify-between shadow-md">
+                  <div className="flex items-center gap-2 text-xs">
+                    <CheckCircle2 size={16} className="text-amber-400" />
+                    <span>All changes saved here will immediately synchronize across Website and Backend.</span>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={isSavingSettings}
+                    className="px-6 py-2.5 rounded-xl bg-amber-500 text-gray-950 font-bold text-xs hover:bg-amber-400 transition-all shadow active:scale-95 cursor-pointer flex items-center gap-2"
+                  >
+                    {isSavingSettings ? <RefreshCw size={14} className="animate-spin" /> : <Save size={14} />}
+                    <span>{isSavingSettings ? "Saving Settings..." : "Save Contact Settings"}</span>
+                  </button>
+                </div>
+
+              </form>
+            </div>
+          )}
+
         </main>
       </div>
 
@@ -1106,6 +1739,14 @@ export default function AdminPortal() {
         project={editingProject}
         onClose={() => setProjectModalOpen(false)}
         onSave={handleSaveProject}
+      />
+
+      {/* Service Form Modal (Add / Edit) */}
+      <ServiceFormModal
+        isOpen={serviceModalOpen}
+        service={editingService}
+        onClose={() => setServiceModalOpen(false)}
+        onSave={handleSaveService}
       />
 
       {/* Gallery Form Modal (Add / Edit) */}

@@ -1,90 +1,8 @@
-/**
- * Public Website API Client for Virtue IN Agency
- */
+import { Request, Response } from "express";
+import { supabase, ServiceRecord } from "../services/supabase.service.js";
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-
-export interface EnquiryInput {
-  name: string;
-  email: string;
-  country_code?: string;
-  phone: string;
-  company: string;
-  venue: string;
-  event_type: string;
-  team_size?: string;
-  budget?: string;
-  preferred_date?: string;
-  source?: string;
-  notes?: string;
-}
-
-export interface ProjectItem {
-  id: number | string;
-  title: string;
-  category: string;
-  subtitle: string;
-  date?: string;
-  month?: string;
-  time?: string;
-  location: string;
-  image: string;
-  gallery?: string[];
-  description?: string;
-  highlights?: string[];
-  client?: string;
-  year?: string;
-  tag?: string;
-  sort_order?: number;
-}
-
-
-export interface GalleryItem {
-  id: number | string;
-  title: string;
-  type: string;
-  date: string;
-  img: string;
-  grid_class?: string;
-  gridClass?: string;
-  description?: string;
-}
-
-export interface ServiceItem {
-  id?: number | string;
-  num?: string;
-  title: string;
-  description: string;
-  icon?: string;
-  image?: string;
-  accent_color?: string;
-  sort_order?: number;
-  is_active?: boolean;
-}
-
-export interface CompanySettings {
-  id?: number | string;
-  company_name?: string;
-  contact_person?: string;
-  email?: string;
-  alternate_email?: string;
-  phone?: string;
-  alternate_phone?: string;
-  address_line1?: string;
-  address_line2?: string;
-  city_state_pin?: string;
-  full_address?: string;
-  working_hours_mon_sat?: string;
-  working_hours_sun?: string;
-  map_embed_url?: string;
-  facebook_url?: string;
-  twitter_url?: string;
-  instagram_url?: string;
-  linkedin_url?: string;
-  website_url?: string;
-}
-
-export const DEFAULT_SERVICES: ServiceItem[] = [
+// Complete 15 default services with high-resolution Cloudflare R2 images
+export const fallbackServices: ServiceRecord[] = [
   {
     id: 1,
     num: "01",
@@ -93,6 +11,8 @@ export const DEFAULT_SERVICES: ServiceItem[] = [
     icon: "CalendarDays",
     image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/BNI%20Futurz%20chapter%20Meeting%20at%20Audi%20chennai/image-1.webp",
     accent_color: "#FFFFFF",
+    sort_order: 1,
+    is_active: true,
   },
   {
     id: 2,
@@ -102,6 +22,8 @@ export const DEFAULT_SERVICES: ServiceItem[] = [
     icon: "Settings",
     image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Madras%20-%20Fashion%20talent%20Expo/image-6.webp",
     accent_color: "#FFB800",
+    sort_order: 2,
+    is_active: true,
   },
   {
     id: 3,
@@ -111,6 +33,8 @@ export const DEFAULT_SERVICES: ServiceItem[] = [
     icon: "Mic",
     image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/BNP%20Paribas%20Gala%20Night/image-3.webp",
     accent_color: "#CBD5E1",
+    sort_order: 3,
+    is_active: true,
   },
   {
     id: 4,
@@ -120,6 +44,8 @@ export const DEFAULT_SERVICES: ServiceItem[] = [
     icon: "ClipboardCheck",
     image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/BNI%20Futurz%20chapter%20Meeting%20at%20Audi%20chennai/image-4.webp",
     accent_color: "#34d399",
+    sort_order: 4,
+    is_active: true,
   },
   {
     id: 5,
@@ -129,6 +55,8 @@ export const DEFAULT_SERVICES: ServiceItem[] = [
     icon: "MapPin",
     image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Southern%20HOG%20Rally/image-5.webp",
     accent_color: "#f472b6",
+    sort_order: 5,
+    is_active: true,
   },
   {
     id: 6,
@@ -138,6 +66,8 @@ export const DEFAULT_SERVICES: ServiceItem[] = [
     icon: "Building",
     image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/TVS%20Emerald%20Peninsula/image-6.webp",
     accent_color: "#60a5fa",
+    sort_order: 6,
+    is_active: true,
   },
   {
     id: 7,
@@ -147,6 +77,8 @@ export const DEFAULT_SERVICES: ServiceItem[] = [
     icon: "Palette",
     image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Madras%20-%20Fashion%20talent%20Expo/image-2.webp",
     accent_color: "#FFFFFF",
+    sort_order: 7,
+    is_active: true,
   },
   {
     id: 8,
@@ -156,6 +88,8 @@ export const DEFAULT_SERVICES: ServiceItem[] = [
     icon: "Music",
     image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Madras%20-%20Fashion%20talent%20Expo/image-1.webp",
     accent_color: "#FFB800",
+    sort_order: 8,
+    is_active: true,
   },
   {
     id: 9,
@@ -165,6 +99,8 @@ export const DEFAULT_SERVICES: ServiceItem[] = [
     icon: "Hammer",
     image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Southern%20HOG%20Rally/image-1.webp",
     accent_color: "#CBD5E1",
+    sort_order: 9,
+    is_active: true,
   },
   {
     id: 10,
@@ -174,6 +110,8 @@ export const DEFAULT_SERVICES: ServiceItem[] = [
     icon: "Store",
     image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/TVS%20Emerald%20Peninsula/image-1.webp",
     accent_color: "#34d399",
+    sort_order: 10,
+    is_active: true,
   },
   {
     id: 11,
@@ -183,6 +121,8 @@ export const DEFAULT_SERVICES: ServiceItem[] = [
     icon: "Megaphone",
     image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/BNP%20Paribas%20Gala%20Night/image-1.webp",
     accent_color: "#f472b6",
+    sort_order: 11,
+    is_active: true,
   },
   {
     id: 12,
@@ -192,6 +132,8 @@ export const DEFAULT_SERVICES: ServiceItem[] = [
     icon: "Activity",
     image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Southern%20HOG%20Rally/image-3.webp",
     accent_color: "#60a5fa",
+    sort_order: 12,
+    is_active: true,
   },
   {
     id: 13,
@@ -201,6 +143,8 @@ export const DEFAULT_SERVICES: ServiceItem[] = [
     icon: "Globe",
     image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/BNI%20Futurz%20chapter%20Meeting%20at%20Audi%20chennai/image-2.webp",
     accent_color: "#FFFFFF",
+    sort_order: 13,
+    is_active: true,
   },
   {
     id: 14,
@@ -210,6 +154,8 @@ export const DEFAULT_SERVICES: ServiceItem[] = [
     icon: "PenTool",
     image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Madras%20-%20Fashion%20talent%20Expo/image-4.webp",
     accent_color: "#FFB800",
+    sort_order: 14,
+    is_active: true,
   },
   {
     id: 15,
@@ -219,118 +165,199 @@ export const DEFAULT_SERVICES: ServiceItem[] = [
     icon: "Radio",
     image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Radiant%20Dental%20Care%20-%20Day%20out%20%40%20Polaris/image-8.webp",
     accent_color: "#CBD5E1",
+    sort_order: 15,
+    is_active: true,
   },
 ];
 
 /**
- * Fetch projects for the website (from Backend / Supabase)
+ * Get all services
  */
-export async function fetchLiveProjects(params?: {
-  category?: string;
-  search?: string;
-}): Promise<ProjectItem[]> {
+export async function getServices(req: Request, res: Response): Promise<void> {
   try {
-    const url = new URL(`${BACKEND_URL}/api/projects`);
-    if (params?.category && params.category !== "All") url.searchParams.set("category", params.category);
-    if (params?.search) url.searchParams.set("search", params.search);
+    const { search } = req.query;
 
-    const res = await fetch(url.toString(), { next: { revalidate: 10 } });
-    const data = await res.json();
-    return data.projects || [];
-  } catch (err) {
-    console.warn("Backend unavailable, using static fallback for projects:", err);
-    return [];
-  }
-}
+    const { data, error } = await supabase
+      .from("services")
+      .select("*")
+      .order("sort_order", { ascending: true });
 
-/**
- * Fetch gallery items for the website (from Backend / Supabase)
- */
-export async function fetchLiveGallery(params?: { type?: string }): Promise<GalleryItem[]> {
-  try {
-    const url = new URL(`${BACKEND_URL}/api/gallery`);
-    if (params?.type && params.type !== "all") url.searchParams.set("type", params.type);
+    let list = (data && data.length > 0) ? (data as ServiceRecord[]) : fallbackServices;
 
-    const res = await fetch(url.toString(), { next: { revalidate: 10 } });
-    const data = await res.json();
-    return data.items || [];
-  } catch (err) {
-    console.warn("Backend unavailable, using static fallback for gallery:", err);
-    return [];
-  }
-}
-
-/**
- * Fetch services for the website (from Backend / Supabase)
- */
-export async function fetchLiveServices(): Promise<ServiceItem[]> {
-  try {
-    const url = new URL(`${BACKEND_URL}/api/services`);
-    const res = await fetch(url.toString(), { next: { revalidate: 10 } });
-    if (res.ok) {
-      const data = await res.json();
-      if (data && Array.isArray(data.services) && data.services.length > 0) {
-        return data.services;
-      }
+    if (search && typeof search === "string") {
+      const q = search.toLowerCase();
+      list = list.filter(
+        (s) =>
+          s.title.toLowerCase().includes(q) ||
+          s.description.toLowerCase().includes(q)
+      );
     }
-  } catch (err) {
-    console.warn("Backend unavailable for services, using default:", err);
-  }
-  return DEFAULT_SERVICES;
-}
 
-/**
- * Fetch company contact & general settings for the website
- */
-export async function fetchLiveSettings(): Promise<CompanySettings> {
-  const defaultSettings: CompanySettings = {
-    company_name: "Virtue IN Agency",
-    contact_person: "SATHISH RINGESAN",
-    email: "plan@virtuein.agency",
-    alternate_email: "sathish@virtueinagency.com",
-    phone: "+91 74010 30000",
-    alternate_phone: "+91 98843 98514",
-    address_line1: "28, Judge Jambulingam Road,",
-    address_line2: "Mylapore, Chennai – 600 004",
-    city_state_pin: "Tamil Nadu, India",
-    full_address: "28, Judge Jambulingam Road, Mylapore, Chennai – 600 004, Tamil Nadu, India",
-    working_hours_mon_sat: "Monday – Saturday: 9:00 AM – 7:00 PM IST",
-    working_hours_sun: "Sunday: By Appointment",
-    map_embed_url: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3886.852445300305!2d80.2642874148231!3d13.044439090807693!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a52662c14041b31%3A0xc3b5e40882e3bc01!2sJudge%20Jambulingam%20Rd%2C%20Dr%20Radhakrishnan%20Salai%2C%20Mylapore%2C%20Chennai%2C%20Tamil%20Nadu%20600004!5e0!3m2!1sen!2sin!4v1682156434444!5m2!1sen!2sin",
-    website_url: "https://www.virtueinagency.com",
-  };
-
-  try {
-    const url = new URL(`${BACKEND_URL}/api/settings`);
-    const res = await fetch(url.toString(), { next: { revalidate: 10 } });
-    const data = await res.json();
-    return data.settings ? { ...defaultSettings, ...data.settings } : defaultSettings;
-  } catch (err) {
-    console.warn("Backend unavailable for settings, using default:", err);
-    return defaultSettings;
-  }
-}
-
-/**
- * Submit contact form enquiry
- */
-export async function submitEnquiry(data: EnquiryInput): Promise<{
-  success: boolean;
-  message?: string;
-  enquiry?: any;
-  error?: string;
-}> {
-  try {
-    const res = await fetch(`${BACKEND_URL}/api/send-enquiry`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
+    res.json({
+      success: true,
+      services: list,
+      count: list.length,
     });
-    return await res.json();
   } catch (err: unknown) {
-    return {
+    res.status(500).json({
       success: false,
-      error: err instanceof Error ? err.message : "Network error. Please check your connection.",
+      services: fallbackServices,
+      error: err instanceof Error ? err.message : "Internal server error fetching services",
+    });
+  }
+}
+
+/**
+ * Get single service by ID
+ */
+export async function getServiceById(req: Request, res: Response): Promise<void> {
+  try {
+    const { id } = req.params;
+    const { data, error } = await supabase
+      .from("services")
+      .select("*")
+      .eq("id", id)
+      .single();
+
+    if (error || !data) {
+      const found = fallbackServices.find((s) => String(s.id) === id);
+      if (found) {
+        res.json({ success: true, service: found });
+        return;
+      }
+      res.status(404).json({ success: false, error: "Service not found" });
+      return;
+    }
+
+    res.json({ success: true, service: data });
+  } catch (err: unknown) {
+    res.status(500).json({
+      success: false,
+      error: err instanceof Error ? err.message : "Error fetching service",
+    });
+  }
+}
+
+/**
+ * Create new service
+ */
+export async function createService(req: Request, res: Response): Promise<void> {
+  try {
+    const { num, title, description, icon, image, accent_color, sort_order, is_active } = req.body;
+
+    if (!title) {
+      res.status(400).json({ success: false, error: "Service title is required" });
+      return;
+    }
+
+    const newRecord: Omit<ServiceRecord, "id"> = {
+      num: num || "",
+      title,
+      description: description || "",
+      icon: icon || "CalendarDays",
+      image: image || "",
+      accent_color: accent_color || "#FFB800",
+      sort_order: sort_order || 1,
+      is_active: is_active ?? true,
     };
+
+    const { data, error } = await supabase
+      .from("services")
+      .insert([newRecord])
+      .select()
+      .single();
+
+    if (error) {
+      // Return simulated created item if Supabase table is not yet migrated
+      const simService: ServiceRecord = {
+        id: Date.now(),
+        ...newRecord,
+      };
+      fallbackServices.push(simService);
+      res.status(201).json({
+        success: true,
+        service: simService,
+        message: "Service created in local fallback (Supabase table optional)",
+      });
+      return;
+    }
+
+    res.status(201).json({ success: true, service: data });
+  } catch (err: unknown) {
+    res.status(500).json({
+      success: false,
+      error: err instanceof Error ? err.message : "Error creating service",
+    });
+  }
+}
+
+/**
+ * Update service
+ */
+export async function updateService(req: Request, res: Response): Promise<void> {
+  try {
+    const { id } = req.params;
+    const updates = req.body;
+
+    const { data, error } = await supabase
+      .from("services")
+      .update({
+        ...updates,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", id)
+      .select()
+      .single();
+
+    if (error) {
+      const idx = fallbackServices.findIndex((s) => String(s.id) === id);
+      if (idx !== -1) {
+        fallbackServices[idx] = { ...fallbackServices[idx], ...updates };
+        res.json({
+          success: true,
+          service: fallbackServices[idx],
+          message: "Service updated in fallback store",
+        });
+        return;
+      }
+      res.status(400).json({ success: false, error: error.message });
+      return;
+    }
+
+    res.json({ success: true, service: data });
+  } catch (err: unknown) {
+    res.status(500).json({
+      success: false,
+      error: err instanceof Error ? err.message : "Error updating service",
+    });
+  }
+}
+
+/**
+ * Delete service
+ */
+export async function deleteService(req: Request, res: Response): Promise<void> {
+  try {
+    const { id } = req.params;
+
+    const { error } = await supabase.from("services").delete().eq("id", id);
+
+    if (error) {
+      const idx = fallbackServices.findIndex((s) => String(s.id) === id);
+      if (idx !== -1) {
+        fallbackServices.splice(idx, 1);
+        res.json({ success: true, message: "Service removed from fallback list" });
+        return;
+      }
+      res.status(400).json({ success: false, error: error.message });
+      return;
+    }
+
+    res.json({ success: true, message: "Service deleted successfully" });
+  } catch (err: unknown) {
+    res.status(500).json({
+      success: false,
+      error: err instanceof Error ? err.message : "Error deleting service",
+    });
   }
 }
