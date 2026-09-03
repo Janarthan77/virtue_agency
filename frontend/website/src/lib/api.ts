@@ -234,7 +234,7 @@ export async function fetchLiveProjects(params?: {
     if (params?.category && params.category !== "All") url.searchParams.set("category", params.category);
     if (params?.search) url.searchParams.set("search", params.search);
 
-    const res = await fetch(url.toString(), { next: { revalidate: 10 } });
+    const res = await fetch(url.toString(), { cache: "no-store" });
     const data = await res.json();
     return data.projects || [];
   } catch (err) {
@@ -251,7 +251,7 @@ export async function fetchLiveGallery(params?: { type?: string }): Promise<Gall
     const url = new URL(`${BACKEND_URL}/api/gallery`);
     if (params?.type && params.type !== "all") url.searchParams.set("type", params.type);
 
-    const res = await fetch(url.toString(), { next: { revalidate: 10 } });
+    const res = await fetch(url.toString(), { cache: "no-store" });
     const data = await res.json();
     return data.items || [];
   } catch (err) {
@@ -266,7 +266,7 @@ export async function fetchLiveGallery(params?: { type?: string }): Promise<Gall
 export async function fetchLiveServices(): Promise<ServiceItem[]> {
   try {
     const url = new URL(`${BACKEND_URL}/api/services`);
-    const res = await fetch(url.toString(), { next: { revalidate: 10 } });
+    const res = await fetch(url.toString(), { cache: "no-store" });
     if (res.ok) {
       const data = await res.json();
       if (data && Array.isArray(data.services) && data.services.length > 0) {
@@ -302,7 +302,7 @@ export async function fetchLiveSettings(): Promise<CompanySettings> {
 
   try {
     const url = new URL(`${BACKEND_URL}/api/settings`);
-    const res = await fetch(url.toString(), { next: { revalidate: 10 } });
+    const res = await fetch(url.toString(), { cache: "no-store" });
     const data = await res.json();
     return data.settings ? { ...defaultSettings, ...data.settings } : defaultSettings;
   } catch (err) {

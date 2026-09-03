@@ -120,10 +120,10 @@ export default function EventDetailsModal({ event, onClose }: EventDetailsModalP
 
         {/* Main Content Area: Responsive Stack on Mobile, 2-Column on Desktop */}
         <div className="flex flex-col lg:grid lg:grid-cols-12 flex-1 overflow-y-auto lg:overflow-hidden min-h-0 custom-scrollbar">
-          
+
           {/* Left Column: Image Slider Showcase (7 cols on desktop) */}
           <div className="lg:col-span-7 bg-black/60 relative flex flex-col justify-between overflow-hidden border-b lg:border-b-0 lg:border-r border-white/[0.08] shrink-0">
-            
+
             {/* Primary Slider Canvas */}
             <div className="relative w-full h-[220px] xs:h-[260px] sm:h-[340px] lg:h-full min-h-[220px] sm:min-h-[300px] lg:min-h-[420px] flex-1 overflow-hidden group">
               <AnimatePresence mode="wait">
@@ -189,11 +189,10 @@ export default function EventDetailsModal({ event, onClose }: EventDetailsModalP
                     key={idx}
                     type="button"
                     onClick={() => setCurrentSlide(idx)}
-                    className={`relative w-14 h-10 sm:w-16 sm:h-12 rounded-lg sm:rounded-xl overflow-hidden shrink-0 border-2 transition-all duration-300 p-0 ${
-                      currentSlide === idx
+                    className={`relative w-14 h-10 sm:w-16 sm:h-12 rounded-lg sm:rounded-xl overflow-hidden shrink-0 border-2 transition-all duration-300 p-0 ${currentSlide === idx
                         ? "border-[#FFB800] scale-105 shadow-[0_0_15px_rgba(255,184,0,0.35)]"
                         : "border-transparent opacity-40 hover:opacity-100"
-                    }`}
+                      }`}
                   >
                     <Image
                       src={imgUrl}
@@ -209,10 +208,10 @@ export default function EventDetailsModal({ event, onClose }: EventDetailsModalP
 
           {/* Right Column: Event Details & Metadata (5 cols on desktop) */}
           <div className="lg:col-span-5 flex flex-col justify-between bg-[#0F172A] overflow-visible lg:overflow-hidden flex-1">
-            
+
             {/* Details body */}
             <div className="p-4 sm:p-6 lg:p-7 overflow-y-visible lg:overflow-y-auto custom-scrollbar flex-1 space-y-4 sm:space-y-5">
-              
+
               {/* Event Title & Subtitle */}
               <div>
                 <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-white leading-tight tracking-tight mb-1.5">
@@ -222,6 +221,18 @@ export default function EventDetailsModal({ event, onClose }: EventDetailsModalP
                   <Building2 size={14} className="shrink-0" />
                   <span className="truncate">{event.subtitle}</span>
                 </div>
+              </div>
+
+              {/* Overview Section */}
+              <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-white/[0.02] border border-white/[0.05]">
+                <h4 className="text-white font-bold text-[11px] sm:text-xs uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                  <Sparkles size={13} className="text-[#FFB800] shrink-0" />
+                  Event Overview
+                </h4>
+                <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">
+                  {event.description ||
+                    `Virtue IN delivered comprehensive execution for this signature ${event.category.toLowerCase()} event, overseeing bespoke staging, audio-visual technology, lighting choreography, and white-glove attendee hospitality.`}
+                </p>
               </div>
 
               {/* Metadata Grid */}
@@ -245,19 +256,6 @@ export default function EventDetailsModal({ event, onClose }: EventDetailsModalP
                     <p className="text-white text-xs font-bold truncate">{event.category || "Corporate"}</p>
                   </div>
                 </div>
-              </div>
-
-
-              {/* Overview Section */}
-              <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-white/[0.02] border border-white/[0.05]">
-                <h4 className="text-white font-bold text-[11px] sm:text-xs uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-                  <Sparkles size={13} className="text-[#FFB800] shrink-0" />
-                  Event Overview
-                </h4>
-                <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">
-                  {event.description ||
-                    `Virtue IN delivered comprehensive execution for this signature ${event.category.toLowerCase()} event, overseeing bespoke staging, audio-visual technology, lighting choreography, and white-glove attendee hospitality.`}
-                </p>
               </div>
 
               {/* Key Highlights */}

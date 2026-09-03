@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
+import { StatsCounterSection } from '@/components/StatsCounterSection'
 import {
   ArrowRight,
   CalendarDays,
@@ -292,26 +293,8 @@ export default function ServicesPage() {
               acoustics, and precision logistics.
             </p>
 
-            {/* Stat Row */}
-            <div className="flex justify-center flex-wrap gap-8 sm:gap-14">
-              {stats.map((s) => (
-                <div key={s.label} className="text-center">
-                  <div
-                    className="text-3xl sm:text-4xl md:text-5xl font-black leading-none"
-                    style={{
-                      background: 'linear-gradient(135deg, #FFB800, #ffd76b)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                    }}
-                  >
-                    {s.value}
-                  </div>
-                  <div className="text-xs text-gray-400 mt-2 uppercase tracking-widest font-semibold">
-                    {s.label}
-                  </div>
-                </div>
-              ))}
-            </div>
+            {/* Stat Row with Animated Counter */}
+            <StatsCounterSection variant="inline" />
 
           </motion.div>
         </div>

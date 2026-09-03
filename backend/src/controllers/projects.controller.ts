@@ -362,7 +362,7 @@ export async function getProjects(req: Request, res: Response): Promise<void> {
   try {
     const { category, search } = req.query;
 
-    let query = supabase.from("projects").select("*").order("sort_order", { ascending: true, nullsFirst: false }).order("id", { ascending: true });
+    let query = supabase.from("projects").select("*").order("id", { ascending: true });
 
     if (category && category !== "All") {
       query = query.eq("category", category as string);
@@ -375,7 +375,7 @@ export async function getProjects(req: Request, res: Response): Promise<void> {
 
     if (error || !data || data.length === 0) {
       if (error) console.warn("Supabase query fallback (projects):", error.message);
-      let list = [...fallbackProjects].sort((a, b) => (a.sort_order ?? Number(a.id)) - (b.sort_order ?? Number(b.id)));
+      let list = [...fallbackProjects].sort((a, b) => (Number(a.id) || 1) - (Number(b.id) || 1));
       if (category && category !== "All") {
         list = list.filter((p) => p.category.toLowerCase().includes((category as string).toLowerCase()));
       }
@@ -386,7 +386,26 @@ export async function getProjects(req: Request, res: Response): Promise<void> {
       return;
     }
 
-    res.json({ success: true, count: data.length, projects: data, source: "supabase" });
+    // Ensure gallery is always an array of strings
+    const sanitized = data.map((p) => {
+      let gal = p.gallery;
+      if (typeof gal === "string") {
+        try {
+          gal = JSON.parse(gal);
+        } catch {
+          gal = [gal];
+        }
+      }
+      if (!Array.isArray(gal)) {
+        gal = p.image ? [p.image] : [];
+      }
+      return {
+        ...p,
+        gallery: gal,
+      };
+    });
+
+    res.json({ success: true, count: sanitized.length, projects: sanitized, source: "supabase" });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Error fetching projects";
     res.status(500).json({ success: false, error: msg });
@@ -411,7 +430,20 @@ export async function getProjectById(req: Request, res: Response): Promise<void>
       return;
     }
 
-    res.json({ success: true, project: data });
+    // Sanitize gallery
+    let gal = data.gallery;
+    if (typeof gal === "string") {
+      try {
+        gal = JSON.parse(gal);
+      } catch {
+        gal = [gal];
+      }
+    }
+    if (!Array.isArray(gal)) {
+      gal = data.image ? [data.image] : [];
+    }
+
+    res.json({ success: true, project: { ...data, gallery: gal } });
   } catch (err: unknown) {
     res.status(500).json({ success: false, error: err instanceof Error ? err.message : "Error" });
   }
@@ -429,9 +461,8 @@ export async function createProject(req: Request, res: Response): Promise<void> 
       return;
     }
 
-    const newProject = {
+    const newProject: any = {
       title: body.title,
-      sort_order: body.sort_order !== undefined ? Number(body.sort_order) : 1,
       category: body.category,
       subtitle: body.subtitle || "",
       date: body.date || "",
@@ -474,11 +505,12 @@ export async function updateProject(req: Request, res: Response): Promise<void> 
     const { id } = req.params;
     const body = req.body;
 
-    const updates = {
+    const updates: any = {
       ...body,
       updated_at: new Date().toISOString(),
     };
     delete updates.id;
+    delete updates.sort_order;
 
     const { data, error } = await supabase.from("projects").update(updates).eq("id", id).select().single();
 

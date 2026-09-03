@@ -31,11 +31,14 @@ import {
   Zap,
 } from "lucide-react";
 import { HeroSlider } from "@/components/HeroSlider";
+import { CategorySlidersShowcase } from "@/components/CategorySlidersShowcase";
 import { AboutSection } from "@/components/AboutSection";
 import { ProjectsSection } from "@/components/ProjectsSection";
 import { GallerySection } from "@/components/GallerySection";
 import { VenuesSection } from "@/components/VenuesSection";
 import { FAQSection } from "@/components/FAQSection";
+import { StatsCounterSection } from "@/components/StatsCounterSection";
+import { GoogleReviewsSection } from "@/components/GoogleReviewsSection";
 import { fetchLiveServices } from "@/lib/api";
 
 const ICON_MAP: Record<string, any> = {
@@ -637,8 +640,14 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen font-sans bg-[#1E293B]">
 
-      {/* 1 · HERO */}
+      {/* 1 · HERO (10 Big Events Shuffle Picture) */}
       <HeroSlider />
+
+      {/* 2-8 · THE 7 EVENT PORTIONS (Category Sliders - 3 Images Each) */}
+      <CategorySlidersShowcase />
+
+      {/* STATS WITH ANIMATED COUNTER */}
+      <StatsCounterSection />
 
       {/* 2 · ABOUT SECTION */}
       <AboutSection />
@@ -685,8 +694,8 @@ export default function Home() {
       {/* 6 · VENUES SECTION */}
       <VenuesSection />
 
-      {/* 7 · TESTIMONIALS */}
-      <TestimonialsSection />
+      {/* 7 · GOOGLE REVIEWS & TESTIMONIALS */}
+      <GoogleReviewsSection />
 
       {/* 8 · FAQ */}
       <FAQSection variant="home" />

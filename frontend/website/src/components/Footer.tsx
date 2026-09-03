@@ -30,14 +30,17 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           {/* Brand */}
           <div>
-            <Link href="/" className="inline-block mb-6 group">
+            <Link href="/" className="inline-flex flex-col items-start mb-6 group leading-none">
               <Image
                 src="/logo.png"
                 alt="Virtue IN"
                 width={180}
                 height={44}
-                className="h-10 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
+                className="h-8 md:h-9 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
               />
+              <span className="text-[9px] md:text-[10px] font-black italic tracking-[0.26em] uppercase text-white/90 group-hover:text-[#FFB800] transition-colors mt-1 pl-0.5">
+                VIRTUE IN AGENCY
+              </span>
             </Link>
             <p className="text-gray-300 mb-6 text-sm leading-relaxed">
               Crafting extraordinary corporate experiences. We exclusively specialize in corporate events and product releases.
@@ -120,11 +123,8 @@ export default function Footer() {
             &copy; {new Date().getFullYear()} Virtue IN. All rights reserved.
           </p>
           <div className="flex gap-6 text-sm">
-            <Link href="#" className="text-gray-400 hover:text-accent transition-colors">Privacy Policy</Link>
-            <Link href="#" className="text-gray-400 hover:text-accent transition-colors">Terms of Service</Link>
-            <Link href="/admin" className="text-gray-400 hover:text-[#FFB800] transition-colors flex items-center gap-1 font-semibold">
-              Admin Portal
-            </Link>
+            <Link href="/privacy-policy" className="text-gray-400 hover:text-[#FFB800] transition-colors">Privacy Policy</Link>
+            <Link href="/terms-and-conditions" className="text-gray-400 hover:text-[#FFB800] transition-colors">Terms of Service</Link>
           </div>
         </div>
       </div>

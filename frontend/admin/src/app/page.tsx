@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import {
+  Menu,
   Mail,
   Send,
   Search,
@@ -267,6 +268,7 @@ export default function AdminPortal() {
   const [currentUser, setCurrentUser] = useState<AdminUser | null>(null);
   const [authChecked, setAuthChecked] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   // Active Workspace Tab
   const [activeTab, setActiveTab] = useState<"enquiries" | "projects" | "services" | "gallery" | "contact">("enquiries");
@@ -664,16 +666,29 @@ export default function AdminPortal() {
   return (
     <div className="h-screen max-h-screen w-screen overflow-hidden bg-[#F8FAFC] text-slate-800 flex flex-row font-sans select-none antialiased">
       
-      {/* ══ 1. UNIFIED ADMIN SIDEBAR ══════════════════════════ */}
+      {/* Mobile Drawer Backdrop */}
+      <AnimatePresence>
+        {mobileSidebarOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setMobileSidebarOpen(false)}
+            className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-40 lg:hidden"
+          />
+        )}
+      </AnimatePresence>
+
+      {/* ══ 1. UNIFIED ADMIN SIDEBAR (Desktop Docked + Mobile Slide-over) ══════════════════════════ */}
       <aside
-        className={`${
-          sidebarCollapsed ? "w-20" : "w-64"
-        } h-full bg-white border-r border-slate-200/80 flex flex-col justify-between transition-all duration-300 shrink-0 z-30 shadow-sm relative`}
+        className={`fixed inset-y-0 left-0 z-50 lg:static lg:z-30 h-full bg-white border-r border-slate-200/80 flex flex-col justify-between transition-all duration-300 shadow-2xl lg:shadow-sm shrink-0 ${
+          mobileSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+        } ${sidebarCollapsed ? "lg:w-20" : "lg:w-64"} w-72 max-w-[85vw]`}
       >
         <div>
           {/* Brand Bar */}
-          <div className="h-16 px-4 border-b border-slate-200/80 flex items-center justify-between bg-white">
-            {!sidebarCollapsed ? (
+          <div className="h-16 px-4 border-b border-slate-200/80 flex items-center justify-between bg-white shrink-0">
+            {(!sidebarCollapsed || mobileSidebarOpen) ? (
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-base shadow-sm">
                   V
@@ -694,18 +709,28 @@ export default function AdminPortal() {
               </div>
             )}
 
+            {/* Desktop Collapse Toggle */}
             <button
               onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              className="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-900 flex items-center justify-center transition-colors cursor-pointer"
+              className="hidden lg:flex w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-900 items-center justify-center transition-colors cursor-pointer"
               title={sidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
             >
               <ChevronLeft size={16} className={sidebarCollapsed ? "rotate-180" : ""} />
+            </button>
+
+            {/* Mobile Close Button */}
+            <button
+              onClick={() => setMobileSidebarOpen(false)}
+              className="lg:hidden w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-900 flex items-center justify-center transition-colors cursor-pointer"
+              title="Close Menu"
+            >
+              <X size={18} />
             </button>
           </div>
 
           {/* Core Navigation Items */}
           <div className="p-3.5 space-y-1.5">
-            {!sidebarCollapsed && (
+            {(!sidebarCollapsed || mobileSidebarOpen) && (
               <p className="px-3 text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
                 Workspace Modules
               </p>
@@ -713,7 +738,10 @@ export default function AdminPortal() {
 
             {/* Tab 1: Enquiries & Leads */}
             <button
-              onClick={() => setActiveTab("enquiries")}
+              onClick={() => {
+                setActiveTab("enquiries");
+                setMobileSidebarOpen(false);
+              }}
               className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
                 activeTab === "enquiries"
                   ? "bg-slate-900 text-white shadow-sm"
@@ -721,8 +749,8 @@ export default function AdminPortal() {
               }`}
             >
               <Inbox size={18} className={activeTab === "enquiries" ? "text-amber-400" : "text-slate-500"} />
-              {!sidebarCollapsed && <span className="truncate flex-1 text-left">Leads &amp; Enquiries</span>}
-              {!sidebarCollapsed && (
+              {(!sidebarCollapsed || mobileSidebarOpen) && <span className="truncate flex-1 text-left">Leads &amp; Enquiries</span>}
+              {(!sidebarCollapsed || mobileSidebarOpen) && (
                 <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-200/60 text-slate-700">
                   {enquiries.length}
                 </span>
@@ -731,7 +759,10 @@ export default function AdminPortal() {
 
             {/* Tab 2: Projects CMS */}
             <button
-              onClick={() => setActiveTab("projects")}
+              onClick={() => {
+                setActiveTab("projects");
+                setMobileSidebarOpen(false);
+              }}
               className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
                 activeTab === "projects"
                   ? "bg-slate-900 text-white shadow-sm"
@@ -739,8 +770,8 @@ export default function AdminPortal() {
               }`}
             >
               <Sparkles size={18} className={activeTab === "projects" ? "text-amber-400" : "text-slate-500"} />
-              {!sidebarCollapsed && <span className="truncate flex-1 text-left">Projects CMS</span>}
-              {!sidebarCollapsed && (
+              {(!sidebarCollapsed || mobileSidebarOpen) && <span className="truncate flex-1 text-left">Projects CMS</span>}
+              {(!sidebarCollapsed || mobileSidebarOpen) && (
                 <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-200/60 text-slate-700">
                   {projects.length}
                 </span>
@@ -749,7 +780,10 @@ export default function AdminPortal() {
 
             {/* Tab 3: Services CMS */}
             <button
-              onClick={() => setActiveTab("services")}
+              onClick={() => {
+                setActiveTab("services");
+                setMobileSidebarOpen(false);
+              }}
               className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
                 activeTab === "services"
                   ? "bg-slate-900 text-white shadow-sm"
@@ -757,8 +791,8 @@ export default function AdminPortal() {
               }`}
             >
               <Layers size={18} className={activeTab === "services" ? "text-amber-400" : "text-slate-500"} />
-              {!sidebarCollapsed && <span className="truncate flex-1 text-left">Services CMS</span>}
-              {!sidebarCollapsed && (
+              {(!sidebarCollapsed || mobileSidebarOpen) && <span className="truncate flex-1 text-left">Services CMS</span>}
+              {(!sidebarCollapsed || mobileSidebarOpen) && (
                 <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-200/60 text-slate-700">
                   {services.length}
                 </span>
@@ -767,7 +801,10 @@ export default function AdminPortal() {
 
             {/* Tab 4: Gallery CMS */}
             <button
-              onClick={() => setActiveTab("gallery")}
+              onClick={() => {
+                setActiveTab("gallery");
+                setMobileSidebarOpen(false);
+              }}
               className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
                 activeTab === "gallery"
                   ? "bg-slate-900 text-white shadow-sm"
@@ -775,8 +812,8 @@ export default function AdminPortal() {
               }`}
             >
               <ImageIcon size={18} className={activeTab === "gallery" ? "text-amber-400" : "text-slate-500"} />
-              {!sidebarCollapsed && <span className="truncate flex-1 text-left">Gallery CMS</span>}
-              {!sidebarCollapsed && (
+              {(!sidebarCollapsed || mobileSidebarOpen) && <span className="truncate flex-1 text-left">Gallery CMS</span>}
+              {(!sidebarCollapsed || mobileSidebarOpen) && (
                 <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-200/60 text-slate-700">
                   {gallery.length}
                 </span>
@@ -785,7 +822,10 @@ export default function AdminPortal() {
 
             {/* Tab 5: Contact & Company Settings */}
             <button
-              onClick={() => setActiveTab("contact")}
+              onClick={() => {
+                setActiveTab("contact");
+                setMobileSidebarOpen(false);
+              }}
               className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
                 activeTab === "contact"
                   ? "bg-slate-900 text-white shadow-sm"
@@ -793,8 +833,8 @@ export default function AdminPortal() {
               }`}
             >
               <Phone size={18} className={activeTab === "contact" ? "text-amber-400" : "text-slate-500"} />
-              {!sidebarCollapsed && <span className="truncate flex-1 text-left">Contact &amp; Info</span>}
-              {!sidebarCollapsed && (
+              {(!sidebarCollapsed || mobileSidebarOpen) && <span className="truncate flex-1 text-left">Contact &amp; Info</span>}
+              {(!sidebarCollapsed || mobileSidebarOpen) && (
                 <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-100 text-emerald-800">
                   Live
                 </span>
@@ -805,7 +845,7 @@ export default function AdminPortal() {
 
         {/* Sidebar Bottom */}
         <div className="p-3.5 border-t border-slate-200/80 space-y-2.5 bg-slate-50/50">
-          {!sidebarCollapsed && (
+          {(!sidebarCollapsed || mobileSidebarOpen) && (
             <div className="p-2.5 rounded-xl bg-white border border-slate-200 text-xs space-y-1.5 shadow-2xs">
               <div className="flex items-center justify-between text-slate-600">
                 <span className="flex items-center gap-1.5 font-normal">
@@ -828,15 +868,15 @@ export default function AdminPortal() {
             className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors group"
           >
             <ExternalLink size={15} className="shrink-0 group-hover:text-amber-600 transition-colors" />
-            {!sidebarCollapsed && <span className="truncate font-medium text-xs">View Live Website</span>}
+            {(!sidebarCollapsed || mobileSidebarOpen) && <span className="truncate font-medium text-xs">View Live Website</span>}
           </Link>
 
           <div
             className={`flex items-center gap-2.5 p-2 rounded-xl bg-white border border-slate-200 shadow-2xs ${
-              sidebarCollapsed ? "justify-center" : "justify-between"
+              (sidebarCollapsed && !mobileSidebarOpen) ? "justify-center" : "justify-between"
             }`}
           >
-            {!sidebarCollapsed && (
+            {(!sidebarCollapsed || mobileSidebarOpen) && (
               <div className="min-w-0 flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold text-xs shrink-0">
                   LP
@@ -863,10 +903,20 @@ export default function AdminPortal() {
       <div className="flex-1 h-full flex flex-col min-w-0 overflow-hidden bg-[#F8FAFC]">
         
         {/* Top Header */}
-        <header className="h-16 px-6 border-b border-slate-200/80 bg-white/95 backdrop-blur-md flex items-center justify-between shrink-0 z-20 shadow-2xs">
-          <div className="flex items-center gap-3">
-            <div className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping shrink-0" />
-            <h2 className="text-base font-semibold text-slate-900 capitalize truncate">
+        <header className="h-16 px-3.5 sm:px-6 border-b border-slate-200/80 bg-white/95 backdrop-blur-md flex items-center justify-between shrink-0 z-20 shadow-2xs gap-2">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            {/* Mobile Hamburger Toggle Button */}
+            <button
+              onClick={() => setMobileSidebarOpen(true)}
+              className="lg:hidden p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors cursor-pointer shrink-0"
+              title="Open Navigation"
+              aria-label="Open Navigation"
+            >
+              <Menu size={18} />
+            </button>
+
+            <div className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping shrink-0 hidden sm:block" />
+            <h2 className="text-xs sm:text-sm md:text-base font-bold text-slate-900 capitalize truncate">
               {activeTab === "enquiries" && "Enquiries & Lead Management"}
               {activeTab === "projects" && "Projects & Event Showcase CMS"}
               {activeTab === "services" && "Services & Capabilities CMS"}
@@ -875,8 +925,8 @@ export default function AdminPortal() {
             </h2>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 border border-slate-200 text-xs font-mono text-slate-700">
+          <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+            <div className="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 border border-slate-200 text-xs font-mono text-slate-700">
               <Clock size={14} className="text-amber-600" />
               <span>{currentTime} IST</span>
             </div>
@@ -885,7 +935,7 @@ export default function AdminPortal() {
               onClick={loadData}
               disabled={loading}
               title="Refresh Data"
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-all shadow-2xs active:scale-95 cursor-pointer"
+              className="flex items-center gap-1.5 px-2.5 sm:px-3.5 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-all shadow-2xs active:scale-95 cursor-pointer"
             >
               <RefreshCw size={13} className={loading ? "animate-spin text-amber-600" : ""} />
               <span className="hidden md:inline">Refresh</span>
@@ -894,40 +944,44 @@ export default function AdminPortal() {
             {activeTab === "enquiries" && (
               <button
                 onClick={handleCreateTestLead}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-900 text-white text-xs font-medium hover:bg-slate-800 transition-all shadow-sm active:scale-95 cursor-pointer"
+                className="flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl bg-slate-900 text-white text-xs font-medium hover:bg-slate-800 transition-all shadow-sm active:scale-95 cursor-pointer"
               >
                 <Plus size={14} className="text-amber-400" />
-                <span>Add Test Lead</span>
+                <span className="hidden sm:inline">Add Test Lead</span>
+                <span className="sm:hidden">Test</span>
               </button>
             )}
 
             {activeTab === "projects" && (
               <button
                 onClick={handleOpenAddProject}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-900 text-white text-xs font-medium hover:bg-slate-800 transition-all shadow-sm active:scale-95 cursor-pointer"
+                className="flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl bg-slate-900 text-white text-xs font-medium hover:bg-slate-800 transition-all shadow-sm active:scale-95 cursor-pointer"
               >
                 <Plus size={14} className="text-amber-400" />
-                <span>Add Project</span>
+                <span className="hidden sm:inline">Add Project</span>
+                <span className="sm:hidden">Add</span>
               </button>
             )}
 
             {activeTab === "services" && (
               <button
                 onClick={handleOpenAddService}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-900 text-white text-xs font-medium hover:bg-slate-800 transition-all shadow-sm active:scale-95 cursor-pointer"
+                className="flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl bg-slate-900 text-white text-xs font-medium hover:bg-slate-800 transition-all shadow-sm active:scale-95 cursor-pointer"
               >
                 <Plus size={14} className="text-amber-400" />
-                <span>Add Service</span>
+                <span className="hidden sm:inline">Add Service</span>
+                <span className="sm:hidden">Add</span>
               </button>
             )}
 
             {activeTab === "gallery" && (
               <button
                 onClick={handleOpenAddGallery}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-900 text-white text-xs font-medium hover:bg-slate-800 transition-all shadow-sm active:scale-95 cursor-pointer"
+                className="flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl bg-slate-900 text-white text-xs font-medium hover:bg-slate-800 transition-all shadow-sm active:scale-95 cursor-pointer"
               >
                 <Plus size={14} className="text-amber-400" />
-                <span>Add Photo</span>
+                <span className="hidden sm:inline">Add Photo</span>
+                <span className="sm:hidden">Add</span>
               </button>
             )}
 
@@ -935,20 +989,21 @@ export default function AdminPortal() {
               <button
                 onClick={() => handleSaveSettings()}
                 disabled={isSavingSettings}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-900 text-white text-xs font-medium hover:bg-slate-800 transition-all shadow-sm active:scale-95 cursor-pointer"
+                className="flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl bg-slate-900 text-white text-xs font-medium hover:bg-slate-800 transition-all shadow-sm active:scale-95 cursor-pointer"
               >
                 {isSavingSettings ? <RefreshCw size={13} className="animate-spin" /> : <Save size={14} className="text-amber-400" />}
-                <span>Save Contact Settings</span>
+                <span className="hidden sm:inline">Save Contact Settings</span>
+                <span className="sm:hidden">Save</span>
               </button>
             )}
           </div>
         </header>
 
         {/* Dynamic Workspace Container */}
-        <main className="flex-1 p-5 flex flex-col min-h-0 overflow-hidden gap-3.5">
+        <main className="flex-1 p-3 sm:p-5 flex flex-col min-h-0 overflow-hidden gap-2.5 sm:gap-3.5">
           
           {/* Row 1: Metrics Overview */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 shrink-0">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5 shrink-0">
             {[
               { label: "Total Enquiries", value: stats?.total ?? enquiries.length, icon: FileText, color: "#0F172A", bgIcon: "bg-slate-100 text-slate-800" },
               { label: "Live Projects", value: stats?.totalProjects ?? projects.length, icon: Sparkles, color: "#D97706", bgIcon: "bg-amber-50 text-amber-600" },
@@ -959,18 +1014,18 @@ export default function AdminPortal() {
               return (
                 <div
                   key={i}
-                  className="bg-white border border-slate-200/90 rounded-xl px-5 py-3.5 flex items-center justify-between relative overflow-hidden shadow-2xs"
+                  className="bg-white border border-slate-200/90 rounded-xl p-3 sm:px-5 sm:py-3.5 flex items-center justify-between relative overflow-hidden shadow-2xs"
                 >
                   <div
                     className="absolute top-0 left-0 right-0 h-[2.5px]"
                     style={{ background: `linear-gradient(90deg, transparent, ${card.color}, transparent)` }}
                   />
                   <div>
-                    <p className="text-xs font-medium uppercase tracking-wider text-slate-500">{card.label}</p>
-                    <p className="text-2xl font-bold text-slate-900 mt-1">{card.value}</p>
+                    <p className="text-[10px] sm:text-xs font-medium uppercase tracking-wider text-slate-500 truncate max-w-[120px] sm:max-w-none">{card.label}</p>
+                    <p className="text-lg sm:text-2xl font-bold text-slate-900 mt-0.5 sm:mt-1">{card.value}</p>
                   </div>
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${card.bgIcon}`}>
-                    <Icon size={18} />
+                  <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shrink-0 ${card.bgIcon}`}>
+                    <Icon size={16} />
                   </div>
                 </div>
               );
@@ -1037,7 +1092,7 @@ export default function AdminPortal() {
                   </div>
                 ) : (
                   <div className="flex-1 overflow-y-auto overflow-x-auto custom-scrollbar">
-                    <table className="w-full text-left border-collapse">
+                    <table className="w-full min-w-[720px] text-left border-collapse">
                       <thead className="sticky top-0 z-10 bg-slate-50/95 border-b border-slate-200 text-xs font-semibold uppercase tracking-wider text-slate-500 backdrop-blur-sm">
                         <tr>
                           <th className="py-3.5 px-5">Client &amp; Contact</th>
@@ -1179,7 +1234,7 @@ export default function AdminPortal() {
                     </button>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
                     {projects.map((p) => (
                       <div
                         key={p.id}
@@ -1303,7 +1358,7 @@ export default function AdminPortal() {
                     </button>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
                     {services.map((s, idx) => (
                       <div
                         key={s.id || idx}
@@ -1418,7 +1473,7 @@ export default function AdminPortal() {
                   </button>
                 </div>
               ) : (
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3.5 sm:gap-4">
                   {gallery.map((g) => (
                     <div
                       key={g.id}
@@ -1470,26 +1525,26 @@ export default function AdminPortal() {
               TAB 5: CONTACT & COMPANY INFORMATION SETTINGS
           ══════════════════════════════════════════════════════ */}
           {activeTab === "contact" && (
-            <div className="flex-1 min-h-0 bg-white border border-slate-200/90 rounded-xl p-6 overflow-y-auto shadow-2xs custom-scrollbar">
-              <form onSubmit={handleSaveSettings} className="max-w-5xl mx-auto space-y-6">
+            <div className="flex-1 min-h-0 bg-white border border-slate-200/90 rounded-xl p-3.5 sm:p-6 overflow-y-auto shadow-2xs custom-scrollbar">
+              <form onSubmit={handleSaveSettings} className="max-w-5xl mx-auto space-y-4 sm:space-y-6">
                 
                 {settingsFeedback && (
                   <div
-                    className={`p-4 rounded-xl text-xs font-semibold border flex items-center gap-2 ${
+                    className={`p-3.5 sm:p-4 rounded-xl text-xs font-semibold border flex items-center gap-2 ${
                       settingsFeedback.success
                         ? "bg-emerald-50 text-emerald-800 border-emerald-200"
                         : "bg-red-50 text-red-800 border-red-200"
                     }`}
                   >
-                    {settingsFeedback.success ? <CheckCircle2 size={16} /> : <AlertCircle size={16} />}
+                    {settingsFeedback.success ? <CheckCircle2 size={16} className="shrink-0" /> : <AlertCircle size={16} className="shrink-0" />}
                     <span>{settingsFeedback.message}</span>
                   </div>
                 )}
 
                 {/* Section 1: Official Emails & Phone Numbers */}
-                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-4">
+                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 sm:p-5 space-y-3.5 sm:space-y-4">
                   <div className="flex items-center gap-2.5 pb-3 border-b border-slate-200">
-                    <Mail size={18} className="text-amber-600" />
+                    <Mail size={18} className="text-amber-600 shrink-0" />
                     <div>
                       <h3 className="font-bold text-slate-900 text-sm">Official Contact &amp; Dispatch Details</h3>
                       <p className="text-xs text-slate-500">
@@ -1498,7 +1553,7 @@ export default function AdminPortal() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4">
                     <div>
                       <label className="text-xs font-semibold uppercase tracking-wider text-slate-700 block mb-1.5">
                         Primary Contact Email *
@@ -1560,9 +1615,9 @@ export default function AdminPortal() {
                 </div>
 
                 {/* Section 2: Physical Office Address */}
-                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-4">
+                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 sm:p-5 space-y-3.5 sm:space-y-4">
                   <div className="flex items-center gap-2.5 pb-3 border-b border-slate-200">
-                    <MapPin size={18} className="text-amber-600" />
+                    <MapPin size={18} className="text-amber-600 shrink-0" />
                     <div>
                       <h3 className="font-bold text-slate-900 text-sm">Physical Office &amp; Headquarters Address</h3>
                       <p className="text-xs text-slate-500">
@@ -1571,7 +1626,7 @@ export default function AdminPortal() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3.5 sm:gap-4">
                     <div>
                       <label className="text-xs font-semibold uppercase tracking-wider text-slate-700 block mb-1.5">
                         Address Line 1
@@ -1598,7 +1653,7 @@ export default function AdminPortal() {
                       />
                     </div>
 
-                    <div>
+                    <div className="sm:col-span-2 xl:col-span-1">
                       <label className="text-xs font-semibold uppercase tracking-wider text-slate-700 block mb-1.5">
                         State &amp; Country
                       </label>
@@ -1614,9 +1669,9 @@ export default function AdminPortal() {
                 </div>
 
                 {/* Section 3: Contact Person & Operating Hours */}
-                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-4">
+                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 sm:p-5 space-y-3.5 sm:space-y-4">
                   <div className="flex items-center gap-2.5 pb-3 border-b border-slate-200">
-                    <Building2 size={18} className="text-amber-600" />
+                    <Building2 size={18} className="text-amber-600 shrink-0" />
                     <div>
                       <h3 className="font-bold text-slate-900 text-sm">Lead Contact Person &amp; Working Hours</h3>
                       <p className="text-xs text-slate-500">
@@ -1625,7 +1680,7 @@ export default function AdminPortal() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3.5 sm:gap-4">
                     <div>
                       <label className="text-xs font-semibold uppercase tracking-wider text-slate-700 block mb-1.5">
                         Contact Person Name
@@ -1653,7 +1708,7 @@ export default function AdminPortal() {
                       />
                     </div>
 
-                    <div>
+                    <div className="sm:col-span-2 xl:col-span-1">
                       <label className="text-xs font-semibold uppercase tracking-wider text-slate-700 block mb-1.5">
                         Sunday Working Hours
                       </label>
@@ -1669,9 +1724,9 @@ export default function AdminPortal() {
                 </div>
 
                 {/* Section 4: Google Maps Embed URL */}
-                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-4">
+                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 sm:p-5 space-y-3.5 sm:space-y-4">
                   <div className="flex items-center gap-2.5 pb-3 border-b border-slate-200">
-                    <Globe size={18} className="text-amber-600" />
+                    <Globe size={18} className="text-amber-600 shrink-0" />
                     <div>
                       <h3 className="font-bold text-slate-900 text-sm">Google Maps Embed &amp; Live Preview</h3>
                       <p className="text-xs text-slate-500">
@@ -1708,16 +1763,16 @@ export default function AdminPortal() {
                 </div>
 
                 {/* Save Button Bar */}
-                <div className="p-4 bg-slate-900 text-white rounded-2xl flex items-center justify-between shadow-md">
+                <div className="p-4 bg-slate-900 text-white rounded-2xl flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 shadow-md">
                   <div className="flex items-center gap-2 text-xs">
-                    <CheckCircle2 size={16} className="text-amber-400" />
-                    <span>All changes saved here will immediately synchronize across Website and Backend.</span>
+                    <CheckCircle2 size={16} className="text-amber-400 shrink-0" />
+                    <span>All changes saved here immediately synchronize across Website and Database.</span>
                   </div>
 
                   <button
                     type="submit"
                     disabled={isSavingSettings}
-                    className="px-6 py-2.5 rounded-xl bg-amber-500 text-gray-950 font-bold text-xs hover:bg-amber-400 transition-all shadow active:scale-95 cursor-pointer flex items-center gap-2"
+                    className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-amber-500 text-gray-950 font-bold text-xs hover:bg-amber-400 transition-all shadow active:scale-95 cursor-pointer flex items-center justify-center gap-2 shrink-0"
                   >
                     {isSavingSettings ? <RefreshCw size={14} className="animate-spin" /> : <Save size={14} />}
                     <span>{isSavingSettings ? "Saving Settings..." : "Save Contact Settings"}</span>

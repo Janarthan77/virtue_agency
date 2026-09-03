@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MapPin, Phone, Mail, Clock, Info, ExternalLink, ArrowRight, Send, CheckCircle2, AlertCircle, Loader2, Sparkles, RefreshCw } from "lucide-react";
 import { submitEnquiry, fetchLiveSettings, EnquiryInput, CompanySettings } from "@/lib/api";
+import { StatsCounterSection } from "@/components/StatsCounterSection";
 
 /* ─── Reveal helper ─────────────────────────────────────── */
 function Reveal({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
@@ -118,8 +119,7 @@ export default function Contact() {
               <span className="w-10 h-[2px] bg-[#FFB800]" />
             </div>
             <h1 className="text-5xl md:text-7xl font-black text-white tracking-tight leading-none mb-6">
-              Let&apos;s Create Something <br />
-              <span className="text-[#FFB800]">Extraordinary</span>
+              Enquire With Us
             </h1>
             <p className="text-gray-400 text-lg max-w-xl mx-auto leading-relaxed">
               Tell us about your event vision and we&apos;ll craft a tailored proposal within 24 hours.
@@ -507,6 +507,9 @@ export default function Contact() {
 
         </div>
       </div>
+
+      {/* ── STATS COUNTER SECTION ──────────────────────── */}
+      <StatsCounterSection />
 
     </div>
   );

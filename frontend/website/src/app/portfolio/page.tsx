@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Grid3X3, List, Eye } from "lucide-react";
 import EventDetailsModal, { EventItem } from "@/components/EventDetailsModal";
 import { fetchLiveProjects } from "@/lib/api";
+import { StatsCounterSection } from "@/components/StatsCounterSection";
 
 interface PortfolioProject {
   id: number;
@@ -573,26 +574,8 @@ export default function Portfolio() {
         </div>
       </section>
 
-      {/* ── STATS STRIP ──────────────────────────── */}
-      <div className="border-y border-white/[0.06] bg-[#1E293B]">
-        <div className="container mx-auto px-6 max-w-7xl py-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            {[
-              { value: "50+", label: "Completed Events" },
-              { value: "30+", label: "Corporate Clients" },
-              { value: "100K+", label: "Attendees Engaged" },
-              { value: "100%", label: "Flawless Execution" },
-            ].map((s) => (
-              <div key={s.label}>
-                <div className="text-3xl font-black text-white">{s.value}</div>
-                <div className="text-gray-500 text-xs font-semibold tracking-wider uppercase mt-1">
-                  {s.label}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+      {/* ── STATS STRIP WITH ANIMATED COUNTER ──── */}
+      <StatsCounterSection />
 
       {/* ── CONTROLS BAR ─────────────────────────── */}
       <div className="sticky top-[65px] z-30 bg-[#0F172A]/90 backdrop-blur-xl border-b border-white/[0.06]">

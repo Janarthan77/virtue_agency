@@ -12,7 +12,7 @@ const navLinks = [
   { name: "Home", href: "/" },
   { name: "About", href: "/about" },
   { name: "Services", href: "/services" },
-  { name: "Portfolio", href: "/portfolio" },
+  { name: "Gallery", href: "/portfolio" },
   { name: "Contact", href: "/contact" },
 ];
 
@@ -63,15 +63,18 @@ export default function Navbar() {
         <div className="container mx-auto px-5 md:px-12 flex justify-between items-center max-w-7xl">
 
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 shrink-0 group">
+          <Link href="/" className="flex flex-col items-start shrink-0 group leading-none">
             <Image
               src="/logo.png"
               alt="Virtue IN"
               width={160}
               height={39}
-              className="h-8 md:h-9 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
+              className="h-7 md:h-8 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
               priority
             />
+            <span className="text-[8px] sm:text-[9px] md:text-[10px] font-black italic tracking-[0.26em] uppercase text-white/90 group-hover:text-[#FFB800] transition-colors mt-1 pl-0.5 select-none">
+              VIRTUE IN AGENCY
+            </span>
           </Link>
 
           {/* Desktop Nav */}
