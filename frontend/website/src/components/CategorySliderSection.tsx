@@ -168,11 +168,11 @@ export function CategorySliderSection({
                 exit={{ opacity: 0, y: -35 }}
                 transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.08 }}
               >
-                <h2 className="text-3xl sm:text-4xl md:text-6xl font-black leading-tight tracking-tight text-white mb-2">
+                <h2 className="text-2xl sm:text-3xl md:text-5xl font-black leading-tight tracking-tight text-white mb-2">
                   {activeSlide.title}
                 </h2>
                 <h3
-                  className="text-3xl sm:text-4xl md:text-6xl font-black leading-tight tracking-tight mb-5 md:mb-7"
+                  className="text-2xl sm:text-3xl md:text-5xl font-black leading-tight tracking-tight mb-5 md:mb-7"
                   style={{
                     WebkitTextStroke: `2px ${accentColor}`,
                     color: "transparent",
@@ -211,10 +211,10 @@ export function CategorySliderSection({
                 Plan Your Event <ArrowRight size={16} />
               </Link>
               <Link
-                href="/portfolio"
+                href="/gallery"
                 className="px-6 sm:px-8 py-3.5 bg-white/10 backdrop-blur-sm border border-white/20 text-white font-bold rounded-full hover:bg-white/20 transition-colors text-sm sm:text-base text-center cursor-pointer"
               >
-                View Portfolio
+                View Gallery
               </Link>
             </motion.div>
           </div>

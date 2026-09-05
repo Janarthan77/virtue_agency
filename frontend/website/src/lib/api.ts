@@ -24,16 +24,12 @@ export interface ProjectItem {
   title: string;
   category: string;
   subtitle: string;
-  date?: string;
-  month?: string;
-  time?: string;
   location: string;
   image: string;
   gallery?: string[];
   description?: string;
   highlights?: string[];
   client?: string;
-  year?: string;
   tag?: string;
   sort_order?: number;
 }
@@ -222,6 +218,28 @@ export const DEFAULT_SERVICES: ServiceItem[] = [
   },
 ];
 
+// In-memory cache for ultra-fast repeated client fetches
+const apiCache = new Map<string, { data: any; timestamp: number }>();
+const CACHE_TTL = 20000; // 20 seconds TTL
+
+async function cachedFetchJson<T>(url: string): Promise<T | null> {
+  const now = Date.now();
+  const cached = apiCache.get(url);
+  if (cached && now - cached.timestamp < CACHE_TTL) {
+    return cached.data as T;
+  }
+
+  try {
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) return null;
+    const data = await res.json();
+    apiCache.set(url, { data, timestamp: now });
+    return data as T;
+  } catch (err) {
+    return null;
+  }
+}
+
 /**
  * Fetch projects for the website (from Backend / Supabase)
  */
@@ -234,9 +252,8 @@ export async function fetchLiveProjects(params?: {
     if (params?.category && params.category !== "All") url.searchParams.set("category", params.category);
     if (params?.search) url.searchParams.set("search", params.search);
 
-    const res = await fetch(url.toString(), { cache: "no-store" });
-    const data = await res.json();
-    return data.projects || [];
+    const data = await cachedFetchJson<{ projects?: ProjectItem[] }>(url.toString());
+    return data?.projects || [];
   } catch (err) {
     console.warn("Backend unavailable, using static fallback for projects:", err);
     return [];
@@ -251,9 +268,8 @@ export async function fetchLiveGallery(params?: { type?: string }): Promise<Gall
     const url = new URL(`${BACKEND_URL}/api/gallery`);
     if (params?.type && params.type !== "all") url.searchParams.set("type", params.type);
 
-    const res = await fetch(url.toString(), { cache: "no-store" });
-    const data = await res.json();
-    return data.items || [];
+    const data = await cachedFetchJson<{ items?: GalleryItem[] }>(url.toString());
+    return data?.items || [];
   } catch (err) {
     console.warn("Backend unavailable, using static fallback for gallery:", err);
     return [];
@@ -266,12 +282,9 @@ export async function fetchLiveGallery(params?: { type?: string }): Promise<Gall
 export async function fetchLiveServices(): Promise<ServiceItem[]> {
   try {
     const url = new URL(`${BACKEND_URL}/api/services`);
-    const res = await fetch(url.toString(), { cache: "no-store" });
-    if (res.ok) {
-      const data = await res.json();
-      if (data && Array.isArray(data.services) && data.services.length > 0) {
-        return data.services;
-      }
+    const data = await cachedFetchJson<{ services?: ServiceItem[] }>(url.toString());
+    if (data && Array.isArray(data.services) && data.services.length > 0) {
+      return data.services;
     }
   } catch (err) {
     console.warn("Backend unavailable for services, using default:", err);
@@ -302,9 +315,8 @@ export async function fetchLiveSettings(): Promise<CompanySettings> {
 
   try {
     const url = new URL(`${BACKEND_URL}/api/settings`);
-    const res = await fetch(url.toString(), { cache: "no-store" });
-    const data = await res.json();
-    return data.settings ? { ...defaultSettings, ...data.settings } : defaultSettings;
+    const data = await cachedFetchJson<{ settings?: CompanySettings }>(url.toString());
+    return data?.settings ? { ...defaultSettings, ...data.settings } : defaultSettings;
   } catch (err) {
     console.warn("Backend unavailable for settings, using default:", err);
     return defaultSettings;
@@ -331,6 +343,70 @@ export async function submitEnquiry(data: EnquiryInput): Promise<{
     return {
       success: false,
       error: err instanceof Error ? err.message : "Network error. Please check your connection.",
+    };
+  }
+}
+
+export interface ClientReviewRecord {
+  id?: number | string;
+  name: string;
+  role?: string;
+  category?: "all" | "corporate" | "launch" | "gala" | string;
+  rating: number;
+  text: string;
+  email?: string;
+  phone?: string;
+  avatar_color?: string;
+  status?: string;
+  is_featured?: boolean;
+  created_at?: string;
+}
+
+/**
+ * Fetch approved client reviews for website
+ */
+export async function fetchLiveReviews(): Promise<ClientReviewRecord[]> {
+  try {
+    const url = `${BACKEND_URL}/api/reviews?status=approved`;
+    const data = await cachedFetchJson<{ reviews?: ClientReviewRecord[] }>(url);
+    if (data && Array.isArray(data.reviews) && data.reviews.length > 0) {
+      return data.reviews;
+    }
+  } catch (err) {
+    console.warn("fetchLiveReviews error, falling back to static seeds:", err);
+  }
+  return [];
+}
+
+/**
+ * Submit client review & feedback (Stores in reviews table and mirrors to enquiries table)
+ */
+export async function submitReview(data: {
+  name: string;
+  role?: string;
+  category?: string;
+  rating: number;
+  text: string;
+  email?: string;
+  phone?: string;
+  avatar_color?: string;
+}): Promise<{
+  success: boolean;
+  message?: string;
+  review?: ClientReviewRecord;
+  error?: string;
+}> {
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/reviews`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    return await res.json();
+  } catch (err: unknown) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : "Network error submitting review",
     };
   }
 }

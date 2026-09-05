@@ -9,22 +9,25 @@ CREATE TABLE IF NOT EXISTS public.projects (
   title TEXT NOT NULL,
   category TEXT NOT NULL,
   subtitle TEXT DEFAULT '',
-  date TEXT DEFAULT '',
-  month TEXT DEFAULT '',
-  time TEXT DEFAULT '',
   location TEXT DEFAULT '',
   image TEXT NOT NULL,
   gallery TEXT[] DEFAULT '{}',
   description TEXT DEFAULT '',
   highlights TEXT[] DEFAULT '{}',
   client TEXT DEFAULT '',
-  year TEXT DEFAULT '2026',
   tag TEXT DEFAULT 'CORPORATE',
   is_featured BOOLEAN DEFAULT true,
   sort_order INT DEFAULT 0,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- If migrating an existing database, run this to drop the legacy columns:
+-- ALTER TABLE public.projects 
+--   DROP COLUMN IF EXISTS year,
+--   DROP COLUMN IF EXISTS date,
+--   DROP COLUMN IF EXISTS month,
+--   DROP COLUMN IF EXISTS time;
 
 
 -- 2. Gallery Table
@@ -121,6 +124,28 @@ CREATE POLICY "Allow service all services" ON public.services FOR ALL USING (tru
 
 CREATE POLICY "Allow public read company_settings" ON public.company_settings FOR SELECT USING (true);
 CREATE POLICY "Allow service all company_settings" ON public.company_settings FOR ALL USING (true);
+
+-- 6. Reviews & Feedback Table
+CREATE TABLE IF NOT EXISTS public.reviews (
+  id BIGSERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  role TEXT DEFAULT '',
+  category TEXT DEFAULT 'corporate',
+  rating INT NOT NULL DEFAULT 5,
+  text TEXT NOT NULL,
+  email TEXT DEFAULT '',
+  phone TEXT DEFAULT '',
+  avatar_color TEXT DEFAULT '#2563EB',
+  status TEXT DEFAULT 'approved', -- 'pending' | 'approved' | 'hidden'
+  is_featured BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE public.reviews ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow public read reviews" ON public.reviews FOR SELECT USING (true);
+CREATE POLICY "Allow public insert reviews" ON public.reviews FOR INSERT WITH CHECK (true);
+CREATE POLICY "Allow service all reviews" ON public.reviews FOR ALL USING (true);
 
 -- =========================================================================
 -- 6. SEED DATA FOR SERVICES (15 Core Agency Services with R2 Images)

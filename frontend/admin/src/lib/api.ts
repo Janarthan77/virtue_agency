@@ -9,16 +9,12 @@ export interface ProjectItem {
   title: string;
   category: string;
   subtitle?: string;
-  date?: string;
-  month?: string;
-  time?: string;
   location?: string;
   image: string;
   gallery?: string[];
   description?: string;
   highlights?: string[];
   client?: string;
-  year?: string;
   tag?: string;
   is_featured?: boolean;
   sort_order?: number;
@@ -114,6 +110,24 @@ export interface DashboardStats {
   totalProjects: number;
   totalGalleryItems: number;
   totalServices?: number;
+  totalReviews?: number;
+}
+
+export interface ReviewItem {
+  id?: number | string;
+  name: string;
+  role?: string;
+  category?: string;
+  rating: number;
+  text: string;
+  email?: string;
+  phone?: string;
+  avatar_color?: string;
+  status?: "approved" | "pending" | "hidden";
+  is_featured?: boolean;
+  source?: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 
@@ -772,4 +786,86 @@ export async function updateCompanySettings(
     success: true,
     settings: DEFAULT_ADMIN_SETTINGS,
   };
+}
+
+// ── 7. CLIENT REVIEWS & FEEDBACK CRUD ───────────────────────
+
+export async function fetchReviews(params?: {
+  status?: string;
+  category?: string;
+  search?: string;
+}): Promise<{ success: boolean; reviews: ReviewItem[]; count?: number; error?: string }> {
+  try {
+    const url = new URL(`${BACKEND_URL}/api/reviews`);
+    if (params?.status && params.status !== "all") url.searchParams.set("status", params.status);
+    if (params?.category && params.category !== "all") url.searchParams.set("category", params.category);
+    if (params?.search) url.searchParams.set("search", params.search);
+
+    const res = await fetch(url.toString(), { cache: "no-store" });
+    if (res.ok) {
+      const data = await res.json();
+      return data;
+    }
+  } catch (err: unknown) {
+    console.warn("fetchReviews API error:", err);
+  }
+
+  return {
+    success: false,
+    reviews: [],
+    error: "Failed to fetch reviews",
+  };
+}
+
+export async function createReview(
+  payload: ReviewItem
+): Promise<{ success: boolean; review?: ReviewItem; error?: string }> {
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/reviews`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    return await res.json();
+  } catch (err: unknown) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : "Create review failed",
+    };
+  }
+}
+
+export async function updateReview(
+  id: string | number,
+  payload: Partial<ReviewItem>
+): Promise<{ success: boolean; review?: ReviewItem; error?: string }> {
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/reviews/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    return await res.json();
+  } catch (err: unknown) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : "Update review failed",
+    };
+  }
+}
+
+export async function deleteReview(
+  id: string | number
+): Promise<{ success: boolean; message?: string; error?: string }> {
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/reviews/${id}`, {
+      method: "DELETE",
+    });
+    return await res.json();
+  } catch (err: unknown) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : "Delete review failed",
+    };
+  }
 }

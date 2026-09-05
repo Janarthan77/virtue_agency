@@ -195,11 +195,11 @@ export function HeroSlider() {
                 exit={{ opacity: 0, y: -40 }}
                 transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94], delay: 0.1 }}
               >
-                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight tracking-tight text-white mb-2">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black leading-tight tracking-tight text-white mb-2">
                   {heroEvents[current].title}
                 </h1>
                 <h2
-                  className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight tracking-tight mb-6 md:mb-8"
+                  className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-tight tracking-tight mb-6 md:mb-8"
                   style={{ WebkitTextStroke: "2px #FFB800", color: "transparent" }}
                 >
                   {heroEvents[current].accent}
@@ -235,10 +235,10 @@ export function HeroSlider() {
                 Plan Your Event
               </Link>
               <Link
-                href="/portfolio"
+                href="/gallery"
                 className="px-6 sm:px-8 py-3.5 sm:py-4 bg-white/10 backdrop-blur-sm border border-white/20 text-white font-bold rounded-full hover:bg-white/20 transition-colors text-sm sm:text-base text-center"
               >
-                View Portfolio
+                View Gallery
               </Link>
               <button
                 onClick={shuffleSlide}

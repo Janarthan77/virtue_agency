@@ -1,42 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Star, CheckCircle2, ExternalLink, ThumbsUp, Quote } from "lucide-react";
+import { Star, CheckCircle2, Quote } from "lucide-react";
 import Link from "next/link";
+import ShareFeedbackModal from "./ShareFeedbackModal";
+import { fetchLiveReviews } from "@/lib/api";
 
-/* ─── Official Google "G" Icon ────────────────────────────────────────── */
-export function GoogleIcon({ size = 20, className = "" }: { size?: number; className?: string }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      className={className}
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-        fill="#4285F4"
-      />
-      <path
-        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-        fill="#34A853"
-      />
-      <path
-        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
-        fill="#FBBC05"
-      />
-      <path
-        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
-        fill="#EA4335"
-      />
-    </svg>
-  );
-}
-
-/* ─── Google Reviews Data ─────────────────────────────────────────────── */
-interface GoogleReviewItem {
+/* ─── Client Reviews Data ─────────────────────────────────────────────── */
+export interface ClientReviewItem {
   id: number;
   name: string;
   role: string;
@@ -45,118 +17,87 @@ interface GoogleReviewItem {
   date: string;
   text: string;
   avatarColor: string;
-  likes: number;
+  likes?: number;
   verified: boolean;
 }
 
-const reviewsData: GoogleReviewItem[] = [
-  {
-    id: 1,
-    name: "Hydra Specma",
-    role: "Factory Inauguration & Facility Launch",
-    category: "launch",
-    rating: 5,
-    date: "2 months ago",
-    text: "We had our factory inauguration executed by Virtue IN and we are extremely satisfied. We experienced a very smooth, well-coordinated, and proactive on-ground team. They handled VIP guest hospitality, audio-visual rigging, and stagecraft flawlessly. We will certainly have more collaborations with them in the future!",
-    avatarColor: "#2563EB",
-    likes: 18,
-    verified: true,
-  },
-  {
-    id: 2,
-    name: "Audi Chennai / BNI Futurz",
-    role: "Automotive Leadership Conclave",
-    category: "corporate",
-    rating: 5,
-    date: "3 months ago",
-    text: "Spectacular execution by Sathish and the Virtue IN crew for our BNI Futurz summit at Audi Chennai. The corporate staging, high-definition LED backdrops, acoustic clarity, and VIP protocols were world-class. Truly one of the best corporate event management agencies in South India.",
-    avatarColor: "#D97706",
-    likes: 24,
-    verified: true,
-  },
-  {
-    id: 3,
-    name: "TVS Emerald",
-    role: "Peninsula & Green Enclave Property Debut",
-    category: "launch",
-    rating: 5,
-    date: "1 month ago",
-    text: "Virtue IN made our flagship residential property unveiling truly unforgettable. Their attention to detail, interactive 3D customer pavilions, and creative stage direction exceeded all our sales targets and expectations. Flawless execution from initial renders to live show handover!",
-    avatarColor: "#059669",
-    likes: 31,
-    verified: true,
-  },
-  {
-    id: 4,
-    name: "BNP Paribas",
-    role: "Rocktober Annual Gala @ The Leela Palace",
-    category: "gala",
-    rating: 5,
-    date: "4 months ago",
-    text: "Flawless end-to-end management of our annual gala at The Leela Palace. From the customized stage sets and live jazz orchestra to delegate registration and award presentations, every minute cue went off without a hitch. Exceptional professionalism.",
-    avatarColor: "#7C3AED",
-    likes: 22,
-    verified: true,
-  },
-  {
-    id: 5,
-    name: "Rotary Club of Madras West",
-    role: "Installation Ceremony @ ITC Grand Chola",
-    category: "corporate",
-    rating: 5,
-    date: "5 months ago",
-    text: "Organizing an installation ceremony for 1,200+ dignitaries and VIP guests is a monumental challenge. Virtue IN handled multi-camera live telecasts, presidential banquet arrangements, and protocol escorting seamlessly. Highly recommended!",
-    avatarColor: "#DC2626",
-    likes: 19,
-    verified: true,
-  },
-  {
-    id: 6,
-    name: "Radiant Dental Care",
-    role: "Annual Coastal Retreat @ Taj Fisherman's Cove",
-    category: "gala",
-    rating: 5,
-    date: "2 months ago",
-    text: "Our team day-out and annual retreat was planned to perfection by Virtue IN. The bespoke beach challenges, evening acoustic setup, and sunset dinner arrangements gave our 200+ employees memories for a lifetime. Outstanding work!",
-    avatarColor: "#0891B2",
-    likes: 15,
-    verified: true,
-  },
-];
-
-export function GoogleReviewsSection() {
+export function ClientReviewsSection() {
   const [activeTab, setActiveTab] = useState<"all" | "corporate" | "launch" | "gala">("all");
-  const [likedReviews, setLikedReviews] = useState<Record<number, boolean>>({});
+  const [allReviews, setAllReviews] = useState<ClientReviewItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
 
-  const filteredReviews = reviewsData.filter(
+  useEffect(() => {
+    async function loadReviews() {
+      setIsLoading(true);
+      try {
+        const live = await fetchLiveReviews();
+        if (live && live.length > 0) {
+          const formatted: ClientReviewItem[] = live.map((r, idx) => ({
+            id: typeof r.id === "number" ? r.id : idx + 1,
+            name: r.name,
+            role: r.role || "Corporate Client",
+            category: (r.category as any) || "corporate",
+            rating: Number(r.rating) || 5,
+            date: r.created_at
+              ? new Date(r.created_at).toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+              })
+              : "Verified Review",
+            text: r.text,
+            avatarColor:
+              r.avatar_color ||
+              ["#2563EB", "#D97706", "#059669", "#7C3AED", "#DC2626", "#0891B2"][idx % 6],
+            verified: true,
+          }));
+          setAllReviews(formatted);
+        } else {
+          setAllReviews([]);
+        }
+      } catch (e) {
+        console.warn("Error fetching reviews from database:", e);
+        setAllReviews([]);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadReviews();
+  }, []);
+
+  const filteredReviews = allReviews.filter(
     (item) => activeTab === "all" || item.category === activeTab
   );
 
-  const toggleLike = (id: number) => {
-    setLikedReviews((prev) => ({ ...prev, [id]: !prev[id] }));
-  };
+  const avgRating =
+    allReviews.length > 0
+      ? (allReviews.reduce((sum, r) => sum + (r.rating || 5), 0) / allReviews.length).toFixed(1)
+      : "5.0";
 
   return (
-    <section className="py-28 bg-[#0F172A] relative overflow-hidden z-20">
+    <section id="reviews" className="py-28 bg-[#0F172A] relative overflow-hidden z-20">
       {/* Background ambient lighting */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#4285F4]/5 blur-[140px] rounded-full pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#FFB800]/5 blur-[140px] rounded-full pointer-events-none" />
       <div className="absolute bottom-0 right-10 w-[500px] h-[400px] bg-[#FFB800]/5 blur-[120px] rounded-full pointer-events-none" />
 
       <div className="container mx-auto px-6 max-w-7xl relative z-10">
 
-        {/* ── Section Header with Official Google Badge ──────────────── */}
+        {/* ── Section Header ────────────────────────────────────────── */}
         <div className="flex flex-col items-center text-center mb-14">
-          
-          {/* Google Verified Rating Pill */}
+
+          {/* Verified Rating Pill */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-md mb-6 shadow-xl"
           >
-            <GoogleIcon size={22} />
+            <div className="w-6 h-6 rounded-full bg-[#FFB800]/15 flex items-center justify-center text-[#FFB800]">
+              <Star size={13} className="fill-[#FFB800] text-[#FFB800]" />
+            </div>
             <div className="flex items-center gap-1.5">
-              <span className="text-white font-black text-sm tracking-wide">4.9</span>
+              <span className="text-white font-black text-sm tracking-wide">{avgRating}</span>
               <div className="flex gap-0.5">
                 {[...Array(5)].map((_, idx) => (
                   <Star key={idx} size={13} className="fill-[#FFB800] text-[#FFB800]" />
@@ -165,7 +106,7 @@ export function GoogleReviewsSection() {
             </div>
             <div className="w-1 h-1 rounded-full bg-white/30" />
             <span className="text-xs font-semibold text-gray-300">
-              Verified Google Reviews
+              {allReviews.length > 0 ? `${allReviews.length} Verified Client Reviews` : "Verified Client Reviews"}
             </span>
           </motion.div>
 
@@ -175,7 +116,7 @@ export function GoogleReviewsSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-4xl sm:text-5xl md:text-6xl font-black text-white tracking-tight leading-tight mb-4"
+            className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-tight mb-4"
           >
             Hear It Straight from{" "}
             <span className="text-[#FFB800]">Our Clients</span>
@@ -191,13 +132,13 @@ export function GoogleReviewsSection() {
             Real feedback from enterprise leaders, corporate heads, and event committees who trusted Virtue IN with their flagship events.
           </motion.p>
 
-          {/* Filter Categories */}
+          {/* Filter Categories + Write Review Button */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.3 }}
-            className="flex items-center justify-center gap-2 mt-8 flex-wrap"
+            className="flex items-center justify-center gap-2.5 mt-8 flex-wrap"
           >
             {[
               { key: "all", label: "All Reviews" },
@@ -208,26 +149,72 @@ export function GoogleReviewsSection() {
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key as any)}
-                className={`px-4 py-2 rounded-full text-xs font-bold transition-all duration-300 cursor-pointer ${
-                  activeTab === tab.key
-                    ? "bg-[#FFB800] text-[#0F172A] shadow-[0_0_20px_rgba(255,184,0,0.4)]"
-                    : "bg-white/[0.04] text-gray-400 hover:text-white hover:bg-white/[0.08] border border-white/[0.06]"
-                }`}
+                className={`px-4 py-2 rounded-full text-xs font-bold transition-all duration-300 cursor-pointer ${activeTab === tab.key
+                  ? "bg-[#FFB800] text-[#0F172A] shadow-[0_0_20px_rgba(255,184,0,0.4)]"
+                  : "bg-white/[0.04] text-gray-400 hover:text-white hover:bg-white/[0.08] border border-white/[0.06]"
+                  }`}
               >
                 {tab.label}
               </button>
             ))}
+
+            {/* Separate button to write feedback */}
+            <button
+              onClick={() => setFeedbackModalOpen(true)}
+              className="px-4 py-2 rounded-full text-xs font-bold bg-[#FFB800]/15 hover:bg-[#FFB800]/25 text-[#FFB800] border border-[#FFB800]/30 hover:border-[#FFB800]/50 transition-all duration-300 flex items-center gap-1.5 cursor-pointer shadow-xs"
+            >
+              <Quote size={12} className="text-[#FFB800]" />
+              <span>Write a Review</span>
+            </button>
           </motion.div>
         </div>
 
-        {/* ── Reviews Grid ───────────────────────────────────────────── */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <AnimatePresence mode="popLayout">
-            {filteredReviews.map((r, i) => {
-              const isLiked = likedReviews[r.id];
-              const likeCount = r.likes + (isLiked ? 1 : 0);
-
-              return (
+        {/* ── Reviews Grid / Loading / Empty State ─────────────────────── */}
+        {isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3].map((n) => (
+              <div
+                key={n}
+                className="bg-[#1E293B]/60 rounded-3xl border border-white/[0.06] p-7 animate-pulse h-64 flex flex-col justify-between"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-11 h-11 rounded-2xl bg-white/10" />
+                  <div className="space-y-2 flex-1">
+                    <div className="h-4 bg-white/10 rounded w-1/2" />
+                    <div className="h-3 bg-white/5 rounded w-1/3" />
+                  </div>
+                </div>
+                <div className="space-y-2 my-4">
+                  <div className="h-3 bg-white/10 rounded w-full" />
+                  <div className="h-3 bg-white/10 rounded w-4/5" />
+                  <div className="h-3 bg-white/10 rounded w-2/3" />
+                </div>
+                <div className="h-4 bg-white/5 rounded w-1/4" />
+              </div>
+            ))}
+          </div>
+        ) : filteredReviews.length === 0 ? (
+          <div className="py-16 px-6 rounded-3xl bg-[#1E293B]/40 border border-white/10 text-center max-w-2xl mx-auto flex flex-col items-center">
+            <div className="w-16 h-16 rounded-2xl bg-[#FFB800]/10 border border-[#FFB800]/20 text-[#FFB800] flex items-center justify-center mb-4 shadow-lg">
+              <Quote size={28} />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-2">Be the First to Share Your Experience</h3>
+            <p className="text-gray-400 text-sm max-w-md mx-auto mb-6 leading-relaxed">
+              We value genuine feedback from enterprise leaders and organizations we serve. Share your testimonial with Virtue IN Agency.
+            </p>
+            <button
+              type="button"
+              onClick={() => setFeedbackModalOpen(true)}
+              className="px-6 py-3 rounded-full text-xs font-bold uppercase tracking-wider bg-gradient-to-r from-[#FFB800] to-[#E5A700] hover:scale-105 text-slate-950 transition-all flex items-center gap-2 cursor-pointer shadow-lg"
+            >
+              <Quote size={13} />
+              <span>Write a Review</span>
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <AnimatePresence mode="popLayout">
+              {filteredReviews.map((r, i) => (
                 <motion.div
                   key={r.id}
                   layout
@@ -241,7 +228,7 @@ export function GoogleReviewsSection() {
                   <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#FFB800]/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
                   <div>
-                    {/* Header of review: Reviewer & Google Badge */}
+                    {/* Header of review: Reviewer & Quote Badge */}
                     <div className="flex items-start justify-between gap-3 mb-4">
                       <div className="flex items-center gap-3">
                         <div
@@ -258,7 +245,7 @@ export function GoogleReviewsSection() {
                               {r.name}
                             </h4>
                             {r.verified && (
-                              <CheckCircle2 size={14} className="text-[#34A853] shrink-0" />
+                              <CheckCircle2 size={14} className="text-[#10B981] shrink-0" />
                             )}
                           </div>
                           <p className="text-gray-400 text-xs font-medium truncate max-w-[170px]">
@@ -267,9 +254,9 @@ export function GoogleReviewsSection() {
                         </div>
                       </div>
 
-                      {/* Google G icon badge */}
-                      <div className="p-2 rounded-xl bg-white/[0.05] border border-white/[0.08] shrink-0" title="Verified Google Review">
-                        <GoogleIcon size={18} />
+                      {/* Quote icon badge */}
+                      <div className="p-2 rounded-xl bg-white/[0.05] border border-white/[0.08] text-[#FFB800]/80 group-hover:text-[#FFB800] group-hover:border-[#FFB800]/30 transition-all shrink-0" title="Verified Review">
+                        <Quote size={16} />
                       </div>
                     </div>
 
@@ -291,77 +278,37 @@ export function GoogleReviewsSection() {
                     </p>
                   </div>
 
-                  {/* Footer: Google Verified Tag + Helpful counter */}
+                  {/* Footer: Verified Feedback Tag & Category Badge */}
                   <div className="border-t border-white/[0.06] pt-4 mt-auto flex items-center justify-between">
-                    <div className="flex items-center gap-1.5 text-gray-400 text-xs font-semibold">
-                      <GoogleIcon size={14} />
+                    <div className="flex items-center gap-1.5 text-gray-400 text-xs font-medium">
+                      <CheckCircle2 size={13} className="text-[#10B981]" />
                       <span className="text-gray-400 group-hover:text-white transition-colors">
-                        Google Review
+                        Verified Client Review
                       </span>
                     </div>
-
-                    <button
-                      onClick={() => toggleLike(r.id)}
-                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
-                        isLiked
-                          ? "bg-[#FFB800]/20 text-[#FFB800] border border-[#FFB800]/30"
-                          : "bg-white/[0.03] text-gray-400 hover:text-white hover:bg-white/[0.08]"
-                      }`}
-                      title="Mark review as helpful"
-                    >
-                      <ThumbsUp size={12} className={isLiked ? "fill-[#FFB800]" : ""} />
-                      <span>{likeCount}</span>
-                    </button>
+                    <span className="text-[10px] font-bold tracking-wider uppercase text-[#FFB800]/90 bg-[#FFB800]/10 px-2.5 py-1 rounded-lg border border-[#FFB800]/20">
+                      {r.category === "corporate" ? "Corporate" : r.category === "launch" ? "Launch" : r.category === "gala" ? "Gala" : "Verified"}
+                    </span>
                   </div>
 
                 </motion.div>
-              );
-            })}
-          </AnimatePresence>
-        </div>
-
-        {/* ── Bottom Callout: View on Google & Review Us ─────────────── */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mt-14 p-6 sm:p-8 rounded-3xl bg-white/[0.02] border border-white/[0.07] backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-6"
-        >
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-white/[0.06] border border-white/10 flex items-center justify-center shrink-0">
-              <GoogleIcon size={26} />
-            </div>
-            <div>
-              <h4 className="text-white font-bold text-base sm:text-lg">
-                Had an experience with Virtue IN?
-              </h4>
-              <p className="text-gray-400 text-xs sm:text-sm">
-                Your feedback helps corporate leaders make informed event decisions.
-              </p>
-            </div>
+              ))}
+            </AnimatePresence>
           </div>
-
-          <div className="flex items-center gap-3 shrink-0 w-full sm:w-auto">
-            <a
-              href="https://maps.google.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full sm:w-auto px-6 py-3 rounded-full bg-white/[0.08] hover:bg-white/15 text-white font-bold text-xs uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-2 border border-white/15"
-            >
-              <GoogleIcon size={16} />
-              <span>Review Us on Google</span>
-              <ExternalLink size={13} className="text-gray-400" />
-            </a>
-            <Link
-              href="/contact"
-              className="w-full sm:w-auto px-6 py-3 rounded-full bg-gradient-to-r from-[#FFFFFF] to-[#E2E8F0] hover:scale-105 text-[#0F172A] font-black text-xs uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-2 shadow-lg"
-            >
-              <span>Plan Your Event</span>
-            </Link>
-          </div>
-        </motion.div>
-
+        )}
       </div>
+
+      {/* Dedicated Share Feedback Modal */}
+      <ShareFeedbackModal
+        isOpen={feedbackModalOpen}
+        onClose={() => setFeedbackModalOpen(false)}
+        onFeedbackSubmitted={(newReview) => {
+          setAllReviews((prev) => [newReview, ...prev]);
+        }}
+      />
     </section>
   );
 }
+
+// Backward-compatibility export
+export { ClientReviewsSection as GoogleReviewsSection };

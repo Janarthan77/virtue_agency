@@ -345,7 +345,7 @@ export function ProjectsSection() {
   );
 
   return (
-    <section className="bg-[#0F172A] py-28 relative overflow-hidden">
+    <section id="portfolio" className="bg-[#0F172A] py-28 relative overflow-hidden">
       {/* Subtle background glow */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-[#FFFFFF]/5 blur-[120px] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-[#FFB800]/4 blur-[100px] pointer-events-none" />
@@ -361,12 +361,12 @@ export function ProjectsSection() {
                 Virtue IN Events
               </p>
             </div>
-            <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight leading-tight">
+            <h2 className="text-3xl md:text-4xl font-black text-white tracking-tight leading-tight">
               Events We&apos;ve <span className="text-[#FFB800]">Managed</span>
             </h2>
           </div>
           <Link
-            href="/portfolio"
+            href="/gallery"
             className="inline-flex items-center gap-2 px-7 py-3 rounded-full text-gray-900 font-bold text-sm transition-all duration-300 hover:scale-105 self-start lg:self-auto shrink-0"
             style={{
               background: "linear-gradient(135deg, #FFFFFF, #E2E8F0)",
@@ -440,7 +440,7 @@ export function ProjectsSection() {
                     style={{ background: "rgba(15,23,42,0.85)", border: "1px solid rgba(255,255,255,0.12)" }}
                   >
                     <Sparkles size={13} className="text-[#FFB800]" />
-                    <span className="text-white text-[10px] font-black uppercase tracking-wider">{event.year || "2026"}</span>
+                    <span className="text-white text-[10px] font-black uppercase tracking-wider">SHOWCASE</span>
                   </div>
 
                   {/* Category tag */}

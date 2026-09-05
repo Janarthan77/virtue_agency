@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect } from "react";
 import {
@@ -89,7 +89,6 @@ export default function ServiceFormModal({
   const [icon, setIcon] = useState("CalendarDays");
   const [image, setImage] = useState("");
   const [accentColor, setAccentColor] = useState("#FFB800");
-  const [sortOrder, setSortOrder] = useState(1);
   const [isActive, setIsActive] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -102,7 +101,6 @@ export default function ServiceFormModal({
       setIcon(service.icon || "CalendarDays");
       setImage(service.image || "");
       setAccentColor(service.accent_color || "#FFB800");
-      setSortOrder(service.sort_order || 1);
       setIsActive(service.is_active ?? true);
     } else {
       setNum("");
@@ -111,7 +109,6 @@ export default function ServiceFormModal({
       setIcon("Sparkles");
       setImage("");
       setAccentColor("#FFB800");
-      setSortOrder(1);
       setIsActive(true);
     }
     setErrorMessage(null);
@@ -138,7 +135,6 @@ export default function ServiceFormModal({
         icon,
         image,
         accent_color: accentColor,
-        sort_order: Number(sortOrder) || 1,
         is_active: isActive,
       };
 
@@ -271,7 +267,7 @@ export default function ServiceFormModal({
             </div>
           </div>
 
-          {/* Row 4: Accent Color & Sort Order */}
+          {/* Row 4: Accent Color & Status */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="text-xs font-semibold uppercase tracking-wider text-slate-700 block mb-1.5">
@@ -300,16 +296,9 @@ export default function ServiceFormModal({
 
             <div>
               <label className="text-xs font-semibold uppercase tracking-wider text-slate-700 block mb-1.5">
-                Display Order &amp; Status
+                Status
               </label>
-              <div className="flex items-center gap-3">
-                <input
-                  type="number"
-                  value={sortOrder}
-                  onChange={(e) => setSortOrder(Number(e.target.value))}
-                  className="w-24 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-sm text-slate-800 font-bold focus:bg-white focus:outline-none"
-                  min={1}
-                />
+              <div className="flex items-center gap-3 pt-1">
                 <label className="flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer select-none">
                   <input
                     type="checkbox"

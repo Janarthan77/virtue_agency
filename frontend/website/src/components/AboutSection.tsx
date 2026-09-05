@@ -15,7 +15,7 @@ const features = [
 
 export function AboutSection() {
   return (
-    <section className="bg-[#1E293B] py-24 md:py-32 relative z-10 overflow-hidden">
+    <section id="about" className="bg-[#1E293B] py-24 md:py-32 relative z-10 overflow-hidden">
       <div className="container mx-auto px-6 max-w-7xl">
         <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 items-center">
 
@@ -34,7 +34,7 @@ export function AboutSection() {
                 </p>
               </div>
 
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-light text-white mb-6 leading-tight">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-light text-white mb-6 leading-tight">
                 <span className="font-bold">No.1</span> Events<br />Management
               </h2>
 

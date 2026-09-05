@@ -46,7 +46,7 @@ export default function PrivacyPolicyPage() {
             <span>Legal & Privacy Compliance</span>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-white tracking-tight leading-tight mb-6">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-tight mb-6">
             Privacy <span className="text-[#FFB800]">Policy</span>
           </h1>
 

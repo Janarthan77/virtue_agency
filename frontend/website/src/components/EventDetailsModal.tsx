@@ -11,16 +11,13 @@ export interface EventItem {
   title: string;
   category: string;
   subtitle: string;
-  date?: string;
-  month?: string;
-  time?: string;
   location: string;
   image: string;
   gallery?: string[];
   description?: string;
   highlights?: string[];
   attendees?: string;
-  year?: string;
+  [key: string]: any;
 }
 
 

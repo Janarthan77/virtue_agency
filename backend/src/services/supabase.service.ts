@@ -18,16 +18,12 @@ export interface ProjectRecord {
   title: string;
   category: string;
   subtitle?: string;
-  date?: string;
-  month?: string;
-  time?: string;
   location?: string;
   image: string;
   gallery?: string[];
   description?: string;
   highlights?: string[];
   client?: string;
-  year?: string;
   tag?: string;
   is_featured?: boolean;
   sort_order?: number;
@@ -109,6 +105,22 @@ export interface CompanySettingsRecord {
   instagram_url?: string;
   linkedin_url?: string;
   website_url?: string;
+  updated_at?: string;
+}
+
+export interface ReviewRecord {
+  id?: number | string;
+  name: string;
+  role?: string;
+  category?: string;
+  rating: number;
+  text: string;
+  email?: string;
+  phone?: string;
+  avatar_color?: string;
+  status?: "approved" | "pending" | "hidden";
+  is_featured?: boolean;
+  created_at?: string;
   updated_at?: string;
 }
 

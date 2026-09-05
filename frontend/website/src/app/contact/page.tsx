@@ -118,7 +118,7 @@ export default function Contact() {
               <p className="text-[#FFB800] font-bold text-sm tracking-[0.25em] uppercase">Get In Touch</p>
               <span className="w-10 h-[2px] bg-[#FFB800]" />
             </div>
-            <h1 className="text-5xl md:text-7xl font-black text-white tracking-tight leading-none mb-6">
+            <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight leading-none mb-6">
               Enquire With Us
             </h1>
             <p className="text-gray-400 text-lg max-w-xl mx-auto leading-relaxed">

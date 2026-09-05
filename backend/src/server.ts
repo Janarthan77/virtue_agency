@@ -10,6 +10,7 @@ import emailRoutes from "./routes/email.routes.js";
 import statsRoutes from "./routes/stats.routes.js";
 import servicesRoutes from "./routes/services.routes.js";
 import settingsRoutes from "./routes/settings.routes.js";
+import reviewsRoutes from "./routes/reviews.routes.js";
 
 dotenv.config();
 
@@ -76,6 +77,7 @@ app.use("/api/send-enquiry", enquiriesRoutes); // Aliased for website form
 app.use("/api/send-email", emailRoutes);
 app.use("/api/stats", statsRoutes);
 app.use("/api/settings", settingsRoutes);
+app.use("/api/reviews", reviewsRoutes);
 
 
 // 404 Catch-All Handler

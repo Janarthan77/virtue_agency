@@ -93,21 +93,17 @@ export async function getGallery(req: Request, res: Response): Promise<void> {
     const { data, error } = await query;
 
     if (error) {
-      console.warn("Supabase gallery table error (using fallback):", error.message);
+      console.warn("Supabase gallery table error:", error.message);
       let list = [...fallbackGallery];
       if (type && type !== "all") {
         list = list.filter((item) => item.type === type);
       }
-      res.json({ success: true, count: list.length, items: list, source: "memory_fallback" });
+      res.json({ success: true, count: list.length, items: list, source: "fallback" });
       return;
     }
 
-    if (!data || data.length === 0) {
-      res.json({ success: true, count: fallbackGallery.length, items: fallbackGallery, source: "memory_fallback" });
-      return;
-    }
-
-    res.json({ success: true, count: data.length, items: data, source: "supabase" });
+    const items = data || [];
+    res.json({ success: true, count: items.length, items, source: "supabase" });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Error fetching gallery items";
     res.status(500).json({ success: false, error: msg });

@@ -25,6 +25,34 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* ─── Premium Admin Portal Scrollbar ─────────────────── */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #CBD5E1 #F8FAFC;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F8FAFC;
+  border-left: 1px solid #E2E8F0;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #94A3B8;
+  border-radius: 9999px;
+  border: 2px solid #F8FAFC;
+  transition: background 0.2s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #64748B;
+}
+
 /* ─── Responsive Utilities ────────────────────────────── */
 
 @layer utilities {
@@ -32,21 +60,24 @@ body {
     @apply bg-white/5 backdrop-blur-md border border-white/10;
   }
   
-  /* Modern thin scrollbar */
+  /* Modern thin scrollbar for admin tables and modals */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #CBD5E1 transparent;
+  }
   .custom-scrollbar::-webkit-scrollbar {
     width: 6px;
     height: 6px;
   }
   .custom-scrollbar::-webkit-scrollbar-track {
-    background: rgba(15, 23, 42, 0.6);
-    border-radius: 9999px;
+    background: transparent;
   }
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
+    background: #CBD5E1;
     border-radius: 9999px;
   }
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.4);
+    background: #94A3B8;
   }
 }
 

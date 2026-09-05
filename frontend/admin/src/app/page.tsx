@@ -57,12 +57,18 @@ import {
   Award,
   Shield,
   Zap,
+  Quote,
+  Star,
 } from "lucide-react";
 import {
   fetchEnquiries,
   fetchProjects,
   fetchGallery,
   fetchServices,
+  fetchReviews,
+  createReview,
+  updateReview,
+  deleteReview,
   DEFAULT_ADMIN_SERVICES,
   DEFAULT_ADMIN_SETTINGS,
   fetchCompanySettings,
@@ -85,6 +91,7 @@ import {
   ProjectItem,
   GalleryItem,
   ServiceItem,
+  ReviewItem,
   CompanySettings,
   DashboardStats,
 } from "@/lib/api";
@@ -92,6 +99,7 @@ import { isAuthenticated, getCurrentAdmin, logoutAdmin, AdminUser } from "@/lib/
 import ProjectFormModal from "@/components/ProjectFormModal";
 import GalleryFormModal from "@/components/GalleryFormModal";
 import ServiceFormModal from "@/components/ServiceFormModal";
+import ReviewFormModal from "@/components/ReviewFormModal";
 
 // Helper map to dynamically render Lucide icon by string name
 const ICON_MAP: Record<string, React.ComponentType<{ size?: number; className?: string; style?: React.CSSProperties }>> = {
@@ -263,6 +271,13 @@ function StatusDropdown({
   );
 }
 
+const getInitials = (name?: string) => {
+  if (!name) return "VI";
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+};
+
 export default function AdminPortal() {
   const router = useRouter();
   const [currentUser, setCurrentUser] = useState<AdminUser | null>(null);
@@ -271,13 +286,14 @@ export default function AdminPortal() {
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   // Active Workspace Tab
-  const [activeTab, setActiveTab] = useState<"enquiries" | "projects" | "services" | "gallery" | "contact">("enquiries");
+  const [activeTab, setActiveTab] = useState<"enquiries" | "projects" | "services" | "gallery" | "reviews" | "contact">("enquiries");
 
   // Data states
   const [enquiries, setEnquiries] = useState<EnquiryItem[]>([]);
   const [projects, setProjects] = useState<ProjectItem[]>([]);
   const [gallery, setGallery] = useState<GalleryItem[]>([]);
   const [services, setServices] = useState<ServiceItem[]>(DEFAULT_ADMIN_SERVICES);
+  const [reviews, setReviews] = useState<ReviewItem[]>([]);
   const [companySettings, setCompanySettings] = useState<CompanySettings>(DEFAULT_ADMIN_SETTINGS);
   const [_unusedSettings, _setUnused] = useState<any>({
     company_name: "Virtue IN Agency",
@@ -302,6 +318,7 @@ export default function AdminPortal() {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("All");
+  const [reviewStatusFilter, setReviewStatusFilter] = useState<string>("all");
 
   // Modals state
   const [selectedEnquiry, setSelectedEnquiry] = useState<EnquiryItem | null>(null);
@@ -311,6 +328,8 @@ export default function AdminPortal() {
   const [editingGallery, setEditingGallery] = useState<GalleryItem | null>(null);
   const [serviceModalOpen, setServiceModalOpen] = useState(false);
   const [editingService, setEditingService] = useState<ServiceItem | null>(null);
+  const [reviewModalOpen, setReviewModalOpen] = useState(false);
+  const [editingReview, setEditingReview] = useState<ReviewItem | null>(null);
 
   // Mail Modal State
   const [mailModalOpen, setMailModalOpen] = useState(false);
@@ -362,21 +381,19 @@ export default function AdminPortal() {
   const loadData = useCallback(async () => {
     setLoading(true);
     try {
-      const [enqRes, projRes, galRes, servRes, settRes, statsRes] = await Promise.all([
+      const [enqRes, projRes, galRes, servRes, revRes, settRes, statsRes] = await Promise.all([
         fetchEnquiries({ status: statusFilter, search: searchQuery }),
         fetchProjects({ category: categoryFilter, search: searchQuery }),
         fetchGallery(),
         fetchServices({ search: searchQuery }),
+        fetchReviews({ status: reviewStatusFilter, search: searchQuery }),
         fetchCompanySettings(),
         fetchDashboardStats(),
       ]);
 
       if (enqRes.success) setEnquiries(enqRes.enquiries || []);
       if (projRes.success && projRes.projects) {
-        const sortedProjects = [...projRes.projects].sort(
-          (a, b) => (Number(a.sort_order) || Number(a.id) || 1) - (Number(b.sort_order) || Number(b.id) || 1)
-        );
-        setProjects(sortedProjects);
+        setProjects(projRes.projects);
       }
       if (galRes.success) setGallery(galRes.items || []);
 
@@ -384,6 +401,9 @@ export default function AdminPortal() {
         setServices(servRes.services);
       } else {
         setServices(DEFAULT_ADMIN_SERVICES);
+      }
+      if (revRes && revRes.success && revRes.reviews) {
+        setReviews(revRes.reviews);
       }
       if (settRes && settRes.settings) {
         setCompanySettings(settRes.settings);
@@ -396,7 +416,7 @@ export default function AdminPortal() {
     } finally {
       setLoading(false);
     }
-  }, [statusFilter, categoryFilter, searchQuery]);
+  }, [statusFilter, categoryFilter, reviewStatusFilter, searchQuery]);
 
   useEffect(() => {
     if (authChecked) {
@@ -477,6 +497,52 @@ export default function AdminPortal() {
     if (res.success) {
       setServices((prev) => prev.filter((s) => s.id !== id));
       loadData();
+    }
+  };
+
+  // ── Client Reviews & Feedback Handlers ──
+  const handleOpenAddReview = () => {
+    setEditingReview(null);
+    setReviewModalOpen(true);
+  };
+
+  const handleOpenEditReview = (r: ReviewItem) => {
+    setEditingReview(r);
+    setReviewModalOpen(true);
+  };
+
+  const handleSaveReview = async (reviewData: ReviewItem) => {
+    if (editingReview?.id) {
+      const res = await updateReview(editingReview.id, reviewData);
+      if (res.success && res.review) {
+        setReviews((prev) => prev.map((r) => (r.id === editingReview.id ? res.review! : r)));
+      }
+    } else {
+      const res = await createReview(reviewData);
+      if (res.success && res.review) {
+        setReviews((prev) => [res.review!, ...prev]);
+      }
+    }
+    loadData();
+  };
+
+  const handleDeleteReview = async (id: string | number) => {
+    if (!confirm("Are you sure you want to delete this client review?")) return;
+    const res = await deleteReview(id);
+    if (res.success) {
+      setReviews((prev) => prev.filter((r) => r.id !== id));
+      loadData();
+    }
+  };
+
+  const handleToggleReviewStatus = async (item: ReviewItem) => {
+    if (!item.id) return;
+    const nextStatus = item.status === "approved" ? "hidden" : "approved";
+    const res = await updateReview(item.id, { status: nextStatus });
+    if (res.success) {
+      setReviews((prev) =>
+        prev.map((r) => (r.id === item.id ? { ...r, status: nextStatus } : r))
+      );
     }
   };
 
@@ -687,164 +753,131 @@ export default function AdminPortal() {
       >
         <div>
           {/* Brand Bar */}
-          <div className="h-16 px-4 border-b border-slate-200/80 flex items-center justify-between bg-white shrink-0">
-            {(!sidebarCollapsed || mobileSidebarOpen) ? (
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-base shadow-sm">
-                  V
-                </div>
-                <div>
-                  <span className="font-bold text-sm tracking-tight text-slate-900 uppercase block leading-tight">
-                    V-RTUE <span className="text-amber-600 font-semibold">IN.</span>
-                  </span>
-                  <span className="text-xs font-medium text-slate-500 flex items-center gap-1.5 mt-0.5">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    Admin Suite
-                  </span>
-                </div>
-              </div>
+          <div className={`h-16 border-b border-slate-200/80 flex items-center bg-white shrink-0 ${
+            (sidebarCollapsed && !mobileSidebarOpen) ? "px-2 justify-center" : "px-4 justify-between"
+          }`}>
+            {(sidebarCollapsed && !mobileSidebarOpen) ? (
+              <button
+                onClick={() => setSidebarCollapsed(false)}
+                className="w-10 h-10 rounded-xl bg-slate-900 hover:bg-slate-800 text-white flex items-center justify-center font-bold text-base shadow-sm group relative transition-all cursor-pointer"
+                title="Expand Sidebar"
+              >
+                <span className="group-hover:hidden">V</span>
+                <ChevronRight size={18} className="hidden group-hover:block text-amber-400" />
+                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-amber-500 text-slate-900 text-[10px] font-black flex items-center justify-center shadow-xs">
+                  <ChevronRight size={10} strokeWidth={3} />
+                </span>
+              </button>
             ) : (
-              <div className="mx-auto w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-base shadow-sm">
-                V
-              </div>
+              <>
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-base shadow-sm shrink-0">
+                    V
+                  </div>
+                  <div className="min-w-0">
+                    <span className="font-bold text-sm tracking-tight text-slate-900 uppercase block leading-tight truncate">
+                      V-RTUE <span className="text-amber-600 font-semibold">IN.</span>
+                    </span>
+                    <span className="text-xs font-medium text-slate-500 flex items-center gap-1.5 mt-0.5">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                      Admin Suite
+                    </span>
+                  </div>
+                </div>
+
+                {/* Desktop Collapse Toggle */}
+                <button
+                  onClick={() => setSidebarCollapsed(true)}
+                  className="hidden lg:flex w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-900 items-center justify-center transition-colors cursor-pointer shrink-0"
+                  title="Collapse Sidebar"
+                >
+                  <ChevronLeft size={16} />
+                </button>
+
+                {/* Mobile Close Button */}
+                <button
+                  onClick={() => setMobileSidebarOpen(false)}
+                  className="lg:hidden w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-900 flex items-center justify-center transition-colors cursor-pointer shrink-0"
+                  title="Close Menu"
+                >
+                  <X size={18} />
+                </button>
+              </>
             )}
-
-            {/* Desktop Collapse Toggle */}
-            <button
-              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              className="hidden lg:flex w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-900 items-center justify-center transition-colors cursor-pointer"
-              title={sidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
-            >
-              <ChevronLeft size={16} className={sidebarCollapsed ? "rotate-180" : ""} />
-            </button>
-
-            {/* Mobile Close Button */}
-            <button
-              onClick={() => setMobileSidebarOpen(false)}
-              className="lg:hidden w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-900 flex items-center justify-center transition-colors cursor-pointer"
-              title="Close Menu"
-            >
-              <X size={18} />
-            </button>
           </div>
 
           {/* Core Navigation Items */}
-          <div className="p-3.5 space-y-1.5">
+          <div className={`${(sidebarCollapsed && !mobileSidebarOpen) ? "p-2 space-y-2" : "p-3.5 space-y-1.5"}`}>
             {(!sidebarCollapsed || mobileSidebarOpen) && (
               <p className="px-3 text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
                 Workspace Modules
               </p>
             )}
 
-            {/* Tab 1: Enquiries & Leads */}
-            <button
-              onClick={() => {
-                setActiveTab("enquiries");
-                setMobileSidebarOpen(false);
-              }}
-              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
-                activeTab === "enquiries"
-                  ? "bg-slate-900 text-white shadow-sm"
-                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-              }`}
-            >
-              <Inbox size={18} className={activeTab === "enquiries" ? "text-amber-400" : "text-slate-500"} />
-              {(!sidebarCollapsed || mobileSidebarOpen) && <span className="truncate flex-1 text-left">Leads &amp; Enquiries</span>}
-              {(!sidebarCollapsed || mobileSidebarOpen) && (
-                <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-200/60 text-slate-700">
-                  {enquiries.length}
-                </span>
-              )}
-            </button>
+            {[
+              { id: "enquiries" as const, label: "Leads & Enquiries", icon: Inbox, badge: enquiries.length, badgeColor: "bg-slate-200/60 text-slate-700" },
+              { id: "projects" as const, label: "Projects CMS", icon: Sparkles, badge: projects.length, badgeColor: "bg-slate-200/60 text-slate-700" },
+              { id: "services" as const, label: "Services CMS", icon: Layers, badge: services.length, badgeColor: "bg-slate-200/60 text-slate-700" },
+              { id: "gallery" as const, label: "Gallery CMS", icon: ImageIcon, badge: gallery.length, badgeColor: "bg-slate-200/60 text-slate-700" },
+              { id: "reviews" as const, label: "Client Feedback", icon: Star, badge: reviews.length, badgeColor: "bg-amber-100 text-amber-800" },
+              { id: "contact" as const, label: "Contact & Info", icon: Phone, badge: "Live", badgeColor: "bg-emerald-100 text-emerald-800" },
+            ].map((item) => {
+              const Icon = item.icon;
+              const isActive = activeTab === item.id;
+              const isCollapsed = sidebarCollapsed && !mobileSidebarOpen;
 
-            {/* Tab 2: Projects CMS */}
-            <button
-              onClick={() => {
-                setActiveTab("projects");
-                setMobileSidebarOpen(false);
-              }}
-              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
-                activeTab === "projects"
-                  ? "bg-slate-900 text-white shadow-sm"
-                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-              }`}
-            >
-              <Sparkles size={18} className={activeTab === "projects" ? "text-amber-400" : "text-slate-500"} />
-              {(!sidebarCollapsed || mobileSidebarOpen) && <span className="truncate flex-1 text-left">Projects CMS</span>}
-              {(!sidebarCollapsed || mobileSidebarOpen) && (
-                <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-200/60 text-slate-700">
-                  {projects.length}
-                </span>
-              )}
-            </button>
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    setActiveTab(item.id);
+                    setMobileSidebarOpen(false);
+                  }}
+                  title={isCollapsed ? `${item.label} (${item.badge})` : undefined}
+                  className={`relative flex items-center transition-all cursor-pointer ${
+                    isCollapsed
+                      ? "w-11 h-11 mx-auto justify-center rounded-xl p-0"
+                      : "w-full gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold"
+                  } ${
+                    isActive
+                      ? "bg-slate-900 text-white shadow-sm"
+                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                  }`}
+                >
+                  <Icon
+                    size={isCollapsed ? 20 : 18}
+                    className={`shrink-0 ${isActive ? "text-amber-400" : "text-slate-500"}`}
+                  />
 
-            {/* Tab 3: Services CMS */}
-            <button
-              onClick={() => {
-                setActiveTab("services");
-                setMobileSidebarOpen(false);
-              }}
-              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
-                activeTab === "services"
-                  ? "bg-slate-900 text-white shadow-sm"
-                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-              }`}
-            >
-              <Layers size={18} className={activeTab === "services" ? "text-amber-400" : "text-slate-500"} />
-              {(!sidebarCollapsed || mobileSidebarOpen) && <span className="truncate flex-1 text-left">Services CMS</span>}
-              {(!sidebarCollapsed || mobileSidebarOpen) && (
-                <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-200/60 text-slate-700">
-                  {services.length}
-                </span>
-              )}
-            </button>
+                  {!isCollapsed && (
+                    <>
+                      <span className="truncate flex-1 text-left">{item.label}</span>
+                      <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${item.badgeColor}`}>
+                        {item.badge}
+                      </span>
+                    </>
+                  )}
 
-            {/* Tab 4: Gallery CMS */}
-            <button
-              onClick={() => {
-                setActiveTab("gallery");
-                setMobileSidebarOpen(false);
-              }}
-              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
-                activeTab === "gallery"
-                  ? "bg-slate-900 text-white shadow-sm"
-                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-              }`}
-            >
-              <ImageIcon size={18} className={activeTab === "gallery" ? "text-amber-400" : "text-slate-500"} />
-              {(!sidebarCollapsed || mobileSidebarOpen) && <span className="truncate flex-1 text-left">Gallery CMS</span>}
-              {(!sidebarCollapsed || mobileSidebarOpen) && (
-                <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-200/60 text-slate-700">
-                  {gallery.length}
-                </span>
-              )}
-            </button>
-
-            {/* Tab 5: Contact & Company Settings */}
-            <button
-              onClick={() => {
-                setActiveTab("contact");
-                setMobileSidebarOpen(false);
-              }}
-              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
-                activeTab === "contact"
-                  ? "bg-slate-900 text-white shadow-sm"
-                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-              }`}
-            >
-              <Phone size={18} className={activeTab === "contact" ? "text-amber-400" : "text-slate-500"} />
-              {(!sidebarCollapsed || mobileSidebarOpen) && <span className="truncate flex-1 text-left">Contact &amp; Info</span>}
-              {(!sidebarCollapsed || mobileSidebarOpen) && (
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-100 text-emerald-800">
-                  Live
-                </span>
-              )}
-            </button>
+                  {/* Collapsed notification dot / mini badge */}
+                  {isCollapsed && item.badge && item.badge !== 0 && (
+                    <span
+                      className={`absolute -top-1 -right-1 min-w-[16px] h-4 px-1 rounded-full text-[9px] font-bold flex items-center justify-center shadow-xs ${
+                        isActive ? "bg-amber-400 text-slate-950" : "bg-slate-200 text-slate-700"
+                      }`}
+                    >
+                      {typeof item.badge === "number" ? item.badge : "●"}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
           </div>
         </div>
 
         {/* Sidebar Bottom */}
-        <div className="p-3.5 border-t border-slate-200/80 space-y-2.5 bg-slate-50/50">
+        <div className={`border-t border-slate-200/80 bg-slate-50/50 ${
+          (sidebarCollapsed && !mobileSidebarOpen) ? "p-2 space-y-3" : "p-3.5 space-y-2.5"
+        }`}>
           {(!sidebarCollapsed || mobileSidebarOpen) && (
             <div className="p-2.5 rounded-xl bg-white border border-slate-200 text-xs space-y-1.5 shadow-2xs">
               <div className="flex items-center justify-between text-slate-600">
@@ -865,37 +898,59 @@ export default function AdminPortal() {
           <Link
             href="http://localhost:3000"
             target="_blank"
-            className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors group"
+            title={(sidebarCollapsed && !mobileSidebarOpen) ? "View Live Website" : undefined}
+            className={`flex items-center rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors group ${
+              (sidebarCollapsed && !mobileSidebarOpen)
+                ? "w-11 h-11 mx-auto justify-center p-0"
+                : "w-full gap-2.5 px-3 py-2 text-xs"
+            }`}
           >
-            <ExternalLink size={15} className="shrink-0 group-hover:text-amber-600 transition-colors" />
+            <ExternalLink size={(sidebarCollapsed && !mobileSidebarOpen) ? 18 : 15} className="shrink-0 group-hover:text-amber-600 transition-colors" />
             {(!sidebarCollapsed || mobileSidebarOpen) && <span className="truncate font-medium text-xs">View Live Website</span>}
           </Link>
 
-          <div
-            className={`flex items-center gap-2.5 p-2 rounded-xl bg-white border border-slate-200 shadow-2xs ${
-              (sidebarCollapsed && !mobileSidebarOpen) ? "justify-center" : "justify-between"
-            }`}
-          >
-            {(!sidebarCollapsed || mobileSidebarOpen) && (
+          {(sidebarCollapsed && !mobileSidebarOpen) ? (
+            <div className="flex flex-col items-center gap-2 pt-1">
+              <div
+                className="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-xs shadow-2xs cursor-default"
+                title={`${companySettings.contact_person || currentUser?.name || "Lead Producer"}\n${companySettings.email || currentUser?.email || "admin@virtuein.agency"}`}
+              >
+                {getInitials(companySettings.contact_person || currentUser?.name || "Lead Producer")}
+              </div>
+
+              <button
+                onClick={handleLogout}
+                title="Sign Out"
+                className="w-10 h-10 rounded-xl text-red-500 hover:bg-red-50 hover:text-red-600 transition-colors flex items-center justify-center cursor-pointer"
+              >
+                <LogOut size={17} />
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2.5 p-2 rounded-xl bg-white border border-slate-200 shadow-2xs justify-between">
               <div className="min-w-0 flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold text-xs shrink-0">
-                  LP
+                  {getInitials(companySettings.contact_person || currentUser?.name || "Lead Producer")}
                 </div>
                 <div className="truncate">
-                  <p className="text-xs font-semibold text-slate-900 truncate">{companySettings.contact_person || currentUser?.name || "Lead Producer"}</p>
-                  <p className="text-[11px] text-slate-400 truncate">{companySettings.email || currentUser?.email || "admin@virtuein.agency"}</p>
+                  <p className="text-xs font-semibold text-slate-900 truncate">
+                    {companySettings.contact_person || currentUser?.name || "Lead Producer"}
+                  </p>
+                  <p className="text-[11px] text-slate-400 truncate">
+                    {companySettings.email || currentUser?.email || "admin@virtuein.agency"}
+                  </p>
                 </div>
               </div>
-            )}
 
-            <button
-              onClick={handleLogout}
-              title="Sign Out"
-              className="p-2 rounded-lg text-red-500 hover:bg-red-50 hover:text-red-600 transition-colors shrink-0 cursor-pointer"
-            >
-              <LogOut size={16} />
-            </button>
-          </div>
+              <button
+                onClick={handleLogout}
+                title="Sign Out"
+                className="p-2 rounded-lg text-red-500 hover:bg-red-50 hover:text-red-600 transition-colors shrink-0 cursor-pointer"
+              >
+                <LogOut size={16} />
+              </button>
+            </div>
+          )}
         </div>
       </aside>
 
@@ -921,6 +976,7 @@ export default function AdminPortal() {
               {activeTab === "projects" && "Projects & Event Showcase CMS"}
               {activeTab === "services" && "Services & Capabilities CMS"}
               {activeTab === "gallery" && "Gallery Media & Photo CMS"}
+              {activeTab === "reviews" && "Client Reviews & Feedback CMS"}
               {activeTab === "contact" && "Company Contact & Website Settings"}
             </h2>
           </div>
@@ -985,6 +1041,17 @@ export default function AdminPortal() {
               </button>
             )}
 
+            {activeTab === "reviews" && (
+              <button
+                onClick={handleOpenAddReview}
+                className="flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl bg-slate-900 text-white text-xs font-medium hover:bg-slate-800 transition-all shadow-sm active:scale-95 cursor-pointer"
+              >
+                <Plus size={14} className="text-amber-400" />
+                <span className="hidden sm:inline">Add Review</span>
+                <span className="sm:hidden">Add</span>
+              </button>
+            )}
+
             {activeTab === "contact" && (
               <button
                 onClick={() => handleSaveSettings()}
@@ -1003,12 +1070,13 @@ export default function AdminPortal() {
         <main className="flex-1 p-3 sm:p-5 flex flex-col min-h-0 overflow-hidden gap-2.5 sm:gap-3.5">
           
           {/* Row 1: Metrics Overview */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5 shrink-0">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-3.5 shrink-0">
             {[
               { label: "Total Enquiries", value: stats?.total ?? enquiries.length, icon: FileText, color: "#0F172A", bgIcon: "bg-slate-100 text-slate-800" },
               { label: "Live Projects", value: stats?.totalProjects ?? projects.length, icon: Sparkles, color: "#D97706", bgIcon: "bg-amber-50 text-amber-600" },
               { label: "Services CMS", value: stats?.totalServices ?? services.length, icon: Layers, color: "#059669", bgIcon: "bg-emerald-50 text-emerald-600" },
               { label: "Gallery Photos", value: stats?.totalGalleryItems ?? gallery.length, icon: ImageIcon, color: "#2563EB", bgIcon: "bg-blue-50 text-blue-600" },
+              { label: "Client Reviews", value: reviews.length, icon: Star, color: "#F59E0B", bgIcon: "bg-amber-50 text-amber-600" },
             ].map((card, i) => {
               const Icon = card.icon;
               return (
@@ -1115,6 +1183,11 @@ export default function AdminPortal() {
                                   {item.name.charAt(0)}
                                 </div>
                                 <span className="truncate">{item.name}</span>
+                                {item.source && (item.source.toLowerCase().includes("review") || item.source.toLowerCase().includes("feedback")) && (
+                                  <span className="px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 text-[10px] font-bold border border-amber-200 shrink-0">
+                                    Feedback
+                                  </span>
+                                )}
                               </div>
                               <div className="text-slate-600 text-xs flex items-center gap-1.5 mt-1 ml-9.5 truncate font-normal">
                                 <Building2 size={12} className="text-slate-400 shrink-0" />
@@ -1255,9 +1328,6 @@ export default function AdminPortal() {
                             <ImageIcon size={10} />
                             {p.gallery?.length || 1} photos
                           </div>
-                          <div className="absolute bottom-2.5 left-3 px-2.5 py-0.5 rounded-lg bg-slate-950/85 backdrop-blur-md text-amber-300 text-[11px] font-black tracking-wider border border-amber-500/40 shadow">
-                            Order #{p.sort_order || 1}
-                          </div>
                         </div>
 
 
@@ -1276,7 +1346,7 @@ export default function AdminPortal() {
                               )}
                               <div className="flex items-center gap-2">
                                 <Building2 size={12} className="text-slate-400 shrink-0" />
-                                <span>{p.year || "2026"} • {p.client || "Corporate"}</span>
+                                <span>{p.client || p.category || "Corporate"}</span>
                               </div>
                             </div>
                           </div>
@@ -1522,7 +1592,208 @@ export default function AdminPortal() {
           )}
 
           {/* ══════════════════════════════════════════════════════
-              TAB 5: CONTACT & COMPANY INFORMATION SETTINGS
+              TAB 5: CLIENT REVIEWS & FEEDBACK CMS
+          ══════════════════════════════════════════════════════ */}
+          {activeTab === "reviews" && (
+            <>
+              {/* Filter bar + Search */}
+              <div className="bg-white border border-slate-200/90 rounded-xl px-4 py-2.5 flex flex-col sm:flex-row items-center justify-between gap-2.5 shrink-0 shadow-2xs">
+                <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto">
+                  {[
+                    { key: "all", label: "All Reviews" },
+                    { key: "approved", label: "Approved (Live)" },
+                    { key: "pending", label: "Pending Review" },
+                    { key: "hidden", label: "Hidden" },
+                  ].map((tab) => (
+                    <button
+                      key={tab.key}
+                      onClick={() => setReviewStatusFilter(tab.key)}
+                      className={`px-3.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all cursor-pointer ${
+                        reviewStatusFilter === tab.key
+                          ? "bg-slate-900 text-white shadow-2xs font-semibold"
+                          : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                      }`}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="flex items-center gap-2 w-full sm:w-auto">
+                  <div className="relative w-full sm:w-72">
+                    <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search by client, event, text..."
+                      className="w-full bg-slate-50 border border-slate-200 rounded-lg pl-9 pr-3.5 py-2 text-xs text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none"
+                    />
+                  </div>
+                  <button
+                    onClick={handleOpenAddReview}
+                    className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-slate-900 text-white text-xs font-semibold hover:bg-slate-800 transition-all cursor-pointer shrink-0 shadow"
+                  >
+                    <Plus size={14} className="text-amber-400" />
+                    <span className="hidden sm:inline">Add Review</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Reviews Cards List Container */}
+              <div className="flex-1 min-h-0 bg-white border border-slate-200/90 rounded-xl p-4 overflow-y-auto shadow-2xs custom-scrollbar">
+                {reviews.length === 0 ? (
+                  <div className="h-full flex flex-col items-center justify-center p-8 text-center min-h-[300px]">
+                    <div className="w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 border border-amber-200 flex items-center justify-center mb-3">
+                      <Quote size={28} />
+                    </div>
+                    <h3 className="text-base font-bold text-slate-800 mb-1">No Client Reviews Found</h3>
+                    <p className="text-xs text-slate-500 max-w-sm mb-4">
+                      When visitors submit feedback via the website modal, reviews will appear here for approval and database synchronization.
+                    </p>
+                    <button
+                      onClick={handleOpenAddReview}
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 text-white text-xs font-semibold shadow hover:bg-slate-800 cursor-pointer"
+                    >
+                      <Plus size={14} className="text-amber-400" />
+                      <span>Add Manual Review</span>
+                    </button>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                    {reviews.map((r) => {
+                      const isApproved = r.status === "approved" || !r.status;
+                      const isPending = r.status === "pending";
+                      const isHidden = r.status === "hidden";
+
+                      return (
+                        <div
+                          key={r.id}
+                          className="bg-slate-50/70 border border-slate-200 rounded-2xl p-5 flex flex-col justify-between hover:border-slate-300 hover:shadow-sm transition-all"
+                        >
+                          <div>
+                            {/* Card Top: Avatar, Name, Status Badge */}
+                            <div className="flex items-start justify-between gap-3 mb-3">
+                              <div className="flex items-center gap-3">
+                                <div
+                                  className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-white text-sm shrink-0 shadow-xs"
+                                  style={{ backgroundColor: r.avatar_color || "#2563EB" }}
+                                >
+                                  {r.name ? r.name.charAt(0).toUpperCase() : "V"}
+                                </div>
+                                <div className="min-w-0">
+                                  <h4 className="font-bold text-slate-900 text-sm truncate">
+                                    {r.name}
+                                  </h4>
+                                  <p className="text-xs text-slate-500 truncate">
+                                    {r.role || "Corporate Client"}
+                                  </p>
+                                </div>
+                              </div>
+
+                              {/* Status Badge */}
+                              <span
+                                className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wide uppercase shrink-0 border ${
+                                  isApproved
+                                    ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                    : isPending
+                                    ? "bg-amber-50 text-amber-700 border-amber-200"
+                                    : "bg-slate-100 text-slate-600 border-slate-200"
+                                }`}
+                              >
+                                {isApproved ? "Live" : isPending ? "Pending" : "Hidden"}
+                              </span>
+                            </div>
+
+                            {/* Stars Rating & Category */}
+                            <div className="flex items-center justify-between gap-2 mb-3">
+                              <div className="flex items-center gap-1">
+                                {[...Array(5)].map((_, idx) => (
+                                  <Star
+                                    key={idx}
+                                    size={13}
+                                    className={
+                                      idx < (r.rating || 5)
+                                        ? "fill-amber-400 text-amber-400"
+                                        : "text-slate-300"
+                                    }
+                                  />
+                                ))}
+                                <span className="text-xs font-bold text-slate-700 ml-1">
+                                  {r.rating || 5}.0
+                                </span>
+                              </div>
+
+                              <span className="text-[10px] font-semibold text-slate-500 bg-white px-2 py-0.5 rounded border border-slate-200 capitalize">
+                                {r.category || "corporate"}
+                              </span>
+                            </div>
+
+                            {/* Quote Text */}
+                            <p className="text-xs text-slate-700 leading-relaxed italic mb-4 line-clamp-4">
+                              &ldquo;{r.text}&rdquo;
+                            </p>
+
+                            {/* Contact Details (if submitted) */}
+                            {(r.email || r.phone) && (
+                              <div className="p-2.5 rounded-xl bg-white border border-slate-200/80 text-[11px] text-slate-600 space-y-0.5 mb-4">
+                                {r.email && (
+                                  <p className="truncate">
+                                    <span className="font-semibold text-slate-700">Email:</span> {r.email}
+                                  </p>
+                                )}
+                                {r.phone && (
+                                  <p className="truncate">
+                                    <span className="font-semibold text-slate-700">Phone:</span> {r.phone}
+                                  </p>
+                                )}
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Card Footer Actions */}
+                          <div className="pt-3 border-t border-slate-200 flex items-center justify-between gap-2 mt-auto">
+                            {/* Toggle Approved / Hidden */}
+                            <button
+                              type="button"
+                              onClick={() => handleToggleReviewStatus(r)}
+                              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer border ${
+                                isApproved
+                                  ? "bg-white hover:bg-slate-100 text-slate-600 border-slate-200"
+                                  : "bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-600"
+                              }`}
+                            >
+                              {isApproved ? "Hide from Web" : "Approve & Show"}
+                            </button>
+
+                            <div className="flex items-center gap-1.5">
+                              <button
+                                onClick={() => handleOpenEditReview(r)}
+                                className="p-2 rounded-lg bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
+                                title="Edit Review"
+                              >
+                                <Edit2 size={13} />
+                              </button>
+                              <button
+                                onClick={() => handleDeleteReview(r.id!)}
+                                className="p-2 rounded-lg bg-white border border-slate-200 text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
+                                title="Delete Review"
+                              >
+                                <Trash2 size={13} />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </>
+          )}
+
+          {/* ══════════════════════════════════════════════════════
+              TAB 6: CONTACT & COMPANY INFORMATION SETTINGS
           ══════════════════════════════════════════════════════ */}
           {activeTab === "contact" && (
             <div className="flex-1 min-h-0 bg-white border border-slate-200/90 rounded-xl p-3.5 sm:p-6 overflow-y-auto shadow-2xs custom-scrollbar">
@@ -1810,6 +2081,14 @@ export default function AdminPortal() {
         item={editingGallery}
         onClose={() => setGalleryModalOpen(false)}
         onSave={handleSaveGallery}
+      />
+
+      {/* Review Form Modal (Add / Edit) */}
+      <ReviewFormModal
+        isOpen={reviewModalOpen}
+        review={editingReview}
+        onClose={() => setReviewModalOpen(false)}
+        onSave={handleSaveReview}
       />
 
       {/* Resend Email Composer Modal */}

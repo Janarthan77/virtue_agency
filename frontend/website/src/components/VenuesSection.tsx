@@ -39,7 +39,7 @@ export function VenuesSection() {
   const activeVenue = venues[activeIndex];
 
   return (
-    <section className="bg-[#0F172A] py-24 relative overflow-hidden text-white">
+    <section id="venues" className="bg-[#0F172A] py-24 relative overflow-hidden text-white">
       {/* Background image overlay simulating the mountain landscape faintly */}
       <div className="absolute inset-0 opacity-[0.02] bg-[url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center pointer-events-none" />
 
@@ -52,7 +52,7 @@ export function VenuesSection() {
               <span className="w-12 h-[1px] bg-[#FFFFFF]"></span>
               Virtue IN Venues
             </p>
-            <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight">
+            <h2 className="text-3xl md:text-4xl font-black text-white tracking-tight">
               Conference <span className="font-light">Rooms & Hotels</span>
             </h2>
           </div>

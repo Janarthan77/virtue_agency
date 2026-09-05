@@ -65,7 +65,7 @@ export function FAQSection({ variant = "home" }: FAQSectionProps) {
   const toggle = (i: number) => setOpenIdx(openIdx === i ? null : i);
 
   return (
-    <section className="bg-[#0F172A] py-28 relative overflow-hidden">
+    <section id="faq" className="bg-[#0F172A] py-28 relative overflow-hidden">
       {/* Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#FFFFFF]/6 blur-[120px] rounded-full pointer-events-none" />
 
@@ -79,7 +79,7 @@ export function FAQSection({ variant = "home" }: FAQSectionProps) {
             </p>
             <span className="w-10 h-[2px] bg-[#FFB800]" />
           </div>
-          <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight leading-tight">
+          <h2 className="text-3xl md:text-4xl font-black text-white tracking-tight leading-tight">
             Frequently Asked <span className="text-[#FFB800]">Questions</span>
           </h2>
           <p className="text-gray-400 mt-4 text-base max-w-xl mx-auto leading-relaxed">

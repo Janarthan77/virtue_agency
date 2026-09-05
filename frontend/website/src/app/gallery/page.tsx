@@ -481,7 +481,7 @@ function ListCard({
   );
 }
 
-export default function Portfolio() {
+export default function GalleryPage() {
   const [allProjects, setAllProjects] = useState<PortfolioProject[]>(portfolioProjects);
   const [filter, setFilter] = useState("All");
   const [view, setView] = useState<"grid" | "list">("grid");

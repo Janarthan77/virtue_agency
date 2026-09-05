@@ -122,7 +122,7 @@ export function GallerySection() {
   };
 
   return (
-    <section className="bg-[#1E293B] pt-24 pb-0 relative">
+    <section id="gallery" className="bg-[#1E293B] pt-24 pb-0 relative">
       <div className="container mx-auto px-6 max-w-7xl mb-16">
         
         {/* Header */}
@@ -130,7 +130,7 @@ export function GallerySection() {
           <p className="text-gray-400 font-semibold text-sm tracking-[0.25em] uppercase mb-3">
             Virtue IN Gallery
           </p>
-          <h2 className="text-4xl md:text-5xl font-light text-white tracking-tight">
+          <h2 className="text-3xl md:text-4xl font-light text-white tracking-tight">
             Beautiful & <span className="font-bold">Unforgettable Times</span>
           </h2>
         </div>

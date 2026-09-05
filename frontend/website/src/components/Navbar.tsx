@@ -12,7 +12,7 @@ const navLinks = [
   { name: "Home", href: "/" },
   { name: "About", href: "/about" },
   { name: "Services", href: "/services" },
-  { name: "Gallery", href: "/portfolio" },
+  { name: "Gallery", href: "/gallery" },
   { name: "Contact", href: "/contact" },
 ];
 
@@ -53,8 +53,8 @@ export default function Navbar() {
     <>
       <motion.header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled || mobileMenuOpen
-          ? "bg-[#0F172A]/95 backdrop-blur-md border-b border-white/[0.08] py-4 shadow-lg"
-          : "bg-transparent py-6"
+          ? "bg-[#0F172A]/95 backdrop-blur-md border-b border-white/[0.08] py-3.5 shadow-lg"
+          : "bg-transparent py-5"
           }`}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
@@ -67,42 +67,45 @@ export default function Navbar() {
             <Image
               src="/logo.png"
               alt="Virtue IN"
-              width={160}
-              height={39}
-              className="h-7 md:h-8 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
+              width={150}
+              height={36}
+              className="h-6 sm:h-7 md:h-7.5 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
               priority
             />
-            <span className="text-[8px] sm:text-[9px] md:text-[10px] font-black italic tracking-[0.26em] uppercase text-white/90 group-hover:text-[#FFB800] transition-colors mt-1 pl-0.5 select-none">
+            <span className="text-[7.5px] sm:text-[8.5px] md:text-[9px] font-black italic tracking-[0.24em] uppercase text-white/90 group-hover:text-[#FFB800] transition-colors mt-0.5 pl-0.5 select-none">
               VIRTUE IN AGENCY
             </span>
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-6 lg:gap-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                className={`text-sm font-semibold transition-colors duration-200 relative group ${pathname === link.href
-                  ? "text-[#FFB800]"
-                  : "text-gray-300 hover:text-white"
-                  }`}
-              >
-                {link.name}
-                {/* Active underline */}
-                <span
-                  className={`absolute bottom-[0px] left-0 h-[2px] bg-[#FFB800] transition-all duration-300 w-full origin-left ${pathname === link.href ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+          <nav className="hidden md:flex items-center gap-5 lg:gap-7">
+            {navLinks.map((link) => {
+              const isLinkActive = link.href === "/" ? pathname === "/" : pathname === link.href;
+              return (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  className={`text-[13px] font-medium tracking-wide transition-colors duration-200 relative group ${isLinkActive
+                    ? "text-[#FFB800]"
+                    : "text-gray-300 hover:text-white"
                     }`}
-                />
-              </Link>
-            ))}
+                >
+                  {link.name}
+                  {/* Active underline */}
+                  <span
+                    className={`absolute bottom-[0px] left-0 h-[2px] bg-[#FFB800] transition-all duration-300 w-full origin-left ${isLinkActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+                      }`}
+                  />
+                </Link>
+              );
+            })}
           </nav>
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center">
             <Link
               href="/contact"
-              className="px-6 py-2.5 rounded-full text-gray-900 font-bold text-sm transition-all duration-300 hover:scale-105 hover:shadow-[0_8px_20px_-6px_rgba(255,255,255,0.5)]"
+              className="px-5 py-2 rounded-full text-gray-900 font-bold text-xs uppercase tracking-wider transition-all duration-300 hover:scale-105 hover:shadow-[0_8px_20px_-6px_rgba(255,255,255,0.5)]"
               style={{ background: "linear-gradient(135deg,#FFFFFF,#E2E8F0)" }}
             >
               PLAN YOUR EVENT
@@ -161,16 +164,21 @@ export default function Navbar() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.07, duration: 0.3 }}
                 >
-                  <Link
-                    href={link.href}
-                    className={`flex items-center justify-between py-4 border-b border-white/[0.06] text-2xl font-black tracking-tight transition-colors duration-200 ${pathname === link.href ? "text-[#FFB800]" : "text-white"
-                      }`}
-                  >
-                    {link.name}
-                    {pathname === link.href && (
-                      <span className="w-2 h-2 rounded-full bg-[#FFB800]" />
-                    )}
-                  </Link>
+                  {(() => {
+                    const isMobileActive = link.href === "/" ? pathname === "/" : pathname === link.href;
+                    return (
+                      <Link
+                        href={link.href}
+                        className={`flex items-center justify-between py-3.5 border-b border-white/[0.06] text-xl font-bold tracking-tight transition-colors duration-200 ${isMobileActive ? "text-[#FFB800]" : "text-white"
+                          }`}
+                      >
+                        {link.name}
+                        {isMobileActive && (
+                          <span className="w-2 h-2 rounded-full bg-[#FFB800]" />
+                        )}
+                      </Link>
+                    );
+                  })()}
                 </motion.div>
               ))}
             </div>

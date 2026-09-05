@@ -30,16 +30,28 @@ import {
   Shield,
   Zap,
 } from "lucide-react";
+import dynamic from "next/dynamic";
 import { HeroSlider } from "@/components/HeroSlider";
 import { CategorySlidersShowcase } from "@/components/CategorySlidersShowcase";
 import { AboutSection } from "@/components/AboutSection";
-import { ProjectsSection } from "@/components/ProjectsSection";
-import { GallerySection } from "@/components/GallerySection";
-import { VenuesSection } from "@/components/VenuesSection";
-import { FAQSection } from "@/components/FAQSection";
 import { StatsCounterSection } from "@/components/StatsCounterSection";
-import { GoogleReviewsSection } from "@/components/GoogleReviewsSection";
 import { fetchLiveServices } from "@/lib/api";
+
+const ProjectsSection = dynamic(() => import("@/components/ProjectsSection").then((m) => m.ProjectsSection), {
+  loading: () => <div className="min-h-[400px] bg-[#0F172A]" />,
+});
+const GallerySection = dynamic(() => import("@/components/GallerySection").then((m) => m.GallerySection), {
+  loading: () => <div className="min-h-[400px] bg-[#0B0F19]" />,
+});
+const VenuesSection = dynamic(() => import("@/components/VenuesSection").then((m) => m.VenuesSection), {
+  loading: () => <div className="min-h-[400px] bg-[#0F172A]" />,
+});
+const ClientReviewsSection = dynamic(() => import("@/components/GoogleReviewsSection").then((m) => m.ClientReviewsSection), {
+  loading: () => <div className="min-h-[400px] bg-[#0B0F19]" />,
+});
+const FAQSection = dynamic(() => import("@/components/FAQSection").then((m) => m.FAQSection), {
+  loading: () => <div className="min-h-[300px] bg-[#0F172A]" />,
+});
 
 const ICON_MAP: Record<string, any> = {
   CalendarDays,
@@ -262,7 +274,7 @@ function BrandCard({ name }: { name: string }) {
 function PortfolioCard({ project, idx }: { project: typeof projects[0]; idx: number }) {
   return (
     <Reveal delay={Math.min(idx * 0.08, 0.4)}>
-      <Link href="/portfolio"
+      <Link href="/gallery"
         className="group flex flex-col bg-[#1E293B] rounded-2xl overflow-hidden shadow-sm border border-white/10 hover:shadow-xl hover:-translate-y-1 transition-all duration-400 cursor-pointer h-full">
 
         {/* Image */}
@@ -278,9 +290,11 @@ function PortfolioCard({ project, idx }: { project: typeof projects[0]; idx: num
           <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-60" />
 
           {/* Year chip top-right */}
-          <span className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-sm text-white text-[10px] font-bold tracking-wider">
-            {project.year}
-          </span>
+          {project.year && (
+            <span className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-sm text-white text-[10px] font-bold tracking-wider">
+              {project.year}
+            </span>
+          )}
         </div>
 
         {/* Content */}
@@ -453,7 +467,7 @@ function ServicesSection() {
   const displayedServices = liveList.slice(0, 6);
 
   return (
-    <section className="bg-[#0F172A] relative pt-32 pb-32">
+    <section id="services" className="bg-[#0F172A] relative pt-32 pb-32">
       <div className="container mx-auto max-w-[1400px] px-6 md:px-12 relative z-10">
 
         <div className="flex flex-col lg:flex-row gap-16 relative">
@@ -468,7 +482,7 @@ function ServicesSection() {
                     Comprehensive Solutions
                   </p>
                 </div>
-                <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight leading-tight mb-6">
+                <h2 className="text-3xl md:text-4xl font-black text-white tracking-tight leading-tight mb-6">
                   From concept to execution — <br />
                   <span className="text-[#FFB800]">managed by experts.</span>
                 </h2>
@@ -575,7 +589,7 @@ function TestimonialsSection() {
               </p>
               <span className="w-10 h-[2px] bg-[#FFB800]" />
             </div>
-            <h2 className="text-4xl md:text-6xl font-black text-white tracking-tight leading-tight">
+            <h2 className="text-3xl md:text-5xl font-black text-white tracking-tight leading-tight">
               Hear it straight from{" "}
               <span className="text-[#FFB800]">our clients</span>
             </h2>
@@ -660,7 +674,7 @@ export default function Home() {
         <div className="max-w-3xl mx-auto text-center mb-14 px-6">
           <Reveal>
             <p className="text-[#FFB800] font-bold text-xs tracking-[0.25em] uppercase mb-3">Trusted By</p>
-            <h2 className="text-3xl md:text-5xl font-black text-white tracking-tight">
+            <h2 className="text-2xl md:text-4xl font-black text-white tracking-tight">
               Brands That <span className="text-[#FFB800]">Love</span> Virtue IN
             </h2>
           </Reveal>
@@ -694,8 +708,8 @@ export default function Home() {
       {/* 6 · VENUES SECTION */}
       <VenuesSection />
 
-      {/* 7 · GOOGLE REVIEWS & TESTIMONIALS */}
-      <GoogleReviewsSection />
+      {/* 7 · CLIENT REVIEWS & TESTIMONIALS */}
+      <ClientReviewsSection />
 
       {/* 8 · FAQ */}
       <FAQSection variant="home" />

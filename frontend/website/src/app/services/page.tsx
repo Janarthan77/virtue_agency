@@ -282,7 +282,7 @@ export default function ServicesPage() {
           >
             <GoldEyebrow text="Our Capabilities" />
 
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-white leading-tight tracking-tight mb-5">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white leading-tight tracking-tight mb-5">
               Comprehensive Event{' '}
               <span className="text-[#FFB800]">Services</span>
             </h1>
@@ -324,7 +324,7 @@ export default function ServicesPage() {
 
           <div className="text-center mb-14">
             <GoldEyebrow text="Execution Methodology" />
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight">
               How We Bring Your Vision To{' '}
               <span className="text-[#FFB800]">Life</span>
             </h2>
@@ -354,7 +354,7 @@ export default function ServicesPage() {
           >
             <GoldEyebrow text="Direct Consultation" />
 
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white mb-4">
               Ready to produce your <span className="text-[#FFB800]">next landmark event?</span>
             </h2>
 

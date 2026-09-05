@@ -182,7 +182,13 @@ export async function getServices(req: Request, res: Response): Promise<void> {
       .select("*")
       .order("sort_order", { ascending: true });
 
-    let list = (data && data.length > 0) ? (data as ServiceRecord[]) : fallbackServices;
+    let list: ServiceRecord[] = [];
+    if (error) {
+      console.warn("Supabase services error:", error.message);
+      list = [...fallbackServices];
+    } else {
+      list = (data || []) as ServiceRecord[];
+    }
 
     if (search && typeof search === "string") {
       const q = search.toLowerCase();

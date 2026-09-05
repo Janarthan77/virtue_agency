@@ -134,7 +134,7 @@ export default function About() {
                     We Are Virtue IN
                   </p>
                 </div>
-                <h1 className="text-5xl md:text-7xl font-black text-white tracking-tight leading-none mb-6">
+                <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight leading-none mb-6">
                   Chennai's{" "}
                   <span className="text-[#FFB800]">Premier</span>
                   <br />
@@ -216,7 +216,7 @@ export default function About() {
                   Who We Are & Our Philosophy
                 </p>
               </div>
-              <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-white tracking-tight leading-tight mb-6">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-tight mb-6">
                 Your End-to-End{" "}
                 <span className="text-[#FFB800]">Event Partner</span>
               </h2>
@@ -395,7 +395,7 @@ export default function About() {
                 </p>
                 <span className="w-10 h-[2px] bg-[#FFB800]" />
               </div>
-              <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight">
+              <h2 className="text-3xl md:text-4xl font-black text-white tracking-tight">
                 Our Core <span className="text-[#FFB800]">Values</span>
               </h2>
             </Reveal>
@@ -441,7 +441,7 @@ export default function About() {
                     What We Offer
                   </p>
                 </div>
-                <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight leading-tight mb-6">
+                <h2 className="text-3xl md:text-4xl font-black text-white tracking-tight leading-tight mb-6">
                   All Services <span className="text-[#FFB800]">Under One Roof</span>
                 </h2>
                 <p className="text-gray-400 text-base leading-relaxed mb-8">
@@ -495,7 +495,7 @@ export default function About() {
             <p className="text-[#FFB800] font-bold text-xs tracking-[0.25em] uppercase mb-4">
               Let&apos;s Connect
             </p>
-            <h2 className="text-4xl md:text-5xl font-black text-white mb-8 leading-tight">
+            <h2 className="text-3xl md:text-4xl font-black text-white mb-8 leading-tight">
               Ready to create something{" "}
               <span className="text-[#FFB800]">extraordinary?</span>
             </h2>

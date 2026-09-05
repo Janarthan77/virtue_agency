@@ -46,9 +46,21 @@ export default function Footer() {
               Crafting extraordinary corporate experiences. We exclusively specialize in corporate events and product releases.
             </p>
             <div className="flex gap-4">
-              {['FB', 'X', 'IG', 'IN'].map((social) => (
-                <a key={social} href="#" className="w-10 h-10 rounded-full border border-white/30 flex items-center justify-center text-gray-200 text-xs hover:border-accent hover:text-accent transition-colors">
-                  {social}
+              {[
+                { label: "FB", name: "Facebook", href: settings.facebook_url && settings.facebook_url !== "#" ? settings.facebook_url : "https://facebook.com" },
+                { label: "X", name: "Twitter", href: settings.twitter_url && settings.twitter_url !== "#" ? settings.twitter_url : "https://x.com" },
+                { label: "IG", name: "Instagram", href: settings.instagram_url && settings.instagram_url !== "#" ? settings.instagram_url : "https://instagram.com" },
+                { label: "IN", name: "LinkedIn", href: settings.linkedin_url && settings.linkedin_url !== "#" ? settings.linkedin_url : "https://linkedin.com" },
+              ].map((s) => (
+                <a
+                  key={s.label}
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={s.name}
+                  className="w-10 h-10 rounded-full border border-white/30 flex items-center justify-center text-gray-200 text-xs hover:border-[#FFB800] hover:text-[#FFB800] transition-colors"
+                >
+                  {s.label}
                 </a>
               ))}
             </div>
@@ -58,18 +70,18 @@ export default function Footer() {
           <div>
             <h4 className="text-accent font-semibold mb-6 text-sm tracking-widest uppercase">Quick Links</h4>
             <ul className="space-y-3">
-              {['About Us', 'Our Portfolio', 'Blog', 'Contact Us'].map((item) => (
-                <li key={item}>
-                  <Link href={`/${item.toLowerCase().replace(' ', '-')}`} className="text-gray-300 hover:text-accent transition-colors text-sm">
-                    {item}
+              {[
+                { name: "About Us", href: "/about" },
+                { name: "Our Gallery", href: "/gallery" },
+                { name: "Our Services", href: "/services" },
+                { name: "Contact Us", href: "/contact" },
+              ].map((link) => (
+                <li key={link.name}>
+                  <Link href={link.href} className="text-gray-300 hover:text-[#FFB800] transition-colors text-sm">
+                    {link.name}
                   </Link>
                 </li>
               ))}
-              <li>
-                 <Link href="/contact" className="text-gray-300 hover:text-accent transition-colors text-sm">
-                    Get a Quote
-                 </Link>
-              </li>
             </ul>
           </div>
 
@@ -77,10 +89,15 @@ export default function Footer() {
           <div>
             <h4 className="text-accent font-semibold mb-6 text-sm tracking-widest uppercase">Our Services</h4>
             <ul className="space-y-3">
-              {['Corporate Events', 'Product Releases', 'Conferences', 'Seminars'].map((item) => (
-                <li key={item}>
-                  <Link href="/services" className="text-gray-300 hover:text-accent transition-colors text-sm">
-                    {item}
+              {[
+                { name: "Corporate Events", href: "/services" },
+                { name: "Product Launches", href: "/services" },
+                { name: "Conferences & Summits", href: "/services" },
+                { name: "Stall Fabrication & Expo", href: "/services" },
+              ].map((svc) => (
+                <li key={svc.name}>
+                  <Link href={svc.href} className="text-gray-300 hover:text-[#FFB800] transition-colors text-sm">
+                    {svc.name}
                   </Link>
                 </li>
               ))}
@@ -113,9 +130,9 @@ export default function Footer() {
         </div>
 
         <div className="flex justify-center mb-8">
-           <Link href="/contact" className="px-8 py-3 bg-gradient-to-r from-[#FFFFFF] to-[#E2E8F0] text-gray-900 font-bold rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center gap-2">
-              Plan Your Event
-           </Link>
+          <Link href="/contact" className="px-8 py-3 bg-gradient-to-r from-[#FFFFFF] to-[#E2E8F0] text-gray-900 font-bold rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center gap-2">
+            Plan Your Event
+          </Link>
         </div>
 
         <div className="border-t border-white/20 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
