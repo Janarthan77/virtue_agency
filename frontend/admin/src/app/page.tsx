@@ -295,22 +295,6 @@ export default function AdminPortal() {
   const [services, setServices] = useState<ServiceItem[]>(DEFAULT_ADMIN_SERVICES);
   const [reviews, setReviews] = useState<ReviewItem[]>([]);
   const [companySettings, setCompanySettings] = useState<CompanySettings>(DEFAULT_ADMIN_SETTINGS);
-  const [_unusedSettings, _setUnused] = useState<any>({
-    company_name: "Virtue IN Agency",
-    contact_person: "SATHISH RINGESAN",
-    email: "plan@virtuein.agency",
-    alternate_email: "sathish@virtueinagency.com",
-    phone: "+91 74010 30000",
-    alternate_phone: "+91 98843 98514",
-    address_line1: "28, Judge Jambulingam Road,",
-    address_line2: "Mylapore, Chennai – 600 004",
-    city_state_pin: "Tamil Nadu, India",
-    full_address: "28, Judge Jambulingam Road, Mylapore, Chennai – 600 004, Tamil Nadu, India",
-    working_hours_mon_sat: "Monday – Saturday: 9:00 AM – 7:00 PM IST",
-    working_hours_sun: "Sunday: By Appointment",
-    map_embed_url: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3886.852445300305!2d80.2642874148231!3d13.044439090807693!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a52662c14041b31%3A0xc3b5e40882e3bc01!2sJudge%20Jambulingam%20Rd%2C%20Dr%20Radhakrishnan%20Salai%2C%20Mylapore%2C%20Chennai%2C%20Tamil%20Nadu%20600004!5e0!3m2!1sen!2sin!4v1682156434444!5m2!1sen!2sin",
-    website_url: "https://www.virtueinagency.com",
-  });
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
 

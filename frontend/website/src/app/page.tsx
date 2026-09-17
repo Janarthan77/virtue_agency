@@ -43,9 +43,6 @@ const ProjectsSection = dynamic(() => import("@/components/ProjectsSection").the
 const GallerySection = dynamic(() => import("@/components/GallerySection").then((m) => m.GallerySection), {
   loading: () => <div className="min-h-[400px] bg-[#0B0F19]" />,
 });
-const VenuesSection = dynamic(() => import("@/components/VenuesSection").then((m) => m.VenuesSection), {
-  loading: () => <div className="min-h-[400px] bg-[#0F172A]" />,
-});
 const ClientReviewsSection = dynamic(() => import("@/components/GoogleReviewsSection").then((m) => m.ClientReviewsSection), {
   loading: () => <div className="min-h-[400px] bg-[#0B0F19]" />,
 });
@@ -704,9 +701,6 @@ export default function Home() {
 
       {/* 4 · GALLERY SECTION */}
       <GallerySection />
-
-      {/* 6 · VENUES SECTION */}
-      <VenuesSection />
 
       {/* 7 · CLIENT REVIEWS & TESTIMONIALS */}
       <ClientReviewsSection />
