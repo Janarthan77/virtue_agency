@@ -23,6 +23,7 @@ export default function ImageUploader({
   onChange,
 }: ImageUploaderProps) {
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgressText, setUploadProgressText] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -36,13 +37,17 @@ export default function ImageUploader({
     try {
       if (multiple) {
         const fileList = Array.from(files);
-        const res = await uploadMultipleImagesToR2(fileList, folder);
+        setUploadProgressText(`Optimizing 0/${fileList.length}...`);
+        const res = await uploadMultipleImagesToR2(fileList, folder, (done, total) => {
+          setUploadProgressText(`Uploading ${done}/${total}...`);
+        });
         if (res.success && res.urls.length > 0) {
           onChange([...values, ...res.urls]);
         } else {
           setError(res.error || "Failed to upload images to Cloudflare R2");
         }
       } else {
+        setUploadProgressText("Optimizing & uploading...");
         const file = files[0];
         const res = await uploadImageToR2(file, folder);
         if (res.success && res.url) {
@@ -55,6 +60,7 @@ export default function ImageUploader({
       setError(err instanceof Error ? err.message : "Upload error");
     } finally {
       setIsUploading(false);
+      setUploadProgressText(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
@@ -124,7 +130,12 @@ export default function ImageUploader({
               className="aspect-video rounded-xl border-2 border-dashed border-slate-300 hover:border-amber-500 bg-slate-50 hover:bg-amber-50/50 flex flex-col items-center justify-center text-slate-500 hover:text-amber-700 transition-all cursor-pointer p-2"
             >
               {isUploading ? (
-                <Loader2 size={18} className="animate-spin text-amber-600" />
+                <div className="flex flex-col items-center gap-1">
+                  <Loader2 size={18} className="animate-spin text-amber-600" />
+                  <span className="text-[10px] font-semibold text-amber-700 text-center leading-tight px-1">
+                    {uploadProgressText || "Uploading..."}
+                  </span>
+                </div>
               ) : (
                 <>
                   <Plus size={18} className="mb-0.5" />
@@ -174,7 +185,9 @@ export default function ImageUploader({
               {isUploading ? (
                 <div className="flex flex-col items-center gap-2">
                   <Loader2 size={24} className="animate-spin text-amber-600" />
-                  <p className="text-xs font-semibold text-slate-600">Uploading to Cloudflare R2...</p>
+                  <p className="text-xs font-semibold text-slate-600">
+                    {uploadProgressText || "Uploading to Cloudflare R2..."}
+                  </p>
                 </div>
               ) : (
                 <>

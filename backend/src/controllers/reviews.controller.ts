@@ -107,20 +107,20 @@ export async function createReview(req: Request, res: Response): Promise<void> {
     try {
       await supabase.from("enquiries").insert([
         {
-          name: newReview.name,
-          email: newReview.email || "feedback@virtueinagency.com",
-          phone: newReview.phone || "+91 74010 30000",
-          company: newReview.name,
-          venue: newReview.role || "Client Review",
+          name: insertData.name,
+          email: insertData.email || "feedback@virtueinagency.com",
+          phone: insertData.phone || "+91 74010 30000",
+          company: insertData.name,
+          venue: insertData.role || "Client Review",
           event_type:
-            newReview.category === "corporate"
+            insertData.category === "corporate"
               ? "Corporate Conclave"
-              : newReview.category === "launch"
+              : insertData.category === "launch"
               ? "Product Launch"
               : "Annual Gala",
           source: "Client Review & Feedback",
           status: "new",
-          notes: `[CLIENT FEEDBACK SUBMISSION]\nRating: ${newReview.rating}/5 Stars\nRole/Event: ${newReview.role}\nCategory: ${newReview.category}\nReview Text:\n"${newReview.text}"`,
+          notes: `[CLIENT FEEDBACK SUBMISSION]\nRating: ${insertData.rating}/5 Stars\nRole/Event: ${insertData.role}\nCategory: ${insertData.category}\nReview Text:\n"${insertData.text}"`,
           created_at: new Date().toISOString(),
         },
       ]);

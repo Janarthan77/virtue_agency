@@ -2,6 +2,8 @@
  * Admin API Client for Virtue IN Agency (Connecting to Node.js Backend & Supabase/Cloudflare R2)
  */
 
+import { compressImage } from "./imageCompression";
+
 const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 export interface ProjectItem {
@@ -135,20 +137,41 @@ export interface ReviewItem {
 
 /**
  * Upload single image to Cloudflare R2 via Node.js Backend
+ * Automatically compresses client-side to keep payload well below Vercel's 4.5MB serverless limit.
  */
 export async function uploadImageToR2(
   file: File,
   folder = "projects"
 ): Promise<{ success: boolean; url: string; key?: string; error?: string }> {
   try {
+    const optimizedFile = await compressImage(file);
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("file", optimizedFile);
     formData.append("folder", folder);
 
     const res = await fetch(`${BACKEND_URL}/api/upload`, {
       method: "POST",
       body: formData,
     });
+
+    if (!res.ok) {
+      if (res.status === 413) {
+        return {
+          success: false,
+          url: "",
+          error: "File size exceeds Vercel 4.5MB limit. Please choose a smaller photo.",
+        };
+      }
+      const errText = await res.text();
+      let errorMsg = `Upload failed (${res.status})`;
+      try {
+        const json = JSON.parse(errText);
+        if (json.error) errorMsg = json.error;
+      } catch {
+        // fallback to status
+      }
+      return { success: false, url: "", error: errorMsg };
+    }
 
     const data = await res.json();
     return data;
@@ -163,23 +186,51 @@ export async function uploadImageToR2(
 
 /**
  * Upload multiple images to Cloudflare R2
+ * Uploads images individually (in sequence or parallel) to avoid Vercel 4.5MB payload limit.
  */
 export async function uploadMultipleImagesToR2(
   files: File[],
-  folder = "projects"
+  folder = "projects",
+  onProgress?: (completed: number, total: number) => void
 ): Promise<{ success: boolean; urls: string[]; count?: number; error?: string }> {
   try {
-    const formData = new FormData();
-    files.forEach((file) => formData.append("files", file));
-    formData.append("folder", folder);
+    if (!files || files.length === 0) {
+      return { success: true, urls: [], count: 0 };
+    }
 
-    const res = await fetch(`${BACKEND_URL}/api/upload/multiple`, {
-      method: "POST",
-      body: formData,
-    });
+    const uploadedUrls: string[] = [];
+    let failureCount = 0;
+    let lastError = "";
+    const total = files.length;
+    let completed = 0;
 
-    const data = await res.json();
-    return data;
+    for (const file of files) {
+      const res = await uploadImageToR2(file, folder);
+      completed++;
+      if (onProgress) onProgress(completed, total);
+
+      if (res.success && res.url) {
+        uploadedUrls.push(res.url);
+      } else {
+        failureCount++;
+        lastError = res.error || "Failed to upload image";
+      }
+    }
+
+    if (uploadedUrls.length === 0 && failureCount > 0) {
+      return {
+        success: false,
+        urls: [],
+        error: lastError || "Failed to upload images to Cloudflare R2",
+      };
+    }
+
+    return {
+      success: true,
+      urls: uploadedUrls,
+      count: uploadedUrls.length,
+      error: failureCount > 0 ? `${failureCount} of ${total} image(s) failed to upload` : undefined,
+    };
   } catch (err: unknown) {
     return {
       success: false,

@@ -72,7 +72,7 @@ export default function Navbar() {
               className="h-6 sm:h-7 md:h-7.5 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
               priority
             />
-            <span className="text-[7.5px] sm:text-[8.5px] md:text-[9px] font-black italic tracking-[0.24em] uppercase text-white/90 group-hover:text-[#FFB800] transition-colors mt-0.5 pl-0.5 select-none">
+            <span className="text-[7.5px] sm:text-[8.5px] md:text-[9px] font-black tracking-[0.24em] uppercase text-white/90 group-hover:text-[#FFB800] transition-colors mt-0.5 pl-0.5 select-none">
               VIRTUE IN AGENCY
             </span>
           </Link>
