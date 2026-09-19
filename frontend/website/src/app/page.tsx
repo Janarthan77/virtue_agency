@@ -77,13 +77,26 @@ const ICON_MAP: Record<string, any> = {
 
 
 /* ─── Brand data ─────────────────────────────────────────────── */
+const R2_BRAND = "https://pub-e796496b65134e82b311969a354b7898.r2.dev/brand_logo";
 const row1Brands = [
-  "Phoenix Marketcity", "Audi Chennai", "BNP Paribas", "TVS Emerald",
-  "Lanson Toyota", "Vivo", "Marina Harley-Davidson", "Radisson Blu",
+  { name: "Phoenix Marketcity", logo: `${R2_BRAND}/brand_logo_1.png` },
+  { name: "Audi Chennai",       logo: `${R2_BRAND}/brand_logo_2.png` },
+  { name: "BNP Paribas",        logo: `${R2_BRAND}/brand_logo_3.png` },
+  { name: "TVS Emerald",        logo: `${R2_BRAND}/brand_logo_4.png` },
+  { name: "Lanson Toyota",      logo: `${R2_BRAND}/brand_logo_5.png` },
+  { name: "Vivo",               logo: `${R2_BRAND}/brand_logo_6.png` },
+  { name: "Marina Harley-Davidson", logo: `${R2_BRAND}/brand_logo_7.png` },
+  { name: "Radisson Blu",       logo: `${R2_BRAND}/brand_logo_8.png` },
 ];
 const row2Brands = [
-  "HOG Marina Chapter", "Radiant Dental Care", "VR Chennai", "Welona",
-  "Venus Motor Cycle", "Johnnie Walker", "Alten", "BNP Paribas",
+  { name: "HOG Marina Chapter",   logo: `${R2_BRAND}/brand_logo_9.png` },
+  { name: "Radiant Dental Care",  logo: `${R2_BRAND}/brand_logo_10.png` },
+  { name: "VR Chennai",           logo: `${R2_BRAND}/brand_logo_11.png` },
+  { name: "Welona",               logo: `${R2_BRAND}/brand_logo_12.png` },
+  { name: "Venus Motor Cycle",    logo: `${R2_BRAND}/brand_logo_13.png` },
+  { name: "Johnnie Walker",       logo: `${R2_BRAND}/brand_logo_14.png` },
+  { name: "Alten",                logo: `${R2_BRAND}/brand_logo_15.png` },
+  { name: "BNP Paribas",          logo: `${R2_BRAND}/brand_logo_16.png` },
 ];
 
 /* ─── Portfolio data ─────────────────────────────────────────── */
@@ -257,12 +270,18 @@ function Reveal({ children, delay = 0, className = "" }: { children: React.React
 }
 
 /* ─── Brand Card ─────────────────────────────────────────────── */
-function BrandCard({ name }: { name: string }) {
+function BrandCard({ name, logo }: { name: string; logo: string }) {
   return (
-    <div className="flex-shrink-0 w-48 h-24 bg-[#1E293B] rounded-2xl border border-white/10 shadow-sm flex items-center justify-center px-5 cursor-pointer group hover:shadow-[0_8px_30px_rgba(255,255,255,0.15)] hover:border-white/40 hover:-translate-y-1 transition-[transform,box-shadow,border-color] duration-300">
-      <span className="text-gray-400 group-hover:text-[#FFB800] font-bold text-[11px] uppercase tracking-[0.15em] text-center leading-tight transition-colors duration-300">
-        {name}
-      </span>
+    <div className="flex-shrink-0 w-48 h-24 bg-[#1E293B] rounded-2xl border border-white/10 shadow-sm flex items-center justify-center px-4 cursor-pointer group hover:shadow-[0_8px_30px_rgba(255,255,255,0.15)] hover:border-white/40 hover:-translate-y-1 transition-[transform,box-shadow,border-color] duration-300">
+      <div className="relative w-full h-14 grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500">
+        <Image
+          src={logo}
+          alt={name}
+          fill
+          sizes="192px"
+          className="object-contain drop-shadow-sm"
+        />
+      </div>
     </div>
   );
 }
@@ -681,7 +700,7 @@ export default function Home() {
         <div className="relative mb-4" style={{ WebkitMaskImage: "linear-gradient(to right, transparent, white 10%, white 90%, transparent)", maskImage: "linear-gradient(to right, transparent, white 10%, white 90%, transparent)" }}>
           <div className="flex overflow-hidden">
             <div className="flex gap-4 pl-4" style={{ animation: "marquee-left 35s linear infinite", minWidth: "max-content" }}>
-              {[...row1Brands, ...row1Brands, ...row1Brands].map((b, i) => <BrandCard key={i} name={b} />)}
+              {[...row1Brands, ...row1Brands, ...row1Brands].map((b, i) => <BrandCard key={i} name={b.name} logo={b.logo} />)}
             </div>
           </div>
         </div>
@@ -690,7 +709,7 @@ export default function Home() {
         <div className="relative" style={{ WebkitMaskImage: "linear-gradient(to right, transparent, white 10%, white 90%, transparent)", maskImage: "linear-gradient(to right, transparent, white 10%, white 90%, transparent)" }}>
           <div className="flex overflow-hidden">
             <div className="flex gap-4 pl-4" style={{ animation: "marquee-right 35s linear infinite", minWidth: "max-content" }}>
-              {[...row2Brands, ...row2Brands, ...row2Brands].map((b, i) => <BrandCard key={i} name={b} />)}
+              {[...row2Brands, ...row2Brands, ...row2Brands].map((b, i) => <BrandCard key={i} name={b.name} logo={b.logo} />)}
             </div>
           </div>
         </div>
