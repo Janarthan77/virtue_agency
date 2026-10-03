@@ -80,174 +80,23 @@ const ICON_MAP: Record<string, any> = {
 const R2_BRAND = "https://pub-e796496b65134e82b311969a354b7898.r2.dev/brand_logo";
 const row1Brands = [
   { name: "Phoenix Marketcity", logo: `${R2_BRAND}/brand_logo_1.png` },
-  { name: "Audi Chennai",       logo: `${R2_BRAND}/brand_logo_2.png` },
-  { name: "BNP Paribas",        logo: `${R2_BRAND}/brand_logo_3.png` },
-  { name: "TVS Emerald",        logo: `${R2_BRAND}/brand_logo_4.png` },
-  { name: "Lanson Toyota",      logo: `${R2_BRAND}/brand_logo_5.png` },
-  { name: "Vivo",               logo: `${R2_BRAND}/brand_logo_6.png` },
+  { name: "Audi Chennai", logo: `${R2_BRAND}/brand_logo_2.png` },
+  { name: "BNP Paribas", logo: `${R2_BRAND}/brand_logo_3.jpg` },
+  { name: "TVS Emerald", logo: `${R2_BRAND}/brand_logo_4.jpg` },
+  { name: "Lanson Toyota", logo: `${R2_BRAND}/brand_logo_5.jpg` },
+  { name: "Vivo", logo: `${R2_BRAND}/brand_logo_6.jpg` },
   { name: "Marina Harley-Davidson", logo: `${R2_BRAND}/brand_logo_7.png` },
-  { name: "Radisson Blu",       logo: `${R2_BRAND}/brand_logo_8.png` },
+  { name: "Radisson Blu", logo: `${R2_BRAND}/brand_logo_8.jpg` },
 ];
 const row2Brands = [
-  { name: "HOG Marina Chapter",   logo: `${R2_BRAND}/brand_logo_9.png` },
-  { name: "Radiant Dental Care",  logo: `${R2_BRAND}/brand_logo_10.png` },
-  { name: "VR Chennai",           logo: `${R2_BRAND}/brand_logo_11.png` },
-  { name: "Welona",               logo: `${R2_BRAND}/brand_logo_12.png` },
-  { name: "Venus Motor Cycle",    logo: `${R2_BRAND}/brand_logo_13.png` },
-  { name: "Johnnie Walker",       logo: `${R2_BRAND}/brand_logo_14.png` },
-  { name: "Alten",                logo: `${R2_BRAND}/brand_logo_15.png` },
-  { name: "BNP Paribas",          logo: `${R2_BRAND}/brand_logo_16.png` },
-];
-
-/* ─── Portfolio data ─────────────────────────────────────────── */
-const projects = [
-  {
-    title: "Rotary Club of Madras West",
-    client: "President Installation 2026–27 @ ITC",
-    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/BNI%20Futurz%20chapter%20Meeting%20at%20Audi%20chennai/image-1.webp",
-    badge: "CORPORATE",
-    year: "2026",
-  },
-  {
-    title: "TVS Emerald – Home Debut",
-    client: "Peninsula, Green Enclave & Atrium Launch",
-    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/TVS%20Emerald%20Peninsula/image-6.webp",
-    badge: "PRODUCT RELEASE",
-    year: "2026",
-  },
-  {
-    title: "NeXHS Annual Foundation Day",
-    client: "Next Generation Hybrid Systems",
-    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/BNP%20Paribas%20Gala%20Night/image-1.webp",
-    badge: "CORPORATE",
-    year: "2026",
-  },
-  {
-    title: "JLL – Day Outing",
-    client: "Jones Lang LaSalle (JLL)",
-    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Radiant%20Dental%20Care%20-%20Day%20out%20%40%20Polaris/image-8.webp",
-    badge: "CORPORATE",
-    year: "2025",
-  },
-  {
-    title: "Audi Chennai Conference Meeting",
-    client: "BNI B Region – Audi Chennai",
-    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/BNI%20Futurz%20chapter%20Meeting%20at%20Audi%20chennai/image-4.webp",
-    badge: "CORPORATE",
-    year: "2024",
-  },
-  {
-    title: "IIMM Conference – Spectrum 2024",
-    client: "Indian Institute of Material Management",
-    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/BNP%20Paribas%20Gala%20Night/image-3.webp",
-    badge: "CORPORATE",
-    year: "2024",
-  },
-  {
-    title: "Radiant Raising Day 2023",
-    client: "Radiant Dental Care – Employees Annual Day",
-    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Radiant%20Dental%20Care%20-%20Day%20out%20%40%20Polaris/image-2.webp",
-    badge: "CORPORATE",
-    year: "2023",
-  },
-  {
-    title: "Radiant Raising Day 2024",
-    client: "Radiant Dental Care – Day Outing & Annual Day",
-    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Radiant%20Dental%20Care%20-%20Day%20out%20%40%20Polaris/image-5.webp",
-    badge: "CORPORATE",
-    year: "2024",
-  },
-  {
-    title: "10th Southern HOG Rally",
-    client: "Harley-Davidson Marina Chapter",
-    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Southern%20HOG%20Rally/image-1.webp",
-    badge: "CORPORATE",
-    year: "2023",
-  },
-  {
-    title: "Doordarshan Election Conclave",
-    client: "Prasar Bharati",
-    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/BNI%20Futurz%20chapter%20Meeting%20at%20Audi%20chennai/image-5.webp",
-    badge: "CORPORATE",
-    year: "2026",
-  },
-  {
-    title: "NYE Beach Night 2025",
-    client: "Fortune Beach Resort",
-    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/NYE%20Beach%202025/image-1.webp",
-    badge: "CORPORATE",
-    year: "2025",
-  },
-  {
-    title: "BNP Paribas Annual Meet",
-    client: "BNP Paribas",
-    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/BNP%20Paribas%20Gala%20Night/image-5.webp",
-    badge: "CORPORATE",
-    year: "2024",
-  },
-  {
-    title: "Save a Child Marathon",
-    client: "Saveetha Eco Pupil School – Ekam NGO",
-    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Save%20a%20Child%20EKAM%20Foundation%20Marathon/image-1.webp",
-    badge: "CORPORATE",
-    year: "2025",
-  },
-  {
-    title: "Sema Pongal Themed Event @ VGP",
-    client: "Round Table India – Area 7",
-    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Welona%20Healthcare%20Family%20Day/image-2.webp",
-    badge: "CORPORATE",
-    year: "2025",
-  },
-  {
-    title: "Middle Office Annual Bash",
-    client: "BNP Paribas – Rocktober Evening",
-    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/BNP%20Paribas%20Gala%20Night/image-7.webp",
-    badge: "CORPORATE",
-    year: "2024",
-  },
-  {
-    title: "Employees Day Outing",
-    client: "Societe Generale",
-    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Welona%20Healthcare%20Family%20Day/image-4.webp",
-    badge: "CORPORATE",
-    year: "2025",
-  },
-  {
-    title: "Madarase Fashion Talent Hunt & Expo",
-    client: "Phoenix Marketcity Chennai",
-    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Madras%20-%20Fashion%20talent%20Expo/image-5.webp",
-    badge: "CORPORATE",
-    year: "2025",
-  },
-  {
-    title: "Annual Night Celebrations",
-    client: "Bank of America IT Company",
-    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/NYE%20Beach%202025/image-10.webp",
-    badge: "CORPORATE",
-    year: "2025",
-  },
-  {
-    title: "Welona Family Day – R & R",
-    client: "Welona Healthcare",
-    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Welona%20Healthcare%20Family%20Day/image-1.webp",
-    badge: "CORPORATE",
-    year: "2024",
-  },
-  {
-    title: "Harley Davidson Motorcycles Display",
-    client: "Marina Harley-Davidson – Various Venues",
-    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Display%20Advertising%20of%20Classic%2048%20-%20VR%20Chennai/image-1.webp",
-    badge: "PRODUCT RELEASE",
-    year: "2024",
-  },
-  {
-    title: "Toyota Hilux – Product Reveal",
-    client: "Lanson Toyota",
-    img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Display%20Advertising%20of%20Classic%2048%20-%20VR%20Chennai/image-7.webp",
-    badge: "PRODUCT RELEASE",
-    year: "2024",
-  },
+  { name: "HOG Marina Chapter", logo: `${R2_BRAND}/brand_logo_9.jpg` },
+  { name: "Radiant Dental Care", logo: `${R2_BRAND}/brand_logo_10.jpg` },
+  { name: "VR Chennai", logo: `${R2_BRAND}/brand_logo_11.jpg` },
+  { name: "Welona", logo: `${R2_BRAND}/brand_logo_12.jpg` },
+  { name: "Venus Motor Cycle", logo: `${R2_BRAND}/brand_logo_13.png` },
+  { name: "Johnnie Walker", logo: `${R2_BRAND}/brand_logo_14.jpg` },
+  { name: "Alten", logo: `${R2_BRAND}/brand_logo_15.jpeg` },
+  { name: "BNP Paribas", logo: `${R2_BRAND}/brand_logo_16.png` },
 ];
 
 /* ─── Animation Wrapper ──────────────────────────────────────── */
@@ -283,58 +132,6 @@ function BrandCard({ name, logo }: { name: string; logo: string }) {
         />
       </div>
     </div>
-  );
-}
-
-/* ─── Portfolio Card ─────────────────────────────────────────── */
-function PortfolioCard({ project, idx }: { project: typeof projects[0]; idx: number }) {
-  return (
-    <Reveal delay={Math.min(idx * 0.08, 0.4)}>
-      <Link href="/gallery"
-        className="group flex flex-col bg-[#1E293B] rounded-2xl overflow-hidden shadow-sm border border-white/10 hover:shadow-xl hover:-translate-y-1 transition-all duration-400 cursor-pointer h-full">
-
-        {/* Image */}
-        <div className="relative overflow-hidden" style={{ aspectRatio: "16/9" }}>
-          <Image
-            src={project.img}
-            alt={project.title}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
-            className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-          />
-          {/* Subtle dark vignette at bottom of image */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-60" />
-
-          {/* Year chip top-right */}
-          {project.year && (
-            <span className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-sm text-white text-[10px] font-bold tracking-wider">
-              {project.year}
-            </span>
-          )}
-        </div>
-
-        {/* Content */}
-        <div className="p-6 flex flex-col flex-1">
-          {/* Badge */}
-          <span className="self-start inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase mb-3"
-            style={{ background: "rgba(255,255,255,0.12)", color: "#FFB800", border: "1px solid rgba(255,255,255,0.3)" }}>
-            <span className="w-1.5 h-1.5 rounded-full bg-[#FFFFFF]" />
-            {project.badge}
-          </span>
-
-          <h3 className="text-lg font-black text-white leading-snug mb-1 group-hover:text-[#FFB800] transition-colors duration-300">
-            {project.title}
-          </h3>
-          <p className="text-gray-400 text-xs font-medium mb-4 flex-1">{project.client}</p>
-
-          {/* View link */}
-          <div className="flex items-center gap-2 text-[#FFB800] text-xs font-bold uppercase tracking-wider
-            translate-x-0 group-hover:gap-3 transition-all duration-300">
-            View Project <ArrowRight size={14} />
-          </div>
-        </div>
-      </Link>
-    </Reveal>
   );
 }
 
@@ -556,110 +353,6 @@ function ServicesSection() {
           </div>
         </div>
 
-      </div>
-    </section>
-  );
-}
-
-
-/* ─── Testimonials Section ─────────────────────────────────────── */
-function TestimonialsSection() {
-  const testimonials = [
-    {
-      text: "We had the factory inauguration done by Virtue IN and we are very satisfied. We experienced a very smooth and well coordinated team. We will have more interactions with them in the future.",
-      client: "Hydra Specma",
-      role: "Factory Inauguration",
-      initial: "H",
-      color: "#FFFFFF",
-    },
-    {
-      text: "Thanks for your extended support on our special day. Thanks and done a great job. Your team managed every detail flawlessly, allowing us to focus on our guests.",
-      client: "Corporate Partner",
-      role: "Annual Day Event",
-      initial: "C",
-      color: "#FFB800",
-    },
-    {
-      text: "Virtue IN made our product launch unforgettable. Their attention to detail and creative direction exceeded all our expectations. Truly a world-class event management team.",
-      client: "TVS Emerald",
-      role: "Product Launch",
-      initial: "T",
-      color: "#CBD5E1",
-    },
-  ];
-
-  return (
-    <section className="py-28 bg-[#0F172A] relative overflow-hidden z-20">
-      {/* Background glows */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-[#FFFFFF]/6 blur-[120px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-[400px] h-[300px] bg-[#FFB800]/4 blur-[100px] rounded-full pointer-events-none" />
-
-      <div className="container mx-auto px-6 max-w-7xl relative z-10">
-        {/* Header */}
-        <div className="text-center mb-20">
-          <Reveal>
-            <div className="flex items-center justify-center gap-3 mb-5">
-              <span className="w-10 h-[2px] bg-[#FFB800]" />
-              <p className="text-[#FFB800] font-bold text-sm tracking-[0.25em] uppercase">
-                Client Stories
-              </p>
-              <span className="w-10 h-[2px] bg-[#FFB800]" />
-            </div>
-            <h2 className="text-3xl md:text-5xl font-black text-white tracking-tight leading-tight">
-              Hear it straight from{" "}
-              <span className="text-[#FFB800]">our clients</span>
-            </h2>
-          </Reveal>
-        </div>
-
-        {/* Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {testimonials.map((t, i) => (
-            <Reveal key={i} delay={i * 0.15}>
-              <div className="group relative bg-[#1E293B] rounded-2xl border border-white/[0.07] p-8 flex flex-col h-full hover:border-white/20 hover:shadow-[0_20px_50px_-15px_rgba(0,0,0,0.4)] transition-all duration-400 cursor-pointer overflow-hidden">
-                {/* Top accent line */}
-                <div
-                  className="absolute top-0 left-0 right-0 h-[2px] rounded-t-2xl"
-                  style={{ background: `linear-gradient(90deg, transparent, ${t.color}, transparent)` }}
-                />
-
-                {/* Quote icon */}
-                <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center mb-6 shrink-0"
-                  style={{ background: `${t.color}18`, border: `1px solid ${t.color}30` }}
-                >
-                  <span className="text-2xl font-serif leading-none" style={{ color: t.color }}>&quot;</span>
-                </div>
-
-                {/* Stars */}
-                <div className="flex gap-1 mb-5">
-                  {[...Array(5)].map((_, idx) => (
-                    <Star key={idx} size={15} className="fill-[#FFB800] text-[#FFB800]" />
-                  ))}
-                </div>
-
-                {/* Text */}
-                <p className="text-gray-300 text-sm md:text-base leading-relaxed flex-grow mb-8">
-                  &ldquo;{t.text}&rdquo;
-                </p>
-
-                {/* Author */}
-                <div className="border-t border-white/[0.07] pt-6 flex items-center gap-4 mt-auto">
-                  <div
-                    className="w-11 h-11 rounded-full flex items-center justify-center shrink-0 font-black text-white text-base"
-                    style={{ background: `linear-gradient(135deg, ${t.color}cc, ${t.color}55)` }}
-                  >
-                    {t.initial}
-                  </div>
-                  <div>
-                    <p className="text-white font-black text-sm">{t.client}</p>
-                    <p className="text-gray-500 text-xs font-medium mt-0.5">{t.role}</p>
-                  </div>
-                </div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
       </div>
     </section>
   );

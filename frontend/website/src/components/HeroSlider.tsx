@@ -11,81 +11,81 @@ export const heroEvents = [
     id: 1,
     img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/TVS%20Emerald%20Peninsula/image-6.webp",
     tag: "Product Launches",
-    title: "TVS Emerald Home Debut",
-    accent: "Luxury Property Launch",
-    subtitle: "High-impact real estate unveiling with interactive architectural walk-throughs, 3D projection mapping, and VIP investor pavilions.",
+    title: "TVS Emerald – Home Debut",
+    accent: "Peninsula & Green Enclave Launch",
+    subtitle: "Grand property unveiling and sales launch for TVS Emerald's ultra-luxury Peninsula & Green Enclave project. Built interactive architectural model zones, high-lumen experiential projection walkthroughs, and VIP lounge pavilions.",
   },
   {
     id: 2,
     img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Display%20Advertising%20of%20Classic%2048%20-%20VR%20Chennai/image-1.webp",
     tag: "Stall Fabrication & Expo",
-    title: "Harley-Davidson Display",
-    accent: "VR Chennai Custom Stall",
-    subtitle: "Bespoke architectural stall fabrication, illuminated vehicle showcase pavilions, and high-conversion interactive mall setups.",
+    title: "Toyota Hilux – Product Reveal",
+    accent: "Lanson Toyota",
+    subtitle: "Off-road experiential launch of Toyota Hilux with obstacle course demo and rugged lifestyle thematic booth.",
   },
   {
     id: 3,
     img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Southern%20HOG%20Rally/image-1.webp",
     tag: "Automotive & Festivals",
     title: "10th Southern HOG Rally",
-    accent: "Rock Music Arena",
-    subtitle: "Bringing together 500+ Harley-Davidson riders across South India with stadium stunt arenas, live bands, and custom rallies.",
+    accent: "Harley-Davidson Marina Chapter",
+    subtitle: "Mega milestone rally welcoming 500+ Harley-Davidson riders across South India with rock concerts and stunt arenas.",
   },
   {
     id: 4,
     img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/BNI%20Futurz%20chapter%20Meeting%20at%20Audi%20chennai/image-4.webp",
     tag: "Corporate Conferences",
-    title: "Audi Chennai Conclave",
-    accent: "Leadership Summits",
-    subtitle: "State-of-the-art business conference and networking summit organized with executive staging and VIP hospitality.",
+    title: "Audi Chennai Conference Meeting",
+    accent: "BNI B Region – Audi Chennai",
+    subtitle: "Executive leadership conference and luxury brand experience meeting organized for Audi Chennai and regional partners.",
   },
   {
     id: 5,
     img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/NYE%20Beach%202025/image-1.webp",
     tag: "Concerts & Festivals",
-    title: "NYE Beach Festival 2025",
-    accent: "Mega Music & DJ Stage",
-    subtitle: "Electrifying open-air coastal music festival at Fortune Beach Resort with international DJs, laser lighting, and seaside pyros.",
+    title: "NYE Beach Night 2025",
+    accent: "Fortune Beach Resort",
+    subtitle: "Electrifying New Year's Eve celebration featuring international DJs, laser lighting spectacles, and seaside countdowns.",
   },
   {
     id: 6,
     img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Madras%20-%20Fashion%20talent%20Expo/image-5.webp",
     tag: "Intellectual Property",
     title: "Madarase Fashion Talent Hunt",
-    accent: "40-Ft LED Runway Expo",
-    subtitle: "Premier fashion intellectual property event at Phoenix Marketcity uniting top designers, celebrity jury, and over 2,500 attendees.",
+    accent: "Phoenix Marketcity Chennai",
+    subtitle: "Runway fashion talent showcase highlighting regional designers with celebrity jury and live stage broadcast.",
   },
   {
     id: 7,
     img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Radiant%20Dental%20Care%20-%20Day%20out%20%40%20Polaris/image-8.webp",
     tag: "Day Outing & Social",
-    title: "Radiant Dental Care",
-    accent: "Taj Beachside Retreat",
-    subtitle: "Invigorating coastal team getaway and annual day celebration at Taj Fisherman's Cove with curated challenges and sunset gala.",
+    title: "JLL – Day Outing",
+    accent: "Jones Lang LaSalle",
+    subtitle: "Beachside corporate retreat and team-building experience at Taj Fisherman's Cove with outdoor challenges and sunset dinner.",
   },
   {
     id: 8,
     img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/BNI%20Futurz%20chapter%20Meeting%20at%20Audi%20chennai/image-1.webp",
     tag: "Presidential Galas",
     title: "Rotary Club of Madras West",
-    accent: "ITC Grand Chola Gala",
-    subtitle: "Prestigious annual installation ceremony at ITC Grand Chola with presidential stagecraft, live broadcast, and 1,200+ VIP attendees.",
+    accent: "President Installation 2026–27 @ ITC Grand Chola",
+    subtitle: "Prestigious annual installation ceremony for Rotary Club of Madras West hosted at ITC Grand Chola with presidential stagecraft, live broadcasting, and VIP attendee management.",
   },
   {
     id: 9,
     img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Save%20a%20Child%20EKAM%20Foundation%20Marathon/image-1.webp",
     tag: "Social & Charity Events",
     title: "Save a Child Marathon",
-    accent: "EKAM NGO 3000+ Runners",
-    subtitle: "Full-scale marathon logistics, RFID timing gates, route hydration stations, and medal ceremonies across Besant Nagar Promenade.",
+    accent: "Saveetha Eco Pupil School – Ekam NGO",
+    subtitle: "Charity 10K & 5K marathon with 3,000+ runners, route water stations, timing chips, and medal staging.",
   },
   {
     id: 10,
     img: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/BNP%20Paribas%20Gala%20Night/image-1.webp",
     tag: "Annual Gala Events",
-    title: "BNP Paribas Annual Bash",
-    accent: "Rocktober Gala Night",
-    subtitle: "Opulent corporate celebration at The Leela Palace featuring tailored grand ballroom styling, live jazz orchestration, and awards.",
+    title: "NeXHS Annual Foundation Day",
+    accent: "Next Generation Hybrid Systems",
+    subtitle: "Annual foundation celebration for NeXHS uniting over 800 employees and stakeholders with keynote presentations and rewards.",
   },
 ];
 
@@ -164,7 +164,7 @@ export function HeroSlider() {
       {/* Content */}
       <div className="relative z-20 h-full flex items-center">
         <div className="container mx-auto px-6 md:px-16">
-          <div className="max-w-3xl">
+          <div className="max-w-5xl">
 
             {/* Tag badge */}
             <AnimatePresence mode="wait">
@@ -215,7 +215,7 @@ export function HeroSlider() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.5, delay: 0.25 }}
-                className="text-gray-300 text-base sm:text-lg md:text-xl font-light leading-relaxed max-w-2xl mb-10"
+                className="text-gray-300 text-base sm:text-lg md:text-xl font-light leading-relaxed max-w-4xl mb-10"
               >
                 {heroEvents[current].subtitle}
               </motion.p>
@@ -287,9 +287,8 @@ export function HeroSlider() {
                 >
                   {/* Slide number */}
                   <span
-                    className={`text-[10px] md:text-xs font-bold tracking-wider transition-colors ${
-                      isActive ? "text-[#FFB800]" : "text-white/30 group-hover:text-white/70"
-                    }`}
+                    className={`text-[10px] md:text-xs font-bold tracking-wider transition-colors ${isActive ? "text-[#FFB800]" : "text-white/30 group-hover:text-white/70"
+                      }`}
                   >
                     {formattedNum}
                   </span>
