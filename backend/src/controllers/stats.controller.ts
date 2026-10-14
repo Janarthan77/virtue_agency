@@ -3,7 +3,6 @@ import { supabase } from "../services/supabase.service.js";
 import { fallbackEnquiries } from "./enquiries.controller.js";
 import { fallbackProjects } from "./projects.controller.js";
 import { fallbackGallery } from "./gallery.controller.js";
-import { fallbackServices } from "./services.controller.js";
 
 export async function getDashboardStats(req: Request, res: Response): Promise<void> {
   try {
@@ -45,7 +44,7 @@ export async function getDashboardStats(req: Request, res: Response): Promise<vo
         totalEmailsSent,
         totalProjects: projectCount || fallbackProjects.length,
         totalGalleryItems: galleryCount || fallbackGallery.length,
-        totalServices: servicesCount || fallbackServices.length,
+        totalServices: servicesCount ?? 0,
       },
     });
   } catch (err: unknown) {

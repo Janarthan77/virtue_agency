@@ -32,7 +32,7 @@ import {
   Sparkles,
   CheckCircle2,
 } from 'lucide-react'
-import { fetchLiveServices, ServiceItem, DEFAULT_SERVICES } from '@/lib/api'
+import { fetchLiveServices, ServiceItem } from '@/lib/api'
 
 /* ─── Icon Component Resolver ─────────────────────────────────────────────── */
 const ICON_MAP: Record<string, React.ComponentType<{ size?: number; className?: string; style?: React.CSSProperties }>> = {
@@ -99,7 +99,7 @@ function ModernServiceCard({
 }) {
   const displayNum = service.num || (index + 1 < 10 ? `0${index + 1}` : `${index + 1}`);
   const effectiveColor = service.accent_color || accentColor;
-  const imageUrl = service.image || DEFAULT_SERVICES[index % DEFAULT_SERVICES.length]?.image || 'https://pub-e796496b65134e82b311969a354b7898.r2.dev/BNI%20Futurz%20chapter%20Meeting%20at%20Audi%20chennai/image-1.webp';
+  const imageUrl = service.image || 'https://pub-e796496b65134e82b311969a354b7898.r2.dev/BNI%20Futurz%20chapter%20Meeting%20at%20Audi%20chennai/image-1.webp';
 
   return (
     <motion.div
@@ -242,12 +242,17 @@ function ProcessCard({ step, index }: { step: (typeof PROCESS_STEPS)[0]; index: 
 
 /* ─── Main Page ─────────────────────────────────────────────────────────────── */
 export default function ServicesPage() {
-  const [servicesList, setServicesList] = useState<ServiceItem[]>(DEFAULT_SERVICES);
+  const [servicesList, setServicesList] = useState<ServiceItem[]>([]);
 
   useEffect(() => {
     fetchLiveServices().then((data) => {
-      if (data && data.length > 0) {
+      if (data) {
         setServicesList(data);
+        if (typeof window !== 'undefined') {
+          setTimeout(() => {
+            (window as any).__lenis?.resize();
+          }, 50);
+        }
       }
     });
   }, []);
@@ -260,7 +265,7 @@ export default function ServicesPage() {
   ];
 
   return (
-    <main className="bg-[#0F172A] text-white min-h-screen font-sans overflow-x-hidden">
+    <div className="bg-[#0F172A] text-white min-h-screen font-sans">
 
       {/* ── HERO ─────────────────────────────────────────────────────────────── */}
       <section className="relative bg-[#0F172A] pt-28 md:pt-36 pb-16 md:pb-24 text-center overflow-hidden">
@@ -376,6 +381,6 @@ export default function ServicesPage() {
         </div>
       </section>
 
-    </main>
+    </div>
   )
 }

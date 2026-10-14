@@ -135,132 +135,9 @@ function BrandCard({ name, logo }: { name: string; logo: string }) {
   );
 }
 
-const servicesData = [
-  {
-    num: "01",
-    title: "End to End Event Management",
-    desc: "Comprehensive management from concept to execution for all types of events, ensuring a seamless experience.",
-    bg: "#ffffff",
-    icon: CalendarDays,
-    image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Southern%20HOG%20Rally/image-5.webp"
-  },
-  {
-    num: "02",
-    title: "End to End Event Production",
-    desc: "Full-scale technical and stage production, ensuring flawless audio, visual, and lighting experiences.",
-    bg: "#ffffff",
-    icon: Settings,
-    image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Madras%20-%20Fashion%20talent%20Expo/image-2.webp"
-  },
-  {
-    num: "03",
-    title: "Conference Management - MICE",
-    desc: "Expert handling of Meetings, Incentives, Conferences, and Exhibitions for corporate excellence.",
-    bg: "#ffffff",
-    icon: Mic,
-    image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/BNI%20Futurz%20chapter%20Meeting%20at%20Audi%20chennai/image-2.webp"
-  },
-  {
-    num: "04",
-    title: "Event Planning - Operations",
-    desc: "Strategic planning, logistics, and operational consulting to make your events seamless.",
-    bg: "#ffffff",
-    icon: ClipboardCheck,
-    image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Save%20a%20Child%20EKAM%20Foundation%20Marathon/image-2.webp"
-  },
-  {
-    num: "05",
-    title: "Destination Management",
-    desc: "Complete travel, logistics, and localized event planning across premier destinations.",
-    bg: "#ffffff",
-    icon: MapPin,
-    image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Radiant%20Dental%20Care%20-%20Day%20out%20%40%20Polaris/image-3.webp"
-  },
-  {
-    num: "06",
-    title: "Venue Sourcing",
-    desc: "Finding the perfect backdrop tailored to your event's scale, style, and unique requirements.",
-    bg: "#ffffff",
-    icon: Building,
-    image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/BNP%20Paribas%20Gala%20Night/image-4.webp"
-  },
-  {
-    num: "07",
-    title: "Decor Hire & Styling",
-    desc: "Creative set designs, gorgeous floral arrangements, and thematic styling for immersive environments.",
-    bg: "#ffffff",
-    icon: Palette,
-    image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/TVS%20Emerald%20Peninsula/image-4.webp"
-  },
-  {
-    num: "08",
-    title: "Entertainment & Artists",
-    desc: "Curating top-tier talent, bands, speakers, and artists for captivating live performances.",
-    bg: "#ffffff",
-    icon: Music,
-    image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/NYE%20Beach%202025/image-6.webp"
-  },
-  {
-    num: "09",
-    title: "Custom Build Setups",
-    desc: "Bespoke structural designs, custom staging, and immersive fabrications tailored to your vision.",
-    bg: "#ffffff",
-    icon: Hammer,
-    image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Southern%20HOG%20Rally/image-8.webp"
-  },
-  {
-    num: "10",
-    title: "Exhibition - Stall Fabrication",
-    desc: "Designing and building interactive and engaging exhibition stalls and corporate booths.",
-    bg: "#ffffff",
-    icon: Store,
-    image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Display%20Advertising%20of%20Classic%2048%20-%20VR%20Chennai/image-3.webp"
-  },
-  {
-    num: "11",
-    title: "Signage",
-    desc: "High-quality, custom event signage and branding materials for impactful visibility.",
-    bg: "#ffffff",
-    icon: Megaphone,
-    image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Display%20Advertising%20of%20Classic%2048%20-%20VR%20Chennai/image-5.webp"
-  },
-  {
-    num: "12",
-    title: "BTL Activations",
-    desc: "Below-the-line marketing activations focused on direct, meaningful consumer engagement.",
-    bg: "#ffffff",
-    icon: Activity,
-    image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Welona%20Healthcare%20Family%20Day/image-3.webp"
-  },
-  {
-    num: "13",
-    title: "Public Relations & Media",
-    desc: "Strategic PR campaigns and comprehensive media management to amplify your event's reach.",
-    bg: "#ffffff",
-    icon: Globe,
-    image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/BNP%20Paribas%20Gala%20Night/image-6.webp"
-  },
-  {
-    num: "14",
-    title: "Creative Design & Print Media",
-    desc: "Exceptional graphic design and printing services for all your event collaterals.",
-    bg: "#ffffff",
-    icon: PenTool,
-    image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/TVS%20Emerald%20Peninsula/image-9.webp"
-  },
-  {
-    num: "15",
-    title: "ATL Management",
-    desc: "Above-the-line mass media advertising and large-scale brand awareness campaigns.",
-    bg: "#ffffff",
-    icon: Radio,
-    image: "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Madras%20-%20Fashion%20talent%20Expo/image-6.webp"
-  }
-];
-
 /* ─── Services Section with Dynamic API Data ───────────────────────────────── */
 function ServicesSection() {
-  const [liveList, setLiveList] = useState<any[]>(servicesData);
+  const [liveList, setLiveList] = useState<any[]>([]);
 
   useEffect(() => {
     fetchLiveServices().then((data) => {
@@ -270,7 +147,7 @@ function ServicesSection() {
           title: item.title,
           desc: item.description,
           icon: (item.icon && (ICON_MAP as any)[item.icon]) ? (ICON_MAP as any)[item.icon] : Sparkles,
-          image: item.image || servicesData[idx % servicesData.length]?.image || "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Southern%20HOG%20Rally/image-5.webp",
+          image: item.image || "https://pub-e796496b65134e82b311969a354b7898.r2.dev/Southern%20HOG%20Rally/image-5.webp",
         }));
         setLiveList(mapped);
       }

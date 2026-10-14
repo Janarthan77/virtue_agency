@@ -69,8 +69,6 @@ import {
   createReview,
   updateReview,
   deleteReview,
-  DEFAULT_ADMIN_SERVICES,
-  DEFAULT_ADMIN_SETTINGS,
   fetchCompanySettings,
   fetchDashboardStats,
   updateEnquiryStatus,
@@ -292,9 +290,9 @@ export default function AdminPortal() {
   const [enquiries, setEnquiries] = useState<EnquiryItem[]>([]);
   const [projects, setProjects] = useState<ProjectItem[]>([]);
   const [gallery, setGallery] = useState<GalleryItem[]>([]);
-  const [services, setServices] = useState<ServiceItem[]>(DEFAULT_ADMIN_SERVICES);
+  const [services, setServices] = useState<ServiceItem[]>([]);
   const [reviews, setReviews] = useState<ReviewItem[]>([]);
-  const [companySettings, setCompanySettings] = useState<CompanySettings>(DEFAULT_ADMIN_SETTINGS);
+  const [companySettings, setCompanySettings] = useState<CompanySettings>({});
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -381,18 +379,18 @@ export default function AdminPortal() {
       }
       if (galRes.success) setGallery(galRes.items || []);
 
-      if (servRes && servRes.services && servRes.services.length > 0) {
+      if (servRes && servRes.success && Array.isArray(servRes.services)) {
         setServices(servRes.services);
       } else {
-        setServices(DEFAULT_ADMIN_SERVICES);
+        setServices([]);
       }
       if (revRes && revRes.success && revRes.reviews) {
         setReviews(revRes.reviews);
       }
-      if (settRes && settRes.settings) {
+      if (settRes && settRes.success && settRes.settings) {
         setCompanySettings(settRes.settings);
       } else {
-        setCompanySettings(DEFAULT_ADMIN_SETTINGS);
+        setCompanySettings({});
       }
       if (statsRes.success && statsRes.stats) setStats(statsRes.stats);
     } catch (err) {

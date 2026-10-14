@@ -128,13 +128,6 @@ export default function Footer() {
             </ul>
           </div>
         </div>
-
-        <div className="flex justify-center mb-8">
-          <Link href="/contact" className="px-8 py-3 bg-gradient-to-r from-[#FFFFFF] to-[#E2E8F0] text-gray-900 font-bold rounded-lg transition-all duration-300 transform hover:scale-105 flex items-center gap-2">
-            Plan Your Event
-          </Link>
-        </div>
-
         <div className="border-t border-white/20 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-gray-400 text-sm">
             &copy; {new Date().getFullYear()} Virtue IN. All rights reserved.
